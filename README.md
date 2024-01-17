@@ -2,8 +2,8 @@
 Your project's description...
 
 ## Environments
-- Preview: https://main--eds-car-dealership-demo--felix-staud.hlx.page/
-- Live: https://main--eds-car-dealership-demo--felix-staud.hlx.live/
+- [Preview](https://main--eds-car-dealership-demo--felix-staud.hlx.page/)
+- [Live](https://main--eds-car-dealership-demo--felix-staud.hlx.page/)
 
 ## Installation
 
