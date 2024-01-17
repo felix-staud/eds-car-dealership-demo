@@ -39,6 +39,7 @@
 
   /* nav height */
   --nav-height: 64px;
+  --nav-contact-height: 2.2rem;
 }
 
 @font-face {
