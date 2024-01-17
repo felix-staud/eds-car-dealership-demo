@@ -1,5 +1,5 @@
-# Your Project's Title...
-Your project's description...
+# Car Dealership Demo
+An AEM: Edge Delivery Service demo for a car dealership website
 
 ## Environments
 - [Preview](https://main--eds-car-dealership-demo--felix-staud.hlx.page/)
