@@ -5,3 +5,4 @@ import { sampleRUM } from './aem.js';
 sampleRUM('cwv');
 
 // add more delayed functionality here
+import './delayed/cookie-consent.js';
