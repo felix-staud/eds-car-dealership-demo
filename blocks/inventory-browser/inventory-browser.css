@@ -1,0 +1,81 @@
+.inventory-browser {
+    padding: 0;
+    margin: 0;
+}
+
+.inventory-browser .inventory > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+    grid-gap: 16px;
+    min-height: 20rem;
+}
+
+.inventory-browser .inventory > ul > li.inventory-item {
+    border: 1px solid #cecfd1;
+    overflow: hidden;
+    animation: slidein 0.5s forwards;
+}
+
+.inventory-browser .inventory .inventory-search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 1rem;
+    border: 2px solid #333;
+    border-radius: .25rem;
+    transition: border-color 350ms ease-in-out;
+}
+
+.inventory-browser .inventory .inventory-search.active,
+.inventory-browser .inventory .inventory-search.active > .icon {
+    border-color: blue;
+}
+
+.inventory-browser .inventory .inventory-search .inventory-search-input {
+    height: 1.5rem;
+    padding: .75rem 1.25rem;
+    font-size: 18px;
+    border-radius: .25rem;
+    flex-grow: 1;
+    outline: none;
+    border: none;
+}
+
+.inventory-browser .inventory .inventory-search > .icon {
+    padding: 1rem;
+    cursor: pointer;
+    border-left: 2px solid #333;
+    transition: border-color 350ms ease-in-out;
+}
+
+.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body {
+    padding: 0rem 1rem 1rem 1rem;
+}
+
+.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body .item-price.tbd {
+    font-style: italic;
+    color: #999;
+}
+
+.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body .item-feature-more-indicator {
+    font-style: italic;
+    font-size: 1rem;
+    color: #aaa;
+}
+
+@keyframes slidein {
+    from {
+      height: 0px;
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      height:var(--h); /*This will change for each element */
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
