@@ -75,7 +75,7 @@ body.appear {
 }
 
 header {
-  height: var(--nav-height);
+  height: calc(var(--nav-height) + var(--nav-contact-height));
 }
 
 h1, h2, h3,

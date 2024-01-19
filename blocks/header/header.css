@@ -151,7 +151,7 @@ header nav .nav-contact {
   header nav .nav-contact {
     display: block;
     visibility: visible;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;

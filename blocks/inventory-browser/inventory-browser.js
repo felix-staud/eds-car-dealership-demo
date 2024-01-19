@@ -1,43 +1,58 @@
 import { decorateIcons } from '../../scripts/aem.js'
+import { createOptimizedPictureFromExternalSource } from '../../scripts/utils.js'
 
 /**
- * @typedef {Object} RawItem
- * @property {string} year 
- * @property {string} make 
- * @property {string} model 
- * @property {string} trim 
- * @property {string} exteriorColor 
- * @property {string} interiorColor 
- * @property {string} vin 
- * @property {string} price 
- * @property {string} miles 
- * @property {string} features
- * @property {string} images
- * @property {string} link 
+ * @typedef {'all' | 'new' | 'used'} SheetName
  * 
- * @typedef {RawItem} Item
- * @property {number} price 
- * @property {number} miles 
- * @property {string[]} features - optional 
- * @property {string[]} images - optional
+ * @typedef {{
+ *  total: number,
+ *  offset: number,
+ *  limit: number,
+ *  data: any[],
+ *  ":type": 'sheet',
+ * }} SingleSheetData
  * 
- * @typedef {Object} Store
- * @property {Item[]} items
- * @property {HTMLUListElement} inventoryUl;
+ * @typedef {{
+ *  [key: string]: SingleSheetData,
+ *  ":version": number,
+ *  ":names" : string[],
+ *  ":type": 'multi-sheet',
+ * }} MultiSheetData
+ * 
+ * @typedef {{
+ *  year: string,
+ *  make: string,
+ *  model: string,
+ *  trim: string,
+ *  exteriorColor: string,
+ *  interiorColor: string,
+ *  vin: string,
+ *  price: number,
+ *  miles: number,
+ *  features?: string[],
+ *  images?: string[],
+ * }} Item
+ * 
+ * @typedef {{
+ *  items: Item[],
+ *  inventoryUl: HTMLUListElement,
+ * }} Store
  */
 
 /** @type {Store} */
 const store = {
     items: [],
+    sheet: "",
     inventoryUl: {},
 }
 
 /**
- * 
- * @param {"new" | "used" | "all"} type 
+ * async load for items from sheet/s
+ * @param {SheetName} sheet
+ * @param {boolean} sort
  * @returns {Promise<Item[]>} promise
  */
-const loadItems = async (sheet) => {
+const loadItems = async (sheet, sort = true) => {
     const splitter = '\n';
     const query = new URLSearchParams();
 
@@ -46,18 +61,40 @@ const loadItems = async (sheet) => {
     }
 
     const response = await fetch('/data/inventory.json?' + query.toString(), { method: 'get' });
-    const json = await response.json();
-    /** @type {RawItem} */
-    const items = json.data;
+    let rawItems = [];
 
-    return items.map((item) => {
+    if (sheet === 'all') {
+        /** @type {MultiSheetData} */
+        const multiSheet = await response.json();
+        const { used, new: neo } = multiSheet;
+        rawItems = [...used.data, ...neo.data];
+        console.log(rawItems);
+    } else {
+        /** @type {SingleSheetData<RawItem>} */
+        const singleSheet = await response.json();
+        rawItems = singleSheet.data;
+    }
+
+    /** @type {Item[]} */
+    const items = rawItems.map((item) => {
         delete item._originLink;
         return ({
             ...item,
             features: item.features.split(splitter),
             images: item.images.split(splitter),
-        })
-    })
+        });
+    });
+
+    return items.sort((a, b) => getItemHeader(a) > getItemHeader(b) ? -1 : 1);
+}
+
+/**
+ * Get the header for an inventory item
+ * @param {Item} item
+ * @returns {string} header
+ */
+const getItemHeader = ({ year, make, model, trim }) => {
+    return `${year} ${make} ${model} - ${trim}`
 }
 
 /**
@@ -99,29 +136,24 @@ const createItemElement = (item) => {
  * @param {Item} item 
  * @returns {HTMLDivElement}
  */
-const createItemImageElement = ({images, year, make, model}) => {
+const createItemImageElement = (item) => {
+    const { images } = item;
     const itemImageElement = document.createElement('div');
     itemImageElement.classList.add('inventory-item-image');
 
-    const picture = document.createElement('picture');
-    const source = document.createElement('source');
-    source.setAttribute('type', 'image/webp');
-    const img = document.createElement('img');
-    img.setAttribute('loading', 'lazy');
+    let src, alt;
 
     if (images && images.length > 0) {
-        source.setAttribute('srcset', images[0]);
-        img.setAttribute('src', images[0]);
-        img.setAttribute('alt', `image of ${year} ${make} ${model}`);
+        src = images[0];
+        alt = `image of ${getItemHeader(item)}`;
     } else {
-        source.setAttribute('srcset', 'https://placehold.co/600x400');
-        img.setAttribute('src', 'https://placehold.co/600x400');
-        img.setAttribute('alt', `placeholder image`);
+        src = 'https://placehold.co/600x400';
+        alt = 'placeholder image';
     }
 
-    picture.appendChild(source);
-    picture.appendChild(img);
-    itemImageElement.appendChild(img);
+    const pictureElement = createOptimizedPictureFromExternalSource(src, alt);
+
+    itemImageElement.appendChild(pictureElement);
 
     return itemImageElement;
 }
@@ -136,7 +168,7 @@ const createItemBodyElement = (item) => {
     itemBodyElement.classList.add('inventory-item-body');
 
     const itemBodyHeader = document.createElement('h4');
-    itemBodyHeader.textContent = `${item.year} ${item.make} ${item.model} - ${item.trim}`;
+    itemBodyHeader.textContent = getItemHeader(item);
 
     const nFormat = new Intl.NumberFormat();
     const price = item.price ? item.price : -1;
@@ -195,7 +227,7 @@ const createSearchElement = () => {
     searchInput.setAttribute('type', 'text');
     searchInput.classList.add('inventory-search-input');
     searchInput.setAttribute('placeholder', "Search our inventory...")
-    searchInput.addEventListener('keyup', ({key}) => {
+    searchInput.addEventListener('keyup', ({ key }) => {
         if (key === 'Enter') {
             handleSearch(searchInput.value);
         }
@@ -222,9 +254,7 @@ const createSearchElement = () => {
     return searchElement;
 }
 
-
 /**
-
  * @param {?string} query 
  */
 const handleSearch = (query) => {
@@ -233,18 +263,41 @@ const handleSearch = (query) => {
     if (!query || query.length === 0) {
         renderItemElements(store.items);
     } else {
-        const filteredItems = store.items.filter(({year, make, model, trim}) => {
+        const filteredItems = store.items.filter(({ year, make, model, trim }) => {
             const searchStr = (year + make + model + trim).toLowerCase();
-            
+
             return searchStr.includes(query);
         });
-        
+
         if (filteredItems.length > 0) {
             renderItemElements(filteredItems);
         } else {
             renderNoResultsElement();
         }
     }
+}
+
+/**
+ * @param {string} src 
+ * @param {string} alt 
+ * @returns {HTMLPictureElement}
+ */
+const createPictureElement = (src, alt) => {
+    const picture = document.createElement('picture');
+
+    const source = document.createElement('source');
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', src);
+
+    const img = document.createElement('img');
+    img.setAttribute('loading', 'lazy');
+    img.setAttribute('src', src);
+    img.setAttribute('alt', alt);
+
+    picture.appendChild(source);
+    picture.appendChild(img);
+
+    return picture
 }
 
 /**
