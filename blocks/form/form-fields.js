@@ -33,6 +33,8 @@ function setCommonAttributes(field, fd) {
     field.required = fd.Mandatory && (fd.Mandatory.toLowerCase() === 'true' || fd.Mandatory.toLowerCase() === 'x');
     field.placeholder = fd.Placeholder;
     field.value = fd.Value;
+    field.min = fd.Min;
+    field.max = fd.Max
 }
 
 const createHeading = (fd) => {
@@ -148,6 +150,7 @@ const createInput = (fd) => {
     field.setAttribute('aria-labelledby', label.id);
     fieldWrapper.append(field);
     fieldWrapper.append(label);
+
 
     return { field, fieldWrapper };
 };
