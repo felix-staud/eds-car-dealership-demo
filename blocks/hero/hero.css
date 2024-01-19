@@ -1,7 +1,7 @@
-main .hero-container > div {
+main .hero-container>div {
   max-width: unset;
 }
-  
+
 main .hero-container {
   padding: 0;
 }
@@ -31,4 +31,59 @@ main .hero-container {
   object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+/* hero with slides */
+
+.hero.hero.with-slides {
+  padding: 0;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.hero.with-slides .slides-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 500px;
+}
+
+.hero.with-slides .slides-container .slide {
+  width: 20%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #000000aa;
+  transition: width 500ms linear, background-color 500ms linear;
+  cursor: pointer;
+}
+
+.hero.with-slides .slides-container .slide h1 {
+  padding: 0;
+}
+
+.hero.with-slides .slides-container .slide .button {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 500ms linear, visibility 500ms linear;
+}
+
+.hero.with-slides .slides-container .slide>ul {
+  list-style-type: none;
+}
+
+.hero.with-slides .slides-container .slide>ul>li {
+  list-style-type: none;
+  display: inline-flex;
+}
+
+.hero.with-slides .slides-container .slide.active {
+  width: 80%;
+  background-color: unset;
+  cursor: default;
+}
+
+.hero.with-slides .slides-container .slide.active .button {
+  visibility: visible;
+  opacity: 1;
 }
