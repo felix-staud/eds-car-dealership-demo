@@ -101,7 +101,7 @@ body.appear {
 }
 
 header {
-  height: calc(var(--nav-height) + var(--nav-contact-height));
+  height: var(--nav-height);
 }
 
 h1,
@@ -281,6 +281,10 @@ main .section {
 @media (width >=600px) {
   main .section {
     padding: 64px 32px;
+  }
+
+  header {
+    height: calc(var(--nav-height) + var(--nav-contact-height));
   }
 }
 

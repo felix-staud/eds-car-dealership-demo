@@ -17,6 +17,16 @@
     height: 65vh;
 }
 
+.hero-slider .swiper-slide p,
+.hero-slider .swiper-slide h1,
+.hero-slider .swiper-slide h2,
+.hero-slider .swiper-slide h3,
+.hero-slider .swiper-slide h4,
+.hero-slider .swiper-slide h5,
+.hero-slider .swiper-slide h6 {
+    text-align: center;
+}
+
 .hero-slider .swiper-slide > div {
     height: fit-content;
 }
