@@ -5,5 +5,23 @@
 }
 
 .multi-view-slider .swiper-slide {
-    width: 33%;
+    width: 100%;
+}
+
+@media (width >=600px) {
+    .multi-view-slider .swiper-slide {
+        width: 50%;
+    }
+}
+
+@media (width >=900px) {
+    .multi-view-slider .swiper-slide {
+        width: 33%;
+    }
+}
+
+@media (width >= 1200px) {
+    .multi-view-slider .swiper-slide {
+        width: 20%;
+    }
 }

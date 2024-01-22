@@ -1,23 +1,9 @@
-import { decorateIcons } from '../../scripts/aem.js'
-import { createOptimizedPictureFromExternalSource } from '../../scripts/utils.js'
+import { decorateIcons } from '../../scripts/aem.js';
+import { createOptimizedPictureFromExternalSource } from '../../scripts/utils.js';
+import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
 
 /**
  * @typedef {'all' | 'new' | 'used'} SheetName
- * 
- * @typedef {{
- *  total: number,
- *  offset: number,
- *  limit: number,
- *  data: any[],
- *  ":type": 'sheet',
- * }} SingleSheetData
- * 
- * @typedef {{
- *  [key: string]: SingleSheetData,
- *  ":version": number,
- *  ":names" : string[],
- *  ":type": 'multi-sheet',
- * }} MultiSheetData
  * 
  * @typedef {{
  *  year: string,
@@ -70,7 +56,7 @@ const loadItems = async (sheet, sort = true) => {
         rawItems = [...used.data, ...neo.data];
         console.log(rawItems);
     } else {
-        /** @type {SingleSheetData<RawItem>} */
+        /** @type {SingleSheetData} */
         const singleSheet = await response.json();
         rawItems = singleSheet.data;
     }

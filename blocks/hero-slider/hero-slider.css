@@ -49,3 +49,7 @@
 .hero-slider .swiper-slide a {
     margin: 0;
 }
+
+.hero-slider .swiper-slide .button-container a.button {
+    width: 100%;
+}
