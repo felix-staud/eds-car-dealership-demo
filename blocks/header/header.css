@@ -4,14 +4,15 @@ header .nav-wrapper {
   width: 100%;
   z-index: 2;
   position: fixed;
+  border-bottom: 1px solid #333;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
 
 header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
+    'hamburger brand tools' var(--nav-height) 'sections sections sections' 1fr / auto 1fr auto;
   align-items: center;
   gap: 0 2em;
   margin: auto;
@@ -23,25 +24,19 @@ header nav {
 
 header nav[aria-expanded="true"] {
   grid-template:
-    'hamburger brand' var(--nav-height)
-    'sections sections' 1fr
+    'hamburger brand' var(--nav-height) 'sections sections' 1fr
     'tools tools' var(--nav-height) / auto 1fr;
   overflow-y: auto;
   min-height: 100vh;
 }
 
-@media (width >= 600px) {
+@media (width >=600px) {
   header nav {
     padding: 0 2rem;
   }
 }
 
-@media (width >= 900px) {
-header .nav-wrapper {
-  border-bottom: 1px solid #333;
-  box-shadow: 0 6px 12px rgba(0,0,0,.175);
-}
-
+@media (width >=900px) {
   header nav {
     display: flex;
     justify-content: space-between;
@@ -137,7 +132,7 @@ header nav[aria-expanded="true"] .nav-hamburger-icon::after {
   transform: rotate(-45deg);
 }
 
-@media (width >= 900px) {
+@media (width >=900px) {
   header nav .nav-hamburger {
     display: none;
     visibility: hidden;
@@ -150,7 +145,7 @@ header nav .nav-contact {
   visibility: hidden;
 }
 
-@media (width >= 900px) {
+@media (width >=900px) {
   header nav .nav-contact {
     display: block;
     visibility: visible;
@@ -164,7 +159,7 @@ header nav .nav-contact {
     text-align: right;
     padding: 0.5rem 1.5rem;
   }
-  
+
   header nav .nav-contact ul {
     list-style: none;
     margin: 0;
@@ -173,23 +168,23 @@ header nav .nav-contact {
     flex-direction: row;
     justify-content: flex-end;
   }
-  
-  header nav .nav-contact ul > li {
+
+  header nav .nav-contact ul>li {
     display: inline-flex;
     margin-right: 1rem;
   }
-  
-  header nav .nav-contact ul > li .icon {
+
+  header nav .nav-contact ul>li .icon {
     width: 1rem;
     height: 1rem;
     margin: 0 2px;
   }
-  
-  header nav .nav-contact ul > li:last-child {
+
+  header nav .nav-contact ul>li:last-child {
     margin-right: 0;
   }
-  
-  header nav .nav-contact ul > li > a {
+
+  header nav .nav-contact ul>li>a {
     display: inline-flex;
     align-items: center;
   }
@@ -224,32 +219,32 @@ header nav[aria-expanded="true"] .nav-sections {
   align-self: start;
 }
 
-header nav .nav-sections ul  {
+header nav .nav-sections ul {
   list-style: none;
   padding-left: 0;
   font-size: var(--body-font-size-xl);
   font-weight: 500;
 }
 
-header nav .nav-sections ul > li {
+header nav .nav-sections ul>li {
   margin: 1rem;
   font-weight: 700;
   border-bottom: 1px solid #aaa;
 }
 
-header nav .nav-sections ul > li:last-child {
+header nav .nav-sections ul>li:last-child {
   border-bottom: unset;
 }
 
-header nav .nav-sections ul > li > ul {
+header nav .nav-sections ul>li>ul {
   margin-top: 0;
 }
 
-header nav .nav-sections ul > li > ul > li {
+header nav .nav-sections ul>li>ul>li {
   font-weight: 500;
 }
 
-@media (width >= 900px) {
+@media (width >=900px) {
   header nav .nav-sections {
     visibility: visible;
     white-space: nowrap;
@@ -292,19 +287,19 @@ header nav .nav-sections ul > li > ul > li {
     font-size: var(--body-font-size-xs);
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li {
+  header nav .nav-sections .default-content-wrapper>ul>li {
     flex: 0 1 auto;
     position: relative;
     font-weight: 500;
     border-bottom: 0;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul {
+  header nav .nav-sections .default-content-wrapper>ul>li>ul {
     display: none;
     position: relative;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"] > ul {
+  header nav .nav-sections .default-content-wrapper>ul>li[aria-expanded="true"]>ul {
     display: block;
     position: absolute;
     left: -1em;
@@ -314,7 +309,7 @@ header nav .nav-sections ul > li > ul > li {
     white-space: initial;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul::before {
+  header nav .nav-sections .default-content-wrapper>ul>li>ul::before {
     content: '';
     position: absolute;
     top: -8px;
@@ -326,7 +321,7 @@ header nav .nav-sections ul > li > ul > li {
     border-bottom: 8px solid var(--light-color);
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
+  header nav .nav-sections .default-content-wrapper>ul>li>ul>li {
     padding: 8px 0;
   }
 }
