@@ -38,7 +38,7 @@ const store = {
  * @param {boolean} sort
  * @returns {Promise<Item[]>} promise
  */
-const loadItems = async (sheet, sort = true) => {
+async function loadItems(sheet, sort = true) {
     const splitter = '\n';
     const query = new URLSearchParams();
 
@@ -79,8 +79,8 @@ const loadItems = async (sheet, sort = true) => {
  * @param {Item} item
  * @returns {string} header
  */
-const getItemHeader = ({ year, make, model, trim }) => {
-    return `${year} ${make} ${model} - ${trim}`
+function getItemHeader({ year, make, model, trim }) {
+    return `${year} ${make} ${model} - ${trim}`;
 }
 
 /**
@@ -88,7 +88,7 @@ const getItemHeader = ({ year, make, model, trim }) => {
  * @param {Item[]} items 
  * @param {HTMLUListElement} parentUl 
  */
-const renderItemElements = (items) => {
+function renderItemElements(items) {
     const itemElements = items.map((item) => createItemElement(item));
     store.inventoryUl.replaceChildren(...itemElements);
 }
@@ -96,7 +96,7 @@ const renderItemElements = (items) => {
 /**
  * inform user about no results
  */
-const renderNoResultsElement = () => {
+function renderNoResultsElement() {
     const noResultsElement = document.createElement('li');
     noResultsElement.textContent = "No results...";
     store.inventoryUl.replaceChildren(noResultsElement);
@@ -107,7 +107,7 @@ const renderNoResultsElement = () => {
  * @param {Item} item 
  * @returns {HTMLLIElement}
  */
-const createItemElement = (item) => {
+function createItemElement(item) {
     if (!item) return;
     const itemElement = document.createElement('li');
     itemElement.classList.add('inventory-item');
@@ -122,7 +122,7 @@ const createItemElement = (item) => {
  * @param {Item} item 
  * @returns {HTMLDivElement}
  */
-const createItemImageElement = (item) => {
+function createItemImageElement(item) {
     const { images } = item;
     const itemImageElement = document.createElement('div');
     itemImageElement.classList.add('inventory-item-image');
@@ -149,7 +149,7 @@ const createItemImageElement = (item) => {
  * @param {Item} item 
  * @returns {HTMLDivElement}
  */
-const createItemBodyElement = (item) => {
+function createItemBodyElement(item) {
     const itemBodyElement = document.createElement('div');
     itemBodyElement.classList.add('inventory-item-body');
 
@@ -164,7 +164,7 @@ const createItemBodyElement = (item) => {
         priceHeader.textContent = `$${nFormat.format(price)}`;
     } else {
         priceHeader.textContent = "$ TBD";
-        priceHeader.classList.add('tbd')
+        priceHeader.classList.add('tbd');
     }
 
     const itemFeaturesDiv = document.createElement('div');
@@ -206,13 +206,13 @@ const createItemBodyElement = (item) => {
  * create search element div
  * @returns {HTMLDivElement} searchElement
  */
-const createSearchElement = () => {
+function createSearchElement() {
     const searchElement = document.createElement('div');
     searchElement.classList.add('inventory-search');
     const searchInput = document.createElement('input');
     searchInput.setAttribute('type', 'text');
     searchInput.classList.add('inventory-search-input');
-    searchInput.setAttribute('placeholder', "Search our inventory...")
+    searchInput.setAttribute('placeholder', "Search our inventory...");
     searchInput.addEventListener('keyup', ({ key }) => {
         if (key === 'Enter') {
             handleSearch(searchInput.value);
@@ -243,7 +243,7 @@ const createSearchElement = () => {
 /**
  * @param {?string} query 
  */
-const handleSearch = (query) => {
+function handleSearch(query) {
     query = query.toLowerCase();
 
     if (!query || query.length === 0) {
@@ -261,29 +261,6 @@ const handleSearch = (query) => {
             renderNoResultsElement();
         }
     }
-}
-
-/**
- * @param {string} src 
- * @param {string} alt 
- * @returns {HTMLPictureElement}
- */
-const createPictureElement = (src, alt) => {
-    const picture = document.createElement('picture');
-
-    const source = document.createElement('source');
-    source.setAttribute('type', 'image/webp');
-    source.setAttribute('srcset', src);
-
-    const img = document.createElement('img');
-    img.setAttribute('loading', 'lazy');
-    img.setAttribute('src', src);
-    img.setAttribute('alt', alt);
-
-    picture.appendChild(source);
-    picture.appendChild(img);
-
-    return picture
 }
 
 /**

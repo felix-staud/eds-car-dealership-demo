@@ -13,7 +13,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs
  *      prevEl: string,
  *  },
  *  breakpoints: {
- *      [key: string]: SwiperConfig,
+ *      [key: number]: SwiperConfig,
  *  }
  *  spaceBetween: number,
  *  zoom: boolean,
@@ -25,7 +25,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs
  * @param {Element[]} slideElements 
  * @returns {HTMLDivElement}
  */
-const buildWrapper = (slideElements) => {
+function buildWrapper(slideElements) {
     const swiperWrapper = document.createElement('div');
     swiperWrapper.classList.add('swiper-wrapper');
 
@@ -42,7 +42,7 @@ const buildWrapper = (slideElements) => {
  * @param {Element} element 
  * @returns {Element}
  */
-const buildSlide = (element) => {
+function buildSlide(element) {
     element.classList.add('swiper-slide');
     return element;
 }
@@ -51,7 +51,7 @@ const buildSlide = (element) => {
  * 
  * @param {Element} block 
  */
-const decorateControls = (block) => {
+function decorateControls(block) {
     const prevBtn = document.createElement('div');
     prevBtn.classList.add('swiper-button-prev');
     const nextBtn = document.createElement('div');
@@ -67,8 +67,8 @@ const decorateControls = (block) => {
  * @param {SwiperConfig} config 
  * @returns 
  */
-export const buildSwiper = (block, config = {}) => {
-    block.classList.add('swiper')
+export function buildSwiper(block, config = {}) {
+    block.classList.add('swiper');
     const slides = block.querySelectorAll(':scope > div');
     const swiperWrapper = buildWrapper(slides);
     block.replaceChildren(swiperWrapper);
@@ -76,7 +76,7 @@ export const buildSwiper = (block, config = {}) => {
     decorateControls(block);
     const swiper = new Swiper(block, config);
 
-    return swiper
+    return swiper;
 }
 
 /**
