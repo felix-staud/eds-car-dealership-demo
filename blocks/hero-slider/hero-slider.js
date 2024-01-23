@@ -1,4 +1,4 @@
-import { buildSwiper } from "../slider/slider.js";
+import { buildSwiper } from "../../scripts/slider.js";
 
 export default function decorate(block) {
     buildSwiper(block, {

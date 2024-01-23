@@ -6,12 +6,12 @@
  * @param {Array} [breakpoints] Breakpoints and corresponding params (eg. width)
  * @returns {HTMLPictureElement} The picture element
  */
-export const createOptimizedPictureFromExternalSource = (
+export function createOptimizedPictureFromExternalSource(
   src,
   alt = '',
   eager = false,
-  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
-) => {
+  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }]
+) {
   const picture = document.createElement('picture');
   const ext = src.substring(src.lastIndexOf('.') + 1);
 
@@ -41,4 +41,20 @@ export const createOptimizedPictureFromExternalSource = (
   });
 
   return picture;
+}
+
+/**
+ * extract the first anchor url from a block
+ * @param {Element} block 
+ * @returns {string | null}
+ */
+export function extractUrlFromBlock(block) {
+  const anchor = block.querySelector('a');
+
+  if (!anchor) {
+    console.warn('Anchor element missing!');
+    return null;
+  }
+
+  return anchor.href;
 }

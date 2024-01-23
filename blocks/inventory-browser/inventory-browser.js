@@ -22,11 +22,11 @@ import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
  * @typedef {{
  *  items: Item[],
  *  inventoryUl: HTMLUListElement,
- * }} Store
+ * }} State
  */
 
-/** @type {Store} */
-const store = {
+/** @type {State} */
+const state = {
     items: [],
     sheet: "",
     inventoryUl: {},
@@ -54,7 +54,6 @@ async function loadItems(sheet, sort = true) {
         const multiSheet = await response.json();
         const { used, new: neo } = multiSheet;
         rawItems = [...used.data, ...neo.data];
-        console.log(rawItems);
     } else {
         /** @type {SingleSheetData} */
         const singleSheet = await response.json();
@@ -90,7 +89,7 @@ function getItemHeader({ year, make, model, trim }) {
  */
 function renderItemElements(items) {
     const itemElements = items.map((item) => createItemElement(item));
-    store.inventoryUl.replaceChildren(...itemElements);
+    state.inventoryUl.replaceChildren(...itemElements);
 }
 
 /**
@@ -99,7 +98,7 @@ function renderItemElements(items) {
 function renderNoResultsElement() {
     const noResultsElement = document.createElement('li');
     noResultsElement.textContent = "No results...";
-    store.inventoryUl.replaceChildren(noResultsElement);
+    state.inventoryUl.replaceChildren(noResultsElement);
 }
 
 /**
@@ -247,9 +246,9 @@ function handleSearch(query) {
     query = query.toLowerCase();
 
     if (!query || query.length === 0) {
-        renderItemElements(store.items);
+        renderItemElements(state.items);
     } else {
-        const filteredItems = store.items.filter(({ year, make, model, trim }) => {
+        const filteredItems = state.items.filter(({ year, make, model, trim }) => {
             const searchStr = (year + make + model + trim).toLowerCase();
 
             return searchStr.includes(query);
@@ -269,9 +268,9 @@ function handleSearch(query) {
  */
 export default async function decorate(block) {
     const sheet = block.textContent ? block.textContent.trim() : "all";
-    store.items = await loadItems(sheet);
-    store.inventoryUl = document.createElement('ul');
-    store.inventoryUl.classList.add('inventory-item-list');
+    state.items = await loadItems(sheet);
+    state.inventoryUl = document.createElement('ul');
+    state.inventoryUl.classList.add('inventory-item-list');
 
     const inventoryDiv = document.createElement('div');
     inventoryDiv.classList.add('inventory');
@@ -279,9 +278,9 @@ export default async function decorate(block) {
     const searchElement = createSearchElement();
 
     inventoryDiv.appendChild(searchElement);
-    inventoryDiv.appendChild(store.inventoryUl);
+    inventoryDiv.appendChild(state.inventoryUl);
 
-    renderItemElements(store.items);
+    renderItemElements(state.items);
 
     block.replaceChildren(inventoryDiv);
 }

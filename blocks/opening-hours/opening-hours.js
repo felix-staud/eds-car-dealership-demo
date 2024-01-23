@@ -1,4 +1,5 @@
 import { SingleSheetData } from '../../scripts/types.js';
+import { extractUrlFromBlock } from '../../scripts/utils.js';
 
 /**
  * @typedef {{
@@ -6,22 +7,6 @@ import { SingleSheetData } from '../../scripts/types.js';
  *  times: string,
  * }} OpeningHour
  */
-
-/**
- * extract the request url from the block
- * @param {Element} block 
- * @returns {string | null}
- */
-function extractUrl(block) {
-    const anchor = block.querySelector('a');
-
-    if (!anchor) {
-        console.warn('Missing link for opening hours block!');
-        return null;
-    }
-
-    return anchor.href;
-}
 
 /**
  * load opening hour data from url
@@ -53,8 +38,6 @@ function buildOpeningHoursCells(openingHours) {
     /** @type {HTMLElement[]} */
     const cells = [];
 
-    console.log(openingHours)
-
     openingHours.forEach(openingHour => {
         const { weekday } = openingHour;
         const isActiveWeekday = weekday.toLowerCase() === weekdays[dayIndex];
@@ -80,7 +63,10 @@ function buildOpeningHoursCells(openingHours) {
  * @param {Element} block 
  */
 export default async function decorate(block) {
-    const url = extractUrl(block);
+    const url = extractUrlFromBlock(block);
+
+    if (!url) return;
+
     const openingHours = await loadOpeningHoursData(url);
     const cells = buildOpeningHoursCells(openingHours);
 
