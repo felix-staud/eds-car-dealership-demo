@@ -1,4 +1,4 @@
-import { SingleSheetData } from '../../scripts/types.js'
+import { SingleSheetData } from '../../scripts/types.js';
 
 /**
  * @typedef {{
@@ -7,42 +7,72 @@ import { SingleSheetData } from '../../scripts/types.js'
  * }} OpeningHour
  */
 
-var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+/**
+ * extract the request url from the block
+ * @param {Element} block 
+ * @returns {string | null}
+ */
+function extractUrl(block) {
+    const anchor = block.querySelector('a');
+
+    if (!anchor) {
+        console.warn('Missing link for opening hours block!');
+        return null;
+    }
+
+    return anchor.href;
+}
 
 /**
- * 
- * @param {string} url 
+ * load opening hour data from url
+ * @param {string} url
+ * @returns {Promise<OpeningHour[]>}
  */
-const buildOpeningHoursTable = async (url) => {
+async function loadOpeningHoursData(url) {
     try {
         const response = await fetch(url);
         /** @type {SingleSheetData} */
         const data = await response.json();
-        /** @type {OpeningHour[]} */
-        const openingHours = data.data;
-        const today =  new Date();
-        const children = [];
 
-        openingHours.forEach(openingHour => {
-            const isActiveWeekday = openingHour.weekday === weekdays[today.getDay()];
-
-            for (let key in openingHour) {
-                const elem = document.createElement('div');
-                elem.classList.add(key);
-
-                if (isActiveWeekday) {
-                    elem.classList.add('active');
-                }
-
-                elem.textContent = openingHour[key];
-                children.push(elem);
-            }
-        });
-        
-        return children;
+        return data.data;
     } catch (err) {
         console.warn('failed to load opening hours data!');
     }
+
+    return [];
+}
+
+/**
+ * 
+ * @param {OpeningHour[]} openingHours 
+ * @returns 
+ */
+function buildOpeningHoursCells(openingHours) {
+    const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const dayIndex = new Date().getDay();
+    /** @type {HTMLElement[]} */
+    const cells = [];
+
+    console.log(openingHours)
+
+    openingHours.forEach(openingHour => {
+        const { weekday } = openingHour;
+        const isActiveWeekday = weekday.toLowerCase() === weekdays[dayIndex];
+
+        for (let key in openingHour) {
+            const elem = document.createElement('div');
+            elem.classList.add(key);
+
+            if (isActiveWeekday) {
+                elem.classList.add('active');
+            }
+
+            elem.textContent = openingHour[key];
+            cells.push(elem);
+        }
+    });
+
+    return cells;
 }
 
 /**
@@ -50,12 +80,9 @@ const buildOpeningHoursTable = async (url) => {
  * @param {Element} block 
  */
 export default async function decorate(block) {
-    const link = block.querySelector('a');
+    const url = extractUrl(block);
+    const openingHours = await loadOpeningHoursData(url);
+    const cells = buildOpeningHoursCells(openingHours);
 
-    if (!link) {
-        console.warn('Missing link for opening hours block!');
-    } else {
-        const children = await buildOpeningHoursTable(link.href);
-        block.replaceChildren(...children);
-    }
+    block.replaceChildren(...cells);
 }

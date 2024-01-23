@@ -1,9 +1,12 @@
 .opening-hours {
-    display: grid; 
-    grid-auto-columns: 1fr; 
-    grid-auto-rows: 1fr; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 5px 10px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 2px 30px;
+    grid-auto-flow: row;
+    justify-content: space-between; 
+
 }
 
 .opening-hours .active {
