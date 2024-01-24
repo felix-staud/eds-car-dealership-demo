@@ -109,7 +109,7 @@ export default async function decorate(block) {
 
   const navContact = nav.querySelector('.nav-contact');
   if (navContact) {
-    //TODO
+    // TODO
   }
 
   const navBrand = nav.querySelector('.nav-brand');

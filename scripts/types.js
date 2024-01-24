@@ -1,19 +1,23 @@
+/* eslint-disable import/no-mutable-exports */
+
 /**
  * @typedef {{
+ *  ":type": 'sheet' | 'multi-sheet'
+ * }} BaseSheetData
+ *
+ * @typedef {BaseSheetData & {
  *  total: number,
  *  offset: number,
  *  limit: number,
  *  data: any[],
- *  ":type": 'sheet',
  * }} SingleSheetData
  *
- * @typedef {{
+ * @typedef {BaseSheetData & {
  *  [key: string]: SingleSheetData,
  *  ":version": number,
  *  ":names" : string[],
- *  ":type": 'multi-sheet',
  * }} MultiSheetData
- * 
+ *
  * https://swiperjs.com/swiper-api
  * @typedef {{
  *  el: HTMLElement,
@@ -29,7 +33,7 @@
  *  removeAllSlides: () => void,
  *  removeSlide: (number | number[]),
  * }} SwiperApi
- * 
+ *
  * @typedef {{
  *  id: number,
  *  year: string,

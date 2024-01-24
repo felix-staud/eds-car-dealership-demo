@@ -20,7 +20,7 @@
   --text-color: black;
 
   /* fonts */
-  --body-font-family: "DDC Heading Font Face", Univers, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --body-font-family: "DDC Heading Font Face", "univers", "helveticanNeue", "helvetica", "arial", sans-serif;
   --heading-font-family: var(--body-font-family);
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
@@ -45,21 +45,22 @@
   --btn-border-width: 1px;
   --btn-border-style: solid;
   --btn-border-radius: 0;
-
   --btn-color: #fff;
   --btn-bg-color: #004582;
   --btn-border-color: #004582;
   --btn-hover-color: #fff;
   --btn-hover-bg-color: #003a71;
   --btn-hover-border-color: #003a71;
-
+  
+  /* primary button */
   --btn-primary-color: #fff;
   --btn-primary-bg-color: #004582;
   --btn-primary-border-color: #004582;
   --btn-primary-hover-color: #fff;
   --btn-primary-hover-bg-color: #003a71;
   --btn-primary-hover-border-color: #003a71;
-
+  
+  /* secondary button */
   --btn-secondary-color: #004582;
   --btn-secondary-bg-color: #fff;
   --btn-secondary-border-color: #fff;
@@ -192,7 +193,6 @@ button {
   display: inline-block;
   box-sizing: border-box;
   text-decoration: none;
-  border: 2px solid transparent;
   padding: 5px 30px;
   text-align: center;
   font-style: normal;

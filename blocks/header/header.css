@@ -5,7 +5,7 @@ header .nav-wrapper {
   z-index: 2;
   position: fixed;
   border-bottom: 1px solid #333;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px #0000002d;
 }
 
 header nav {
@@ -232,16 +232,16 @@ header nav .nav-sections ul>li {
   border-bottom: 1px solid #aaa;
 }
 
+header nav .nav-sections ul>li>ul>li {
+  font-weight: 500;
+}
+
 header nav .nav-sections ul>li:last-child {
   border-bottom: unset;
 }
 
 header nav .nav-sections ul>li>ul {
   margin-top: 0;
-}
-
-header nav .nav-sections ul>li>ul>li {
-  font-weight: 500;
 }
 
 @media (width >=900px) {

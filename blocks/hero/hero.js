@@ -1,3 +1,3 @@
-export default function (block) {
-    //decorate hero
+export default function decorate() {
+  // decorate hero
 }

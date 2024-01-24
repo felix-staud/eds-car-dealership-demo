@@ -30,6 +30,13 @@
     transition: border-color 350ms ease-in-out;
 }
 
+.inventory-browser .inventory .inventory-search > .icon {
+    padding: 1rem;
+    cursor: pointer;
+    border-left: 2px solid #333;
+    transition: border-color 350ms ease-in-out;
+}
+
 .inventory-browser .inventory .inventory-search.active,
 .inventory-browser .inventory .inventory-search.active > .icon {
     border-color: blue;
@@ -45,15 +52,8 @@
     border: none;
 }
 
-.inventory-browser .inventory .inventory-search > .icon {
-    padding: 1rem;
-    cursor: pointer;
-    border-left: 2px solid #333;
-    transition: border-color 350ms ease-in-out;
-}
-
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
-    padding: 0rem 1rem 1rem 1rem;
+    padding: 0 1rem 1rem;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price.tbd {
@@ -69,12 +69,13 @@
 
 @keyframes slidein {
     from {
-      height: 0px;
+      height: 0;
       transform: scale(0);
       opacity: 0;
     }
+
     to {
-      height:var(--h); /*This will change for each element */
+      height:var(--h); /* This will change for each element */
       transform: scale(1);
       opacity: 1;
     }
