@@ -20,15 +20,25 @@ export function extractHrefFromBlock(block) {
 }
 
 /**
- * transforms an absolute url into a relative one
- * @param {string} absoluteUrl
- * @returns {string}
+ * load data from a single-sheet
+ * @param {SingleSheetData} singleSheetData;
+ * @returns {SingleSheetData["data"]} data
  */
-export function toRelativeUrl(absoluteUrl) {
-  try {
-    return new URL(absoluteUrl).pathname;
-  } catch (err) {
-    console.info(`url "${absoluteUrl}" is not absolute`); // eslint-disable-line no-console
-    return absoluteUrl;
-  }
+export function loadSingleSheetData(singleSheetData) {
+  return singleSheetData.data;
+}
+
+/**
+ * load data from a multi-sheet
+ * @param {MultiSheetData} multiSheetData
+ * @returns {MultiSheetData["data"]} data
+ */
+export function loadMultiSheetData(multiSheetData) {
+  const data = [];
+
+  multiSheetData[':names'].forEach((name) => {
+    data.push(...multiSheetData[name].data);
+  });
+
+  return data;
 }

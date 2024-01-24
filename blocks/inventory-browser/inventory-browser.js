@@ -1,6 +1,10 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { Car, MultiSheetData, SingleSheetData } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
-import { extractHrefFromBlock, toRelativeUrl } from '../../scripts/utils.js';
+import {
+  extractHrefFromBlock,
+  loadMultiSheetData,
+  loadSingleSheetData,
+} from '../../scripts/utils.js';
 
 /**
  * @typedef {{
@@ -33,7 +37,7 @@ function getCarHeader({
  * @returns {Promise<Car[]>} promise
  */
 async function loadCars(href) {
-  const splitter = '\n';
+  const splitter = { features: ', ', images: ', ' };
 
   const url = new URL(href);
 
@@ -42,19 +46,17 @@ async function loadCars(href) {
   const data = [];
   const response = await fetch(url.toString());
   /** @type {MultiSheetData | SingleSheetData} */
-  const { ':type': sheetType } = await response.json();
+  const sheetData = await response.json();
 
-  if (sheetType === 'multi-sheet') {
-    /** @type {MultiSheetData} */
-    const multiSheet = await response.json();
-    const { used, new: neo } = multiSheet;
-    data.push(...used.data, ...neo.data);
-  } else if (sheetType === 'sheet') {
-    /** @type {SingleSheetData} */
-    const singleSheet = await response.json();
-    data.push(...singleSheet.data);
-  } else {
-    throw new Error(`unknown sheet-type: ${sheetType}`);
+  switch (sheetData[':type']) {
+    case 'multi-sheet':
+      data.push(...loadMultiSheetData(sheetData));
+      break;
+    case 'sheet':
+      data.push(...loadSingleSheetData(sheetData));
+      break;
+    default:
+      throw new Error(`unknown sheet-type: ${sheetData[':type']}`);
   }
 
   /** @type {Car[]} */
@@ -62,8 +64,8 @@ async function loadCars(href) {
     delete car._originLink; // eslint-disable-line no-underscore-dangle
     return ({
       ...car,
-      features: car.features.split(splitter),
-      images: car.images.split(splitter),
+      features: car.features.split(splitter.features),
+      images: car.images.split(splitter.images),
     });
   });
 
@@ -112,7 +114,7 @@ function createCarBodyElement(car) {
   carBodyEl.classList.add('inventory-car-body');
 
   const carBodyHeaderAnchor = document.createElement('a');
-  carBodyHeaderAnchor.href = toRelativeUrl(car.link);
+  carBodyHeaderAnchor.href = car.link;
   carBodyHeaderAnchor.textContent = getCarHeader(car);
   const carBodyHeader = document.createElement('h4');
   carBodyHeader.appendChild(carBodyHeaderAnchor);
