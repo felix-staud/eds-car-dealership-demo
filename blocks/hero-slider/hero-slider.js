@@ -1,4 +1,4 @@
-import { buildSwiper } from "../../scripts/slider.js";
+import { buildSwiper } from "../slider/slider.js";
 
 /**
  * @param {Element} block 
