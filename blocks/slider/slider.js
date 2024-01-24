@@ -1,4 +1,5 @@
-import { Swiper, Navigation, Manipulation } from '../../scripts/vendor/swiper.js';
+import { Manipulation, Navigation } from '../../scripts/vendor/swiper/modules/index.min.mjs';
+import { Swiper } from '../../scripts/vendor/swiper/swiper.min.mjs';
 
 /**
  * @typedef {{rows: number, columns: number}} SwiperGridConfig

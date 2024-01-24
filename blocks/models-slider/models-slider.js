@@ -1,8 +1,9 @@
-import { Swiper, Navigation, Manipulation } from '../../scripts/vendor/swiper.js'
+import { createOptimizedPicture } from '../../scripts/aem.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js';
 import { extractUrlFromBlock } from '../../scripts/utils.js';
+import { Manipulation, Navigation } from '../../scripts/vendor/swiper/modules/index.min.mjs';
+import { Swiper } from '../../scripts/vendor/swiper/swiper.min.mjs';
 import { buildSlide } from '../slider/slider.js';
-import { createOptimizedPicture } from '../../scripts/aem.js'
 
 /** 
  * @typedef {{
