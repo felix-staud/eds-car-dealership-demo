@@ -5,22 +5,28 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(278px, 1fr));
   grid-gap: 16px;
+  width: 100%;
 }
 
 .cards > ul > li {
   border: 1px solid transparent;
   background-color: var(--background-color);
-
-}
-
-.cards .cards-card-body {
-  margin: 16px;
-  text-align: center;
+  display: inline-flex;
+  flex-direction: column;
 }
 
 .cards .cards-card-image {
   line-height: 0;
   text-align: center;
+}
+
+.cards .cards-card-body {
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  text-align: center;
+  flex: 1;
+  justify-content: center;
 }
 
 .cards .cards-card-body > *:first-child {
