@@ -170,7 +170,10 @@ function carModelToSwiperSlide(carModel) {
  */
 async function loadCarModels(url) {
     try {
-        const response = await fetch(url);
+        const query = new URLSearchParams();
+        query.append('time', new Date().getMilliseconds());
+
+        const response = await fetch(`${url}?${query.toString()}`);
         /** @type {SingleSheetData} */
         const sheetData = await response.json();
 

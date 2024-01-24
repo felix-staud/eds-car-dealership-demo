@@ -15,7 +15,10 @@ import { extractUrlFromBlock } from '../../scripts/utils.js';
  */
 async function loadOpeningHoursData(url) {
     try {
-        const response = await fetch(url);
+        const query = new URLSearchParams();
+        query.append('time', new Date().getMilliseconds());
+
+        const response = await fetch(`${url}?${query.toString()}`);
         /** @type {SingleSheetData} */
         const data = await response.json();
 

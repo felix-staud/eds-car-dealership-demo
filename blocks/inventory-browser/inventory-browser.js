@@ -45,6 +45,8 @@ async function loadItems(sheet, sort = true) {
         query.append('sheet', sheet);
     }
 
+    query.append('time', new Date().getMilliseconds());
+
     const response = await fetch('/data/inventory.json?' + query.toString(), { method: 'get' });
     let rawItems = [];
 
