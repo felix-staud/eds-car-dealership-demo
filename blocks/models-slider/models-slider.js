@@ -1,7 +1,8 @@
 import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js';
-import { createOptimizedPictureFromExternalSource, extractUrlFromBlock } from '../../scripts/utils.js';
-import { buildSlide } from '../../scripts/slider.js';
+import { extractUrlFromBlock } from '../../scripts/utils.js';
+import { buildSlide } from '../slider/slider.js';
+import { createOptimizedPicture } from '../../scripts/aem.js'
 
 /** 
  * @typedef {{
@@ -143,6 +144,7 @@ function renderSlider() {
     const slides = carModels.map(carModelToSwiperSlide);
     swiper.removeAllSlides();
     slides.forEach(swiper.appendSlide);
+    swiper.update();
 }
 
 /**
@@ -150,8 +152,8 @@ function renderSlider() {
  * @param {CarModel} carModel 
  */
 function carModelToSwiperSlide(carModel) {
-    const picture = createOptimizedPictureFromExternalSource(carModel.image);
-    const header = document.createElement('h3');
+    const picture = createOptimizedPicture(carModel.image, carModel.model);
+    const header = document.createElement('div');
     header.textContent = carModel.model;
 
     let slide = document.createElement('div');
@@ -193,8 +195,10 @@ export default async function (block) {
         <div class="nav-pills"></div>
         <div class="swiper">
             <div class="swiper-wrapper"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+            <div class="swiper-navigation">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
         </div>`;
     state.block = block;
     state.swiper = new Swiper(block.querySelector('.swiper'), {

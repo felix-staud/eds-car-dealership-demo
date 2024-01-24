@@ -36,26 +36,30 @@
 
 /* Swiper */
 
-.models-slider .swiper .swiper-slide {
+.models-slider .swiper .swiper-navigation {
+    --swiper-navigation-sides-offset: 0;
+}
+
+.models-slider .swiper .swiper-wrapper .swiper-slide {
     text-align: center;
     padding: 0 var(--swiper-slide-padding-x);
     width: calc(100% - 2 * var(--swiper-slide-padding));
 }
 
 @media (width >=600px) {
-    .models-slider .swiper .swiper-slide {
+    .models-slider .swiper .swiper-wrapper .swiper-slide {
         width: 50%;
     }
 }
 
 @media (width >=900px) {
-    .models-slider .swiper .swiper-slide {
+    .models-slider .swiper .swiper-wrapper .swiper-slide {
         width: 33%;
     }
 }
 
 @media (width >=1200px) {
-    .models-slider .swiper .swiper-slide {
+    .models-slider .swiper .swiper-wrapper .swiper-slide {
         width: 20%;
     }
 }

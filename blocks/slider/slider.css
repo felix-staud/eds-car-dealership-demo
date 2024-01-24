@@ -1,0 +1,11 @@
+.slider .swiper-wrapper .swiper-slide {
+    text-align: center;
+}
+
+.slider .swiper-wrapper {
+    max-height: 500px;
+}
+
+.slider .swiper-wrapper img {
+    max-width: 600px;
+}

@@ -54,11 +54,11 @@ export function buildSwiperNavigation({prevEl, nextEl}) {
     prevBtn.classList.add(prevEl ? prevEl.substring(1) : 'swiper-button-prev');
     const nextBtn = document.createElement('div');
     nextBtn.classList.add(nextEl ? nextEl.substring(1) : 'swiper-button-next');
+    const navigation = document.createElement('div');
+    navigation.classList.add('swiper-navigation');
+    navigation.replaceChildren(prevBtn, nextBtn);
 
-    return [
-        prevBtn,
-        nextBtn
-    ]
+    return navigation;
 }
 
 /**
@@ -78,7 +78,7 @@ export function buildSwiper(parent, config = {}) {
 
     if (config.navigation) {
         const navigation = buildSwiperNavigation(config.navigation);
-        children.push(...navigation);
+        children.push(navigation);
     }
 
     parent.replaceChildren(...children);
@@ -99,6 +99,9 @@ export default function (block) {
         grid: {
           rows: 1,
         },
-        navigation: true,
+        navigation: {
+            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next',
+        },
     })
 }

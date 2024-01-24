@@ -1,5 +1,4 @@
-import { decorateIcons } from '../../scripts/aem.js';
-import { createOptimizedPictureFromExternalSource } from '../../scripts/utils.js';
+import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
 
 /**
@@ -130,13 +129,13 @@ function createItemImageElement(item) {
 
     if (images && images.length > 0) {
         src = images[0];
-        alt = `image of ${getItemHeader(item)}`;
+        alt = `Image of ${getItemHeader(item)}`;
     } else {
         src = 'https://placehold.co/600x400';
         alt = 'placeholder image';
     }
 
-    const pictureElement = createOptimizedPictureFromExternalSource(src, alt);
+    const pictureElement = createOptimizedPicture(src, alt);
 
     itemImageElement.appendChild(pictureElement);
 
