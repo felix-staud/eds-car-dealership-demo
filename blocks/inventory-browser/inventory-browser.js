@@ -36,7 +36,7 @@ function getCarHeader({
  * @returns {string} car-details link
  */
 function getCarDetailsLink({ condition, id }) {
-  const path = ['inventory'];
+  const path = ['', 'inventory'];
 
   switch (condition) {
     case 'new':
