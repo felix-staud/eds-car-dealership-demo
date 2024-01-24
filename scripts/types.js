@@ -29,8 +29,25 @@
  *  removeAllSlides: () => void,
  *  removeSlide: (number | number[]),
  * }} SwiperApi
+ * 
+ * @typedef {{
+ *  id: number,
+ *  year: string,
+ *  make: string,
+ *  model: string,
+ *  trim: string,
+ *  exteriorColor: string,
+ *  interiorColor: string,
+ *  vin: string,
+ *  price: number,
+ *  miles: number,
+ *  features?: string[],
+ *  images?: string[],
+ *  link: string,
+ * }} Car
  */
 
 export let SingleSheetData;
 export let MultiSheetData;
 export let SwiperApi;
+export let Car;

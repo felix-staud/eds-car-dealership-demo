@@ -13,7 +13,7 @@
     min-height: 20rem;
 }
 
-.inventory-browser .inventory > ul > li.inventory-item {
+.inventory-browser .inventory > ul > li.inventory-car {
     border: 1px solid #cecfd1;
     overflow: hidden;
     animation: slidein 0.5s forwards;
@@ -52,16 +52,16 @@
     transition: border-color 350ms ease-in-out;
 }
 
-.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body {
+.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
     padding: 0rem 1rem 1rem 1rem;
 }
 
-.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body .item-price.tbd {
+.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price.tbd {
     font-style: italic;
     color: #999;
 }
 
-.inventory-browser .inventory > ul > li.inventory-item .inventory-item-body .item-feature-more-indicator {
+.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-feature-more-indicator {
     font-style: italic;
     font-size: 1rem;
     color: #aaa;

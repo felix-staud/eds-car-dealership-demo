@@ -1,45 +1,31 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
-import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
+import { SingleSheetData, MultiSheetData, Car } from '../../scripts/types.js'
 import { toRelativeUrl } from '../../scripts/utils.js';
 
 /**
  * @typedef {'all' | 'new' | 'used'} SheetName
  * 
  * @typedef {{
- *  year: string,
- *  make: string,
- *  model: string,
- *  trim: string,
- *  exteriorColor: string,
- *  interiorColor: string,
- *  vin: string,
- *  price: number,
- *  miles: number,
- *  features?: string[],
- *  images?: string[],
- *  link: string,
- * }} Item
- * 
- * @typedef {{
- *  items: Item[],
+ *  cars: Car[],
+ *  sheet: string,
  *  inventoryUl: HTMLUListElement,
  * }} State
  */
 
 /** @type {State} */
 const state = {
-    items: [],
+    cars: [],
     sheet: "",
     inventoryUl: {},
 }
 
 /**
- * async load for items from sheet/s
+ * async load for cars from sheet/s
  * @param {SheetName} sheet
  * @param {boolean} sort
- * @returns {Promise<Item[]>} promise
+ * @returns {Promise<Car[]>} promise
  */
-async function loadItems(sheet, sort = true) {
+async function loadCars(sheet, sort = true) {
     const splitter = '\n';
 
     const url = new URL("/data/inventory.json", window.location.origin);
@@ -51,49 +37,49 @@ async function loadItems(sheet, sort = true) {
     url.searchParams.append('time', Date.now());
 
     const response = await fetch(url.toString());
-    let rawItems = [];
+    let rawCars = [];
 
     if (sheet === 'all') {
         /** @type {MultiSheetData} */
         const multiSheet = await response.json();
         const { used, new: neo } = multiSheet;
-        rawItems = [...used.data, ...neo.data];
+        rawCars = [...used.data, ...neo.data];
     } else {
         /** @type {SingleSheetData} */
         const singleSheet = await response.json();
-        rawItems = singleSheet.data;
+        rawCars = singleSheet.data;
     }
 
-    /** @type {Item[]} */
-    const items = rawItems.map((item) => {
-        delete item._originLink;
+    /** @type {Car[]} */
+    const cars = rawCars.map((car) => {
+        delete car._originLink;
         return ({
-            ...item,
-            features: item.features.split(splitter),
-            images: item.images.split(splitter),
+            ...car,
+            features: car.features.split(splitter),
+            images: car.images.split(splitter),
         });
     });
 
-    return items.sort((a, b) => getItemHeader(a) > getItemHeader(b) ? -1 : 1);
+    return cars.sort((a, b) => getCarHeader(a) > getCarHeader(b) ? -1 : 1);
 }
 
 /**
- * Get the header for an inventory item
- * @param {Item} item
+ * Get the header for a car
+ * @param {Car} car
  * @returns {string} header
  */
-function getItemHeader({ year, make, model, trim }) {
+function getCarHeader({ year, make, model, trim }) {
     return `${year} ${make} ${model} - ${trim}`;
 }
 
 /**
- * fill inventory browser with items
- * @param {Item[]} items 
+ * fill inventory browser with cars
+ * @param {Car[]} cars 
  * @param {HTMLUListElement} parentUl 
  */
-function renderItemElements(items) {
-    const itemElements = items.map((item) => createItemElement(item));
-    state.inventoryUl.replaceChildren(...itemElements);
+function renderCarElement(cars) {
+    const carElements = cars.map((car) => createCarElement(car));
+    state.inventoryUl.replaceChildren(...carElements);
 }
 
 /**
@@ -107,38 +93,38 @@ function renderNoResultsElement() {
 
 /**
  * 
- * @param {Item} item 
+ * @param {Car} car 
  * @returns {HTMLLIElement}
  */
-function createItemElement(item) {
-    if (!item) return;
-    const itemElement = document.createElement('li');
-    itemElement.classList.add('inventory-item');
-    itemElement.appendChild(createItemImageElement(item));
-    itemElement.appendChild(createItemBodyElement(item));
+function createCarElement(car) {
+    if (!car) return;
+    const carEl = document.createElement('li');
+    carEl.classList.add('inventory-car');
+    carEl.appendChild(createCarImageElement(car));
+    carEl.appendChild(createCarBodyElement(car));
 
-    return itemElement;
+    return carEl;
 }
 
 /**
- * creates an item image element
- * @param {Item} item 
+ * creates an car image element
+ * @param {Car} car 
  * @returns {HTMLDivElement}
  */
-function createItemImageElement(item) {
-    const { images, link } = item;
-    const itemImageElement = document.createElement('div');
-    itemImageElement.classList.add('inventory-item-image');
+function createCarImageElement(car) {
+    const { images, link } = car;
+    const carImageEl = document.createElement('div');
+    carImageEl.classList.add('inventory-car-image');
     
-    const itemImageAnchor = document.createElement('a');
-    itemImageAnchor.href = link;
-    itemImageElement.appendChild(itemImageAnchor);
+    const carImageAnchor = document.createElement('a');
+    carImageAnchor.href = link;
+    carImageEl.appendChild(carImageAnchor);
 
     let src, alt;
 
     if (images && images.length > 0) {
         src = images[0];
-        alt = `Image of ${getItemHeader(item)}`;
+        alt = `Image of ${getCarHeader(car)}`;
     } else {
         src = 'https://placehold.co/600x400';
         alt = 'placeholder image';
@@ -146,30 +132,30 @@ function createItemImageElement(item) {
 
     const pictureElement = createOptimizedPicture(src, alt);
 
-    itemImageAnchor.appendChild(pictureElement);
+    carImageAnchor.appendChild(pictureElement);
 
-    return itemImageElement;
+    return carImageEl;
 }
 
 /**
- * creates an item image element
- * @param {Item} item 
+ * creates a car image element
+ * @param {Car} car 
  * @returns {HTMLDivElement}
  */
-function createItemBodyElement(item) {
-    const itemBodyElement = document.createElement('div');
-    itemBodyElement.classList.add('inventory-item-body');
+function createCarBodyElement(car) {
+    const carBodyEl = document.createElement('div');
+    carBodyEl.classList.add('inventory-car-body');
 
-    const itemBodyHeaderAnchor = document.createElement('a');
-    itemBodyHeaderAnchor.href = toRelativeUrl(item.link);
-    itemBodyHeaderAnchor.textContent = getItemHeader(item);
-    const itemBodyHeader = document.createElement('h4');
-    itemBodyHeader.appendChild(itemBodyHeaderAnchor);
+    const carBodyHeaderAnchor = document.createElement('a');
+    carBodyHeaderAnchor.href = toRelativeUrl(car.link);
+    carBodyHeaderAnchor.textContent = getCarHeader(car);
+    const carBodyHeader = document.createElement('h4');
+    carBodyHeader.appendChild(carBodyHeaderAnchor);
 
     const nFormat = new Intl.NumberFormat();
-    const price = item.price ? item.price : -1;
+    const price = car.price ? car.price : -1;
     const priceHeader = document.createElement('h5');
-    priceHeader.classList.add('item-price');
+    priceHeader.classList.add('car-price');
     if (price > 0) {
         priceHeader.textContent = `$${nFormat.format(price)}`;
     } else {
@@ -177,39 +163,39 @@ function createItemBodyElement(item) {
         priceHeader.classList.add('tbd');
     }
 
-    const itemFeaturesDiv = document.createElement('div');
-    itemFeaturesDiv.classList.add('inventory-item-features');
-    const itemFeaturesListHeader = document.createElement('h5');
-    itemFeaturesListHeader.classList.add('item-features-header');
-    itemFeaturesListHeader.textContent = 'Features:';
+    const carFeaturesDiv = document.createElement('div');
+    carFeaturesDiv.classList.add('inventory-car-features');
+    const carFeaturesListHeader = document.createElement('h5');
+    carFeaturesListHeader.classList.add('car-features-header');
+    carFeaturesListHeader.textContent = 'Features:';
 
-    if (item.features && item.features.length > 0) {
-        const itemFeaturesList = document.createElement('ul');
-        itemFeaturesList.classList.add('item-features');
+    if (car.features && car.features.length > 0) {
+        const carFeaturesList = document.createElement('ul');
+        carFeaturesList.classList.add('car-features');
 
-        for (let i = 0; i < item.features.length && i < 3; i++) {
-            const itemFeatureLi = document.createElement('li');
-            itemFeatureLi.classList.add('item-feature');
-            itemFeatureLi.textContent = item.features[i];
-            itemFeaturesList.appendChild(itemFeatureLi);
+        for (let i = 0; i < car.features.length && i < 3; i++) {
+            const carFeatureLi = document.createElement('li');
+            carFeatureLi.classList.add('car-feature');
+            carFeatureLi.textContent = car.features[i];
+            carFeaturesList.appendChild(carFeatureLi);
         }
 
-        if (item.features.length > 3) {
+        if (car.features.length > 3) {
             const moreIndicatorLi = document.createElement('li');
-            moreIndicatorLi.classList.add('item-feature-more-indicator');
+            moreIndicatorLi.classList.add('car-feature-more-indicator');
             moreIndicatorLi.textContent = 'and much more...';
-            itemFeaturesList.appendChild(moreIndicatorLi);
+            carFeaturesList.appendChild(moreIndicatorLi);
         }
 
-        itemFeaturesDiv.appendChild(itemFeaturesListHeader);
-        itemFeaturesDiv.appendChild(itemFeaturesList);
+        carFeaturesDiv.appendChild(carFeaturesListHeader);
+        carFeaturesDiv.appendChild(carFeaturesList);
     }
 
-    itemBodyElement.appendChild(itemBodyHeader);
-    itemBodyElement.appendChild(priceHeader);
-    itemBodyElement.appendChild(itemFeaturesDiv);
+    carBodyEl.appendChild(carBodyHeader);
+    carBodyEl.appendChild(priceHeader);
+    carBodyEl.appendChild(carFeaturesDiv);
 
-    return itemBodyElement;
+    return carBodyEl;
 }
 
 /**
@@ -257,16 +243,16 @@ function handleSearch(query) {
     query = query.toLowerCase();
 
     if (!query || query.length === 0) {
-        renderItemElements(state.items);
+        renderCarElement(state.cars);
     } else {
-        const filteredItems = state.items.filter(({ year, make, model, trim }) => {
+        const filteredCars = state.cars.filter(({ year, make, model, trim }) => {
             const searchStr = (year + make + model + trim).toLowerCase();
 
             return searchStr.includes(query);
         });
 
-        if (filteredItems.length > 0) {
-            renderItemElements(filteredItems);
+        if (filteredCars.length > 0) {
+            renderCarElement(filteredCars);
         } else {
             renderNoResultsElement();
         }
@@ -279,9 +265,9 @@ function handleSearch(query) {
  */
 export default async function decorate(block) {
     const sheet = block.textContent ? block.textContent.trim() : "all";
-    state.items = await loadItems(sheet);
+    state.cars = await loadCars(sheet);
     state.inventoryUl = document.createElement('ul');
-    state.inventoryUl.classList.add('inventory-item-list');
+    state.inventoryUl.classList.add('inventory-car-list');
 
     const inventoryDiv = document.createElement('div');
     inventoryDiv.classList.add('inventory');
@@ -291,7 +277,7 @@ export default async function decorate(block) {
     inventoryDiv.appendChild(searchElement);
     inventoryDiv.appendChild(state.inventoryUl);
 
-    renderItemElements(state.items);
+    renderCarElement(state.cars);
 
     block.replaceChildren(inventoryDiv);
 
