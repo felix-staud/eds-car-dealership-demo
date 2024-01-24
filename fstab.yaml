@@ -1,5 +1,5 @@
 mountpoints:
   /: https://drive.google.com/drive/folders/1rdp547Hao0jIsuc3i75JBygdjQ3-Sbz_
 
-Folders:
+folders:
   /inventory/details/: /inventory/details-default

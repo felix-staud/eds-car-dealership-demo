@@ -1,4 +1,4 @@
-@import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+@import url('../../node_modules/swiper/swiper.min.css');
 
 .models-slider {
     --swiper-slide-padding-x: 3%;

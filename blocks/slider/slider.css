@@ -1,3 +1,7 @@
+@import url('../../node_modules/swiper/swiper.min.css');
+@import url('../../node_modules/swiper/modules/navigation.min.css');
+@import url('../../node_modules/swiper/modules/manipulation.min.css');
+
 .slider .swiper-wrapper .swiper-slide {
     text-align: center;
 }

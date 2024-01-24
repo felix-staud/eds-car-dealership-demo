@@ -1,4 +1,4 @@
-import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
+import { Swiper, Navigation, Manipulation } from '../../scripts/vendor/swiper.js'
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js';
 import { extractUrlFromBlock } from '../../scripts/utils.js';
 import { buildSlide } from '../slider/slider.js';
@@ -165,21 +165,22 @@ function carModelToSwiperSlide(carModel) {
 
 /**
  * 
- * @param {string} url 
+ * @param {string} href 
  * @returns {Promise<CarModel[]>}
  */
-async function loadCarModels(url) {
+async function loadCarModels(href) {
     try {
-        const query = new URLSearchParams();
-        query.append('time', new Date().getMilliseconds());
+        const url = new URL(href);
 
-        const response = await fetch(`${url}?${query.toString()}`);
+        url.searchParams.append('time', Date.now());
+
+        const response = await fetch(url.toString());
         /** @type {SingleSheetData} */
         const sheetData = await response.json();
 
         return sheetData.data;
     } catch (err) {
-        console.warn(err);
+        console.warn('failed to loda car models!', err);
     }
 
     return [];
@@ -205,6 +206,7 @@ export default async function (block) {
         </div>`;
     state.block = block;
     state.swiper = new Swiper(block.querySelector('.swiper'), {
+        modules: [Navigation, Manipulation],
         direction: 'horizontal',
         slidesPerView: 'auto',
         navigation: {

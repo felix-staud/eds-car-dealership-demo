@@ -23,7 +23,7 @@ export function toRelativeUrl(absoluteUrl) {
   try {
     return new URL(absoluteUrl).pathname;
   } catch (err) {
-    console.warn(`invalid absolute url given: ${absoluteUrl}`, err);
+    console.info(`url "${absoluteUrl}" is not absolute`);
     return absoluteUrl;
   }
 

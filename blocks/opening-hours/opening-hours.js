@@ -10,21 +10,21 @@ import { extractUrlFromBlock } from '../../scripts/utils.js';
 
 /**
  * load opening hour data from url
- * @param {string} url
+ * @param {string} href
  * @returns {Promise<OpeningHour[]>}
  */
-async function loadOpeningHoursData(url) {
+async function loadOpeningHoursData(href) {
     try {
-        const query = new URLSearchParams();
-        query.append('time', new Date().getMilliseconds());
+        const url = new URL(href);
+        url.searchParams.append('time', Date.now());
 
-        const response = await fetch(`${url}?${query.toString()}`);
+        const response = await fetch(url.toString());
         /** @type {SingleSheetData} */
         const data = await response.json();
 
         return data.data;
     } catch (err) {
-        console.warn('failed to load opening hours data!');
+        console.warn('failed to load opening hours data!', err);
     }
 
     return [];

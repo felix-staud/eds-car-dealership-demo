@@ -41,15 +41,16 @@ const state = {
  */
 async function loadItems(sheet, sort = true) {
     const splitter = '\n';
-    const query = new URLSearchParams();
+
+    const url = new URL("/data/inventory.json", window.location.origin);
 
     if (sheet !== 'all') {
         query.append('sheet', sheet);
     }
 
-    query.append('time', new Date().getMilliseconds());
+    url.searchParams.append('time', Date.now());
 
-    const response = await fetch('/data/inventory.json?' + query.toString(), { method: 'get' });
+    const response = await fetch(url.toString());
     let rawItems = [];
 
     if (sheet === 'all') {
@@ -293,4 +294,6 @@ export default async function decorate(block) {
     renderItemElements(state.items);
 
     block.replaceChildren(inventoryDiv);
+
+    /** some changes to force a reload? */
 }

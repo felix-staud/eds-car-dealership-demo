@@ -19,7 +19,7 @@ export default async function decorate(block) {
 
   block.append(footer);
 
-  const fullYearTextNode = document.createTextNode(new Date().getFullYear()); //new Date() is faster than Date.now();
+  const fullYearTextNode = document.createTextNode(new Date().getFullYear());
   const yearAnchor = footer.querySelector('a[href="#year"]');
 
   yearAnchor.replaceWith(fullYearTextNode);

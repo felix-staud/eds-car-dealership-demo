@@ -1,4 +1,4 @@
-import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
+import { Swiper, Navigation, Manipulation } from '../../scripts/vendor/swiper.js';
 
 /**
  * @typedef {{rows: number, columns: number}} SwiperGridConfig
@@ -82,7 +82,10 @@ export function buildSwiper(parent, config = {}) {
     }
 
     parent.replaceChildren(...children);
-    const swiper = new Swiper(parent, config);
+    const swiper = new Swiper(parent, {
+        modules: [Navigation, Manipulation],
+        ...config
+    });
 
     return swiper;
 }
