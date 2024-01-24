@@ -2,5 +2,5 @@ mountpoints:
   /: https://drive.google.com/drive/folders/1rdp547Hao0jIsuc3i75JBygdjQ3-Sbz_
 
 folders:
-  /inventory/new/: /inventory/generic-car-details
-  /inventory/used/: /inventory/generic-car-details
+  /inventory/new/: /inventory/generic-new-car-details
+  /inventory/used/: /inventory/generic-used-car-details
