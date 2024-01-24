@@ -13,3 +13,18 @@ export function extractUrlFromBlock(block) {
 
   return anchor.href;
 }
+
+/**
+ * transforms an absolute url into a relative one
+ * @param {string} absoluteUrl 
+ * @returns {string}
+ */
+export function toRelativeUrl(absoluteUrl) {
+  try {
+    return new URL(absoluteUrl).pathname;
+  } catch (err) {
+    console.warn(`invalid absolute url given: ${absoluteUrl}`, err);
+    return absoluteUrl;
+  }
+
+}

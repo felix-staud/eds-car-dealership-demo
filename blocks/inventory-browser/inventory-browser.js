@@ -1,5 +1,6 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
+import { toRelativeUrl } from '../../scripts/utils.js';
 
 /**
  * @typedef {'all' | 'new' | 'used'} SheetName
@@ -16,6 +17,7 @@ import { SingleSheetData, MultiSheetData } from '../../scripts/types.js'
  *  miles: number,
  *  features?: string[],
  *  images?: string[],
+ *  link: string,
  * }} Item
  * 
  * @typedef {{
@@ -123,9 +125,13 @@ function createItemElement(item) {
  * @returns {HTMLDivElement}
  */
 function createItemImageElement(item) {
-    const { images } = item;
+    const { images, link } = item;
     const itemImageElement = document.createElement('div');
     itemImageElement.classList.add('inventory-item-image');
+    
+    const itemImageAnchor = document.createElement('a');
+    itemImageAnchor.href = link;
+    itemImageElement.appendChild(itemImageAnchor);
 
     let src, alt;
 
@@ -139,7 +145,7 @@ function createItemImageElement(item) {
 
     const pictureElement = createOptimizedPicture(src, alt);
 
-    itemImageElement.appendChild(pictureElement);
+    itemImageAnchor.appendChild(pictureElement);
 
     return itemImageElement;
 }
@@ -153,8 +159,11 @@ function createItemBodyElement(item) {
     const itemBodyElement = document.createElement('div');
     itemBodyElement.classList.add('inventory-item-body');
 
+    const itemBodyHeaderAnchor = document.createElement('a');
+    itemBodyHeaderAnchor.href = toRelativeUrl(item.link);
+    itemBodyHeaderAnchor.textContent = getItemHeader(item);
     const itemBodyHeader = document.createElement('h4');
-    itemBodyHeader.textContent = getItemHeader(item);
+    itemBodyHeader.appendChild(itemBodyHeaderAnchor);
 
     const nFormat = new Intl.NumberFormat();
     const price = item.price ? item.price : -1;
