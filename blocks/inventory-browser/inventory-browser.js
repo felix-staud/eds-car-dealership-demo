@@ -31,6 +31,28 @@ function getCarHeader({
 }
 
 /**
+ * get the details link for a car
+ * @param {Car} car
+ * @returns {string} car-details link
+ */
+function getCarDetailsLink({ condition, id }) {
+  const path = ['inventory'];
+
+  switch (condition) {
+    case 'new':
+      path.push('new');
+      break;
+    default: // used
+      path.push('used');
+      break;
+  }
+
+  path.push(id);
+
+  return path.join('/');
+}
+
+/**
  * async load for cars from sheet/s
  * @param {string} href
  * @param {boolean} sort
@@ -78,12 +100,12 @@ async function loadCars(href) {
  * @returns {HTMLDivElement}
  */
 function createCarImageElement(car) {
-  const { images, link } = car;
+  const { images } = car;
   const carImageEl = document.createElement('div');
   carImageEl.classList.add('inventory-car-image');
 
   const carImageAnchor = document.createElement('a');
-  carImageAnchor.href = link;
+  carImageAnchor.href = getCarDetailsLink(car);
   carImageEl.appendChild(carImageAnchor);
 
   let src;
@@ -114,7 +136,7 @@ function createCarBodyElement(car) {
   carBodyEl.classList.add('inventory-car-body');
 
   const carBodyHeaderAnchor = document.createElement('a');
-  carBodyHeaderAnchor.href = car.link;
+  carBodyHeaderAnchor.href = getCarDetailsLink(car);
   carBodyHeaderAnchor.textContent = getCarHeader(car);
   const carBodyHeader = document.createElement('h4');
   carBodyHeader.appendChild(carBodyHeaderAnchor);

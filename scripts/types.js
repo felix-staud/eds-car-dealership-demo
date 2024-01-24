@@ -36,6 +36,7 @@
  *
  * @typedef {{
  *  id: number,
+ *  condition: 'new' | 'pre-owned' | 'certified',
  *  year: string,
  *  make: string,
  *  model: string,
@@ -47,7 +48,6 @@
  *  miles: number,
  *  features?: string[],
  *  images?: string[],
- *  link: string,
  * }} Car
  */
 
