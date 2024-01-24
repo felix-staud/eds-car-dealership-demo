@@ -1,8 +1,7 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
+import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js';
 import { extractUrlFromBlock } from '../../scripts/utils.js';
-import { Manipulation, Navigation } from '../../scripts/vendor/swiper/modules/index.min.mjs';
-import { Swiper } from '../../scripts/vendor/swiper/swiper.min.mjs';
 import { buildSlide } from '../slider/slider.js';
 
 /** 
@@ -195,6 +194,7 @@ export default async function (block) {
     const url = extractUrlFromBlock(block);
 
     if (!url) return;
+    await loadCSS('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
 
     block.innerHTML = `
         <div class="nav-pills"></div>
@@ -207,7 +207,6 @@ export default async function (block) {
         </div>`;
     state.block = block;
     state.swiper = new Swiper(block.querySelector('.swiper'), {
-        modules: [Navigation, Manipulation],
         direction: 'horizontal',
         slidesPerView: 'auto',
         navigation: {

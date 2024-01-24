@@ -1,5 +1,5 @@
-import { Manipulation, Navigation } from '../../scripts/vendor/swiper/modules/index.min.mjs';
-import { Swiper } from '../../scripts/vendor/swiper/swiper.min.mjs';
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
+import { loadCSS } from '../../scripts/aem.js';
 
 /**
  * @typedef {{rows: number, columns: number}} SwiperGridConfig
@@ -83,10 +83,7 @@ export function buildSwiper(parent, config = {}) {
     }
 
     parent.replaceChildren(...children);
-    const swiper = new Swiper(parent, {
-        modules: [Navigation, Manipulation],
-        ...config
-    });
+    const swiper = new Swiper(parent, config);
 
     return swiper;
 }
@@ -95,7 +92,9 @@ export function buildSwiper(parent, config = {}) {
  * 
  * @param {Element} block 
  */
-export default function (block) {
+export default async function (block) {
+    await loadCSS('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+
     buildSwiper(block, {
         direction: 'horizontal',
         slidesPerView: "auto",
