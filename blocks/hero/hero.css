@@ -34,6 +34,9 @@ main .hero-container {
 }
 
 .hero a {
+  --link-hover-color: #fff;
+  --link-hover-bg-height: 3px;
+
   color: #fff;
 }
 

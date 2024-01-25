@@ -12,3 +12,7 @@
 .opening-hours .active {
     font-weight: 600;
 }
+
+.opening-hours a {
+    white-space: nowrap;
+}

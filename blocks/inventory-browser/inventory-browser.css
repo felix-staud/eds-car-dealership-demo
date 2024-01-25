@@ -52,6 +52,33 @@
     border: none;
 }
 
+.inventory-browser .inventory .inventory-car .inventory-car-image {
+    position: relative;
+}
+
+.inventory-browser .inventory .inventory-car .inventory-car-image .overlay {
+    position: absolute;
+    inset: 0;
+    background-color: unset;
+    transition: background-color 350ms ease-in-out;
+}
+
+.inventory-browser .inventory .inventory-car .inventory-car-image a {
+    --link-hover-bg-height: 0;
+
+    display: inline-flex;
+}
+
+.inventory-browser .inventory .inventory-car .inventory-car-image a:hover .overlay {
+    background-color: #fff5;
+}
+
+.inventory-browser .inventory .inventory-car .inventory-car-body a {
+    --link-color: #535353;
+    --link-hover-color: #535353;
+    --link-hover-bg-height: 2px;
+}
+
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
     padding: 0 1rem 1rem;
 }

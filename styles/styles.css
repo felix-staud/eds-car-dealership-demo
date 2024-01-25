@@ -14,6 +14,7 @@
   /* colors */
   --link-color: #035fe6;
   --link-hover-color: #136ff6;
+  --link-hover-bg-height: 1px;
   --background-color: white;
   --light-color: #eee;
   --dark-color: #ccc;
@@ -176,19 +177,28 @@ main pre {
 }
 
 /* links */
+a {
+  color: var(--link-color);
+  position: relative;
+  background: linear-gradient(0deg, var(--link-hover-color), var(--link-hover-color)) no-repeat right bottom / 0 var(--link-hover-bg-height);
+  transition: background-size 350ms;
+}
+
+a:where(:hover, :focus-visible) {
+  background-size: 100% var(--link-hover-bg-height);
+  background-position-x: left;
+}
+
 a:any-link {
   color: var(--link-color);
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-  color: var(--link-hover-color);
-}
-
 /* buttons */
 a.button:any-link,
 button {
+  --link-hover-bg-height: 0px;
+
   font-family: var(--body-font-family);
   display: inline-block;
   box-sizing: border-box;

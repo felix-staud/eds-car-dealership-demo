@@ -1,9 +1,12 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { Car, MultiSheetData, SingleSheetData } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
+  createIconElement,
   extractHrefFromBlock,
+  formatNumber,
   loadMultiSheetData,
   loadSingleSheetData,
+  parseRawCarData,
 } from '../../scripts/utils.js';
 
 /**
@@ -37,8 +40,9 @@ function getCarHeader({
  */
 function getCarDetailsLink({ condition, id }) {
   const path = ['', 'inventory'];
+  const lCondition = condition.toLowerCase();
 
-  switch (condition) {
+  switch (lCondition) {
     case 'new':
       path.push('new');
       break;
@@ -59,37 +63,27 @@ function getCarDetailsLink({ condition, id }) {
  * @returns {Promise<Car[]>} promise
  */
 async function loadCars(href) {
-  const splitter = { features: ', ', images: ', ' };
-
   const url = new URL(href);
 
   url.searchParams.append('time', Date.now());
 
-  const data = [];
+  const rawCarData = [];
   const response = await fetch(url.toString());
   /** @type {MultiSheetData | SingleSheetData} */
   const sheetData = await response.json();
 
   switch (sheetData[':type']) {
     case 'multi-sheet':
-      data.push(...loadMultiSheetData(sheetData));
+      rawCarData.push(...loadMultiSheetData(sheetData));
       break;
     case 'sheet':
-      data.push(...loadSingleSheetData(sheetData));
+      rawCarData.push(...loadSingleSheetData(sheetData));
       break;
     default:
       throw new Error(`unknown sheet-type: ${sheetData[':type']}`);
   }
 
-  /** @type {Car[]} */
-  const cars = data.map((car) => {
-    delete car._originLink; // eslint-disable-line no-underscore-dangle
-    return ({
-      ...car,
-      features: car.features.split(splitter.features),
-      images: car.images.split(splitter.images),
-    });
-  });
+  const cars = parseRawCarData(rawCarData);
 
   return cars.sort((a, b) => (getCarHeader(a) > getCarHeader(b) ? -1 : 1));
 }
@@ -123,6 +117,10 @@ function createCarImageElement(car) {
 
   carImageAnchor.appendChild(pictureEl);
 
+  const overlay = document.createElement('div');
+  overlay.classList.add('overlay');
+  pictureEl.append(overlay);
+
   return carImageEl;
 }
 
@@ -141,12 +139,11 @@ function createCarBodyElement(car) {
   const carBodyHeader = document.createElement('h4');
   carBodyHeader.appendChild(carBodyHeaderAnchor);
 
-  const nFormat = new Intl.NumberFormat();
   const price = car.price ? car.price : -1;
   const priceHeader = document.createElement('h5');
   priceHeader.classList.add('car-price');
   if (price > 0) {
-    priceHeader.textContent = `$${nFormat.format(price)}`;
+    priceHeader.textContent = `$${formatNumber(price)}`;
   } else {
     priceHeader.textContent = '$ TBD';
     priceHeader.classList.add('tbd');
@@ -270,9 +267,7 @@ function createSearchElement() {
     searchEl.classList.remove('active');
   });
 
-  const icon = document.createElement('span');
-  icon.classList.add('icon');
-  icon.classList.add('icon-search');
+  const icon = createIconElement('search');
   icon.addEventListener('click', () => {
     handleSearch(searchInput.value);
   });

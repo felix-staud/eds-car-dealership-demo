@@ -1,3 +1,5 @@
+import { Car } from './types.js'; // eslint-disable-line no-unused-vars
+
 /**
  * extract the first anchor url from a block
  * @param {Element} block
@@ -41,4 +43,46 @@ export function loadMultiSheetData(multiSheetData) {
   });
 
   return data;
+}
+
+/**
+ * i18n formatting for a number
+ * @param {number} num
+ * @returns {string} i18n formatted number
+ */
+export function formatNumber(num) {
+  const nFormat = new Intl.NumberFormat();
+
+  return nFormat.format(num);
+}
+
+/**
+ * create a span icon element with the given iconname.
+ * make sure to run aem.js::decorateIcons() on the parent element to load the actual icon image!
+ * @param {string} iconname
+ * @param {boolean} [asString=false]
+ * @returns {HTMLSpanElement} icon span element
+ */
+export function createIconElement(iconname) {
+  const icon = document.createElement('span');
+  icon.classList.add('icon', `icon-${iconname}`);
+
+  return icon;
+}
+
+/**
+ * parse any[] car data to Car[]
+ * @param {an6[]} rawCarData
+ */
+export function parseRawCarData(rawCarData) {
+  const splitter = { features: ', ', images: '\n' };
+
+  return rawCarData.map((car) => {
+    delete car._originLink; // eslint-disable-line no-underscore-dangle
+    return ({
+      ...car,
+      features: car.features.split(splitter.features),
+      images: car.images.split(splitter.images),
+    });
+  });
 }
