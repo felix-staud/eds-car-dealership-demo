@@ -52,4 +52,6 @@
 
 .hero-slider .swiper-slide .button-container a.button {
     width: 100%;
+    display: inline-flex;
+    margin-bottom: 0.5rem;
 }
