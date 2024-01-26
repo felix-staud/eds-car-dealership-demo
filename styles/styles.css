@@ -302,16 +302,16 @@ main .section {
   main .section {
     padding: 64px 32px;
   }
-
-  header {
-    height: calc(var(--nav-height) + var(--nav-contact-height));
-  }
 }
 
 @media (width >=900px) {
   .section>div {
     max-width: 1200px;
     margin: auto;
+  }
+
+  header {
+    height: calc(var(--nav-height) + var(--nav-contact-height));
   }
 }
 

@@ -235,7 +235,7 @@ main .section.car-details-container {
   border-bottom: unset;
 }
 
-.car-details .car-sections .car-notes {
+.car-details .car-sections #car-notes {
   grid-area: notes;
   min-height: 50px;
 }
@@ -250,17 +250,22 @@ main .section.car-details-container {
 @media (width >=900px) {
   .car-details .car-sections {
     grid-gap: 1rem;
-    grid-template-columns: 60% auto;
+    grid-template-columns: auto 400px;
     grid-template-areas:
     'header header'
     'details-main pricing'
-    'feature-highlights NONE'
-    'pending pending';
+    'feature-highlights pricing'
+    'notes notes';
     padding: 0;
   }
 
   .car-details #car-header h1 {
     width: 850px;
+    margin: auto;
+  }
+
+  .car-details .car-sections .car-section .car-section-content {
+    max-width: 1200px;
     margin: auto;
   }
 
@@ -279,6 +284,20 @@ main .section.car-details-container {
 
   .car-details #car-feature-highlights .car-section-content > ul > li:nth-last-child(-n+2) {
     border-bottom: unset;
+  }
+
+  .car-details #car-pricing .car-section-content {
+    max-width: 350px;
+    margin: auto;
+    position: sticky;
+    top: 8rem;
+    border: 2px solid silver;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px #0000002d;
+  }
+
+  .car-details #car-details-main {
+    background-color: unset;
   }
 }
 
