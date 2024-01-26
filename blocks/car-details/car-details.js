@@ -6,6 +6,9 @@ import {
   extractHrefFromBlock,
   formatNumber,
   parseRawCarData,
+  setPageDescription,
+  setPageImage,
+  setPageTitle,
 } from '../../scripts/utils.js';
 
 /**
@@ -163,6 +166,10 @@ export default async function decorate(block) {
     features,
     notes,
   } = car;
+
+  setPageTitle(`${year} ${make} ${model} ${trim} (${getDealershipCode(car)}) | Cars & Cars`);
+  setPageDescription(`Check out this ${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} on Cars & Cars!`);
+  setPageImage(images[0]);
 
   /** @type {{label: string, value?: string | number | null}[]} */
   const mainDetails = [

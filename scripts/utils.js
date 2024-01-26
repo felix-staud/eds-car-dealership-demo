@@ -86,3 +86,35 @@ export function parseRawCarData(rawCarData) {
     });
   });
 }
+
+/**
+ * Set page title including meta tags
+ * @param {string} title
+ */
+export function setPageTitle(title) {
+  document.title = title;
+
+  const metaElems = document.head.querySelectorAll('meta[property$=":title"], meta[name$=":title"]');
+
+  metaElems.forEach((metaEl) => metaEl.setAttribute('content', title));
+}
+
+/**
+ * Set page meta description
+ * @param {string} desc
+ */
+export function setPageDescription(desc) {
+  const metaElems = document.head.querySelectorAll('meta[name="description"], meta[property$=":description"], meta[name$=":description"]');
+
+  metaElems.forEach((metaEl) => metaEl.setAttribute('content', desc));
+}
+
+/**
+ * Set page meta image
+ * @param {string | URL} image
+ */
+export function setPageImage(image) {
+  const metaElems = document.head.querySelectorAll('meta[property*=":image"], meta[name$=":image"]');
+
+  metaElems.forEach((metaEl) => metaEl.setAttribute('content', image.toString()));
+}
