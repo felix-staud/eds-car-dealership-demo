@@ -62,7 +62,7 @@ function getFeatureIcon(feature) {
   let iconname = 'check-circle';
   /** @type {Record<string, string[]>} */
   const iconMapping = {
-    'air-conditioner': ['temperature control'],
+    'air-conditioner': ['temperature control', 'climate control'],
     'alloy-wheel': ['alloy wheel'],
     'app-link': ['sync'],
     'bluetooth-signal': ['bluetooth'],
@@ -70,17 +70,23 @@ function getFeatureIcon(feature) {
     'car-driver-seat': ['driver seat'],
     'car-seat': ['seat'],
     'car-window-down': ['front window', 'rear window'],
-    'door-mirror': ['door mirror'],
-    headlight: ['headlight'],
+    compass: ['compass'],
+    'door-mirror': ['door mirror', 'outside mirror', 'blind zone', 'side-mirror', 'side mirror'],
+    headlight: ['headlight', 'headlamp', 'fog light'],
+    park: ['park', 'parking'],
     'power-plug': ['power outlet'],
+    radio: ['radio'],
     'rear-wiper': ['rear wiper'],
-    'rearview-mirror': ['rearview mirror'],
+    'rearview-mirror': ['rearview mirror', 'rear-view mirror'],
     'remote-control': ['remote'],
     security: ['security'],
-    sensor: ['sensor'],
+    sensor: ['sensor', 'cross traffic', 'cross-traffic'],
     speaker: ['speaker'],
+    speed: ['speed'],
     'steering-wheel': ['steering wheel'],
+    suspension: ['suspension'],
     temperature: ['a/c', 'air condition', 'temperature'],
+    trailer: ['trailer'],
     'wireless-communication': ['wireless'],
   };
 
