@@ -111,10 +111,22 @@ export function setPageDescription(desc) {
 
 /**
  * Set page meta image
- * @param {string | URL} image
+ * @param {string} image
  */
 export function setPageImage(image) {
   const metaElems = document.head.querySelectorAll('meta[property*=":image"], meta[name$=":image"]');
 
-  metaElems.forEach((metaEl) => metaEl.setAttribute('content', image.toString()));
+  /** @type {URL} */
+  let url;
+
+  if (image.startsWith(window.location.origin)) {
+    url = new URL(image);
+  } else if (image.startsWith('/')) {
+    url = new URL(image, window.location.origin);
+  } else {
+    const imgUrl = new URL(image);
+    url = new URL(imgUrl.pathname, window.location.origin);
+  }
+
+  metaElems.forEach((metaEl) => metaEl.setAttribute('content', url.toString()));
 }
