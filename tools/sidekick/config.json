@@ -1,0 +1,16 @@
+{
+  "project": "EDS Car Dealership Demo",
+  "plugins": [
+    {
+      "id": "blocks-library",
+      "title": "Block Library",
+      "environments": [
+        "edit"
+      ],
+      "url": "/tools/sidekick/library.html",
+      "includePaths": [
+        "**.docx**"
+      ]
+    }
+  ]
+}
