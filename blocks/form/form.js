@@ -1,6 +1,21 @@
 import createField, { createTimestampField } from './form-fields.js';
 import { sampleRUM } from '../../scripts/aem.js';
 
+/**
+ * @param {HTMLFormElement} form
+ */
+function fillFieldsFromLocationUrl(form) {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  searchParams.forEach((value, key) => {
+    /** @type {HTMLInputElement | null} */
+    const formField = form.querySelector(`#${key}`);
+    if (formField) {
+      formField.value = value;
+    }
+  });
+}
+
 async function createForm(formHref) {
   const { pathname } = new URL(formHref);
   const resp = await fetch(pathname);
@@ -10,7 +25,6 @@ async function createForm(formHref) {
   // eslint-disable-next-line prefer-destructuring
   form.dataset.action = pathname.split('.json')[0];
 
-  console.log(json.data);
   const fields = await Promise.all(json.data.map((fd) => createField(fd, form)));
   fields.push(createTimestampField());
   fields.forEach((field) => {
@@ -26,6 +40,8 @@ async function createForm(formHref) {
       fieldset.append(field);
     });
   });
+
+  fillFieldsFromLocationUrl(form);
 
   return form;
 }

@@ -114,6 +114,26 @@ function getDealershipCode(car) {
 }
 
 /**
+ * @param {'availability' | 'test drive' | 'other'} reason
+ * @param {Car} car
+ */
+function createContactFormSearchParams(reason, car) {
+  const {
+    condition,
+    year,
+    make,
+    model,
+    trim,
+    bodyStyle,
+  } = car;
+  const searchParams = new URLSearchParams();
+  searchParams.append('contact-reason', reason);
+  searchParams.append('contact-comments', `\n\n${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} (Code: ${getDealershipCode(car)})`);
+
+  return searchParams;
+}
+
+/**
  * @param {Element} block
  */
 export default async function decorate(block) {
@@ -160,7 +180,6 @@ export default async function decorate(block) {
   ];
   const filteredMainDetails = mainDetails.filter((detail) => detail.value !== null);
 
-  // TODO: all these have to be added to the list!
   block.innerHTML = `
     <div class="car-images swiper">
       <div class="swiper-wrapper">
@@ -191,8 +210,8 @@ export default async function decorate(block) {
             <div class="${price > 0 ? 'highlight-container' : ''}"><div class="${price > 0 ? 'highlight' : 'tbd'}">$${price > 0 ? formatNumber(price) : ' TBD'}</div></div>
           </div>
           <div class="button-group">
-            <a href="/about-us#contact-us" class="button primary"> Check Availability</a>
-            <a href="/about-us#contact-us" class="button secondary">Schedule Test-Drive</a>
+            <a href="/about-us?${createContactFormSearchParams('availability', car).toString()}#contact-us" class="button primary"> Check Availability</a>
+            <a href="/about-us?${createContactFormSearchParams('test drive', car).toString()}#contact-us" class="button secondary">Schedule Test-Drive</a>
           </div>
           <div>
             We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
