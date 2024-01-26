@@ -104,6 +104,16 @@ function getFeatureIcon(feature) {
 }
 
 /**
+ * @param {Car} car
+ * @returns {string} dealership code
+ */
+function getDealershipCode(car) {
+  const inventory = car.condition.toLowerCase() === 'new' ? 'new' : 'used';
+
+  return `${inventory.substring(0, 1).toUpperCase()}${car.id}`;
+}
+
+/**
  * @param {Element} block
  */
 export default async function decorate(block) {
@@ -111,32 +121,50 @@ export default async function decorate(block) {
   const carId = getCarId();
   const car = await loadCar(apiUrl, carId);
   const {
-    images,
     condition,
     year,
     make,
     model,
     trim,
+    bodyStyle,
     price,
+    images,
     exteriorColor,
     interiorColor,
     miles,
+    seats,
+    fuelEconomy,
+    transmission,
+    drivetrain,
+    engine,
+    fuelType,
+    horsepower,
     vin,
     features,
+    notes,
   } = car;
 
-  // TODO: all these have to be added to the list!
-  const body = 'SUV';
-  const seats = 5;
-  const fuelEconomy = '20/30 MPG City/Hwy';
-  const transmission = '6-Speed Automatic';
-  const drivetrain = 'Front-wheel Drive';
-  const engine = 'I-4 cyl';
+  /** @type {{label: string, value?: string | number | null}[]} */
+  const mainDetails = [
+    { label: 'Exterior Color', value: exteriorColor ? `<div class="color-preview" style="background-color: ${exteriorColor}"></div> ${exteriorColor}` : null },
+    { label: 'interior Color', value: interiorColor ? `<div class="color-preview" style="background-color: ${interiorColor}"></div> ${interiorColor}` : null },
+    { label: 'Odometer', value: miles ? `${formatNumber(miles)} miles` : null },
+    { label: 'Body/Seating', value: bodyStyle && seats ? `${bodyStyle}/${seats} ${seats > 1 ? 'seats' : 'seat'}` : null },
+    { label: 'Fuel Economy', value: fuelEconomy || null },
+    { label: 'Transmission', value: transmission || null },
+    { label: 'Drivetrain', value: drivetrain ? `${drivetrain}${horsepower ? ` (${horsepower}hp)` : ''}` : null },
+    { label: 'Engine', value: engine ? `${engine}${fuelType ? ` (${fuelType})` : ''}` : null },
+    { label: 'VIN', value: vin || null },
+    { label: 'Dealership Code', value: getDealershipCode(car) },
+    { label: 'Body Style', value: bodyStyle || null },
+  ];
+  const filteredMainDetails = mainDetails.filter((detail) => detail.value !== null);
 
+  // TODO: all these have to be added to the list!
   block.innerHTML = `
     <div class="car-images swiper">
       <div class="swiper-wrapper">
-          ${images.map((image, index) => `<div class="swiper-slide">${createOptimizedPicture(image, `${condition} ${year} ${make} ${model} ${trim} ${body} ${index}`).outerHTML}</div>`).join('\n')}
+          ${images.map((image, index) => `<div class="swiper-slide">${createOptimizedPicture(image, `${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} ${index}`).outerHTML}</div>`).join('\n')}
         </div>
       <div class="swiper-navigation">
         <div class="swiper-button-prev"></div>
@@ -145,61 +173,55 @@ export default async function decorate(block) {
       <div class="swiper-pagination"></div>
     </div>
 
-    <ul class="car-grid-layout">
-      <li class="car-header bg-secondary">
-        <h1>
-          <small>${condition} ${year} ${make}</small>
-          ${model} ${trim} ${body}
-        </h1>
+    <ul class="car-sections">
+      <li id="car-header" class="car-section bg-secondary">
+        <div class="car-section-content">
+          <h1>
+            <small>${condition} ${year} ${make}</small>
+            ${model} ${trim} ${bodyStyle}
+          </h1>
+        </div>
       </li>
      
-      <li class="car-pricing">
-        <h2>Detailed Pricing</h2>
-        <div class="car-price">
-          <div>Price</div>
-          <div>$${formatNumber(price)}</div>
-        </div>
-        <a href="#" class="button primary">Schedule Test-Drive</a>
-        <div>
-          We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
+      <li id="car-pricing" class="car-section">
+        <div class="car-section-content">
+          <h2>Detailed Pricing</h2>
+          <div id="car-price">
+            <div>Price</div>
+            <div class="${price > 0 ? 'highlight-container' : ''}"><div class="${price > 0 ? 'highlight' : 'tbd'}">$${price > 0 ? formatNumber(price) : ' TBD'}</div></div>
+          </div>
+          <div class="button-group">
+            <a href="#" class="button primary">Check Availability</a>
+            <a href="#" class="button primary">Schedule Test-Drive</a>
+          </div>
+          <div>
+            We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
+          </div>
         </div>
       </li>
       
-      <li class="car-details-main">
-        <ul>
-          <li>Exterior Color</li>
-          <li>${exteriorColor}</li>
-          <li>Interior Color</li>
-          <li>${interiorColor}</li>
-          <li>Odometer</li>
-          <li>${formatNumber(miles)} miles</li>
-          <li>Body/Seating</li>
-          <li>${body}/${seats} ${seats > 1 ? 'seats' : 'seat'}</li>
-          <li>Fuel Economy</li>
-          <li>${fuelEconomy}<a href="#"><small>Details</small></a></li>
-          <li>Transmission</li>
-          <li>${transmission}</li>
-          <li>Drivetrain</li>
-          <li>${drivetrain}</li>
-          <li>Engine</li>
-          <li>${engine}</li>
-          <li>VIN</li>
-          <li>${vin}</li>
-          <li>Stock Number</li>
-          <li>${carId}</li>
-          <li>Body Style</li>
-          <li>${body}</li>
-        </ul>
+      <li id="car-details-main" class="car-section">
+        <div class="car-section-content">
+          <ul>
+          ${filteredMainDetails.map((detail) => `<li>${detail.label}</li>\n<li>${detail.value}</li>`).join('\n')}
+          </ul>
+        </div>
       </li>
       
-      <li class="car-feature-highlights">
-        <h2>Highlighted Features</h2>
-        <ul>
-          ${features.map((feature) => `<li>${getFeatureIcon(feature)} ${feature}</li>`).join('\n')}
-        </ul>
+      <li id="car-feature-highlights" class="car-section">
+        <div class="car-section-content">
+          <h2>Highlighted Features</h2>
+          <ul>
+            ${features.map((feature) => `<li>${getFeatureIcon(feature)} ${feature}</li>`).join('\n')}
+          </ul>
+        </div>
       </li>
 
-      <li class="car-pending-section bg-secondary">
+      <li id="car-notes" class="car-section bg-secondary">
+        <div class="car-section-content">
+        <h2>Notes</h2>
+        <p>${notes}</p> 
+        </div>
       </li>
     </ul>`;
 

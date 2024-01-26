@@ -11,16 +11,22 @@
  */
 
 :root {
-  /* colors */
+  /* links */
   --link-color: #035fe6;
   --link-hover-color: #136ff6;
   --link-hover-bg-height: 1px;
-  --background-color: white;
+
+  /* colors */
+  --background-color: #fff;
   --light-color: #eee;
   --dark-color: #ccc;
-  --text-color: black;
+  --text-color: #000;
 
-  /* fonts */
+  /* highlight */
+  --highlight-color: #ffe872;
+  --highlight-font-weight: 600;
+
+  /* fonts */;
   --body-font-family: "DDC Heading Font Face", "univers", "helveticanNeue", "helvetica", "arial", sans-serif;
   --heading-font-family: var(--body-font-family);
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
@@ -68,6 +74,9 @@
   --btn-secondary-hover-color: #004582;
   --btn-secondary-hover-bg-color: #ebf0f5;
   --btn-secondary-hover-border-color: #ebf0f5;
+
+  /* icons */
+  --icon-size: 24px;
 }
 
 @font-face {
@@ -192,6 +201,7 @@ a:where(:hover, :focus-visible) {
 a:any-link {
   color: var(--link-color);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 /* buttons */
@@ -274,8 +284,8 @@ main img {
 
 .icon {
   display: inline-block;
-  height: 24px;
-  width: 24px;
+  height: var(--icon-size);
+  width: var(--icon-size);
 }
 
 .icon img {
@@ -285,7 +295,7 @@ main img {
 
 /* sections */
 main .section {
-  padding: 64px 16px;
+  padding: 1rem;
 }
 
 @media (width >=600px) {
