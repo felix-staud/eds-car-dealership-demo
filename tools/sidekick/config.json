@@ -5,7 +5,9 @@
       "id": "blocks-library",
       "title": "Block Library",
       "environments": [
-        "edit"
+        "edit",
+        "preview",
+        "live"
       ],
       "url": "/tools/sidekick/library.html",
       "includePaths": [
