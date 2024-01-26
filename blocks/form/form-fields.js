@@ -69,8 +69,8 @@ const createSelect = async (fd) => {
     const option = document.createElement('option');
     option.text = text.trim();
     option.value = value.trim();
-    if (option.value === select.value) {
-      option.setAttribute('selected', '');
+    if (option.value === fd.Value) {
+      option.setAttribute('selected', 'selected');
     }
     select.add(option);
     return option;

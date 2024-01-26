@@ -5,7 +5,7 @@
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPR--btn-secondary-border-colorESENTATIONS
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -70,7 +70,7 @@
   /* secondary button */
   --btn-secondary-color: #004582;
   --btn-secondary-bg-color: #fff;
-  --btn-secondary-border-color: #fff;
+  --btn-secondary-border-color: #004582;
   --btn-secondary-hover-color: #004582;
   --btn-secondary-hover-bg-color: #ebf0f5;
   --btn-secondary-hover-border-color: #ebf0f5;
@@ -210,7 +210,6 @@ button {
   --link-hover-bg-height: 0px;
 
   font-family: var(--body-font-family);
-  display: inline-block;
   box-sizing: border-box;
   text-decoration: none;
   padding: 5px 30px;
@@ -219,22 +218,23 @@ button {
   font-weight: 500;
   cursor: pointer;
   color: var(--btn-color);
-  background-color: var(--btn-bg-color);
   border: var(--btn-border-width, 1px) var(--btn-border-style, solid) var(--btn-border-color);
   border-radius: var(--btn-border-radius, 3);
   margin: 16px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: background-color .2s cubic-bezier(.4, 0, .2, 1),
-    color .2s cubic-bezier(.4, 0, .2, 1),
-    border-color .2s cubic-bezier(.4, 0, .2, 1);
+  transition: 0.4s ease-in, background-position 0s;
+  background: linear-gradient(var(--btn-hover-bg-color) 0 0) calc(100% - var(--button-bg-effect-p,0%)) / var(--button-bg-effect-p,0%) no-repeat;
+  background-color: var(--btn-bg-color);
 }
 
 a.button:hover,
 a.button:focus,
 button:hover,
 button:focus {
+  --button-bg-effect-p: 100%;
+
   color: var(--btn-hover-color);
   background-color: var(--btn-hover-bg-color);
   border-color: var(--btn-hover-border-color);
@@ -264,16 +264,11 @@ button.primary:hover {
 
 a.button.secondary,
 button.secondary {
-  color: var(--btn-secondary-color);
-  border-color: var(--btn-secondary-border-color);
-  background-color: var(--btn-secondary-bg-color);
-}
-
-a.button.secondary:hover,
-button.secondary:hover {
-  color: var(--btn-secondary-hover-color);
-  background-color: var(--btn-secondary-hover-bg-color);
-  border-color: var(--btn-secondary-hover-border-color);
+  --btn-color: var(--btn-secondary-color);
+  --btn-bg-color: var(--btn-secondary-bg-color);
+  --btn-hover-color: var(--btn-secondary-hover-color);
+  --btn-hover-bg-color: var(--btn-secondary-hover-bg-color);
+  --btn-hover-border-color: var(--btn-secondary-hover-border-color);
 }
 
 main img {

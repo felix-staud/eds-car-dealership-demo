@@ -191,8 +191,8 @@ export default async function decorate(block) {
             <div class="${price > 0 ? 'highlight-container' : ''}"><div class="${price > 0 ? 'highlight' : 'tbd'}">$${price > 0 ? formatNumber(price) : ' TBD'}</div></div>
           </div>
           <div class="button-group">
-            <a href="#" class="button primary">Check Availability</a>
-            <a href="#" class="button primary">Schedule Test-Drive</a>
+            <a href="/about-us#contact-us" class="button primary"> Check Availability</a>
+            <a href="/about-us#contact-us" class="button secondary">Schedule Test-Drive</a>
           </div>
           <div>
             We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
