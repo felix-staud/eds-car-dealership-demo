@@ -338,3 +338,9 @@ header nav .nav-sections ul>li>ul {
 header nav .nav-tools {
   grid-area: tools;
 }
+
+header nav .nav-tools a.button,
+header nav .nav-tools button {
+  border: unset;
+  padding: unset;
+}

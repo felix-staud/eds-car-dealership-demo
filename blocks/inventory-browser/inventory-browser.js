@@ -15,6 +15,7 @@ import {
  * @typedef {{
  *  cars: Car[],
  *  inventoryUl: HTMLUListElement,
+ *  inputCount: number,
  * }} State
  */
 
@@ -22,7 +23,18 @@ import {
 const state = {
   cars: [],
   inventoryUl: {},
+  inputCount: 0,
 };
+
+/**
+ * @param {string} prefix,
+ * @returns {string}
+ */
+function generateInputId(prefix = 'input') {
+  const id = `${prefix}-${state.inputCount}`;
+  state.inputCount += 1;
+  return id;
+}
 
 /**
  * Get the header for a car
@@ -91,39 +103,76 @@ async function loadCars(href) {
 }
 
 /**
+ * @param {{label: string, key: string}} filter
+ * @param {string[]} options
+ * @returns {string} HTML string
+ */
+function createAccordionElement(filter, options = []) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const checkboxId = generateInputId('checkbox');
+
+  const searchParam = searchParams.get(filter.key);
+  const searchParamArr = searchParam ? searchParam.split(',') : [];
+
+  return `
+  <div class="accordion">
+    <input type="checkbox" id="${checkboxId}" class="accordion-label-checkbox">
+    <label class="accordion-label" for="${checkboxId}">${filter.label}</label>
+    <div class="accordion-content">
+      ${options.map((option, index) => `<input type="checkbox" id="${checkboxId}-option-${index}" name="${filter.key}" value="${option}"${searchParamArr.includes(option) ? ' checked ' : ''}/><label for="${`${checkboxId}-option-${index}`}">${option}</label>`).join('\n')}
+    </div>
+  </div>`;
+}
+
+/**
  * @param {Car[]} cars
  */
 function createFiltersElement(cars) {
   const wrapperEl = document.createElement('div');
   wrapperEl.classList.add('filters-wrapper');
 
+  /** @type {{label: string, key: string}[]} */
+  const filters = [
+    { label: 'Year', key: 'year' },
+    { label: 'Make', key: 'make' },
+    { label: 'Model', key: 'model' },
+    { label: 'Trim', key: 'trim' },
+    { label: 'Body Style', key: 'bodyStyle' },
+    { label: 'Exterior Color', key: 'exteriorColor' },
+    { label: 'Interior Color', key: 'interiorColor' },
+    { label: 'Transmission', key: 'transmission' },
+    { label: 'Fuel Type', key: 'fuelType' },
+  ];
+
+  /** @type {Record<string, Set>} */
+  const filterOptions = {};
+
+  filters.forEach(({ key }) => {
+    if (!filterOptions[key]) {
+      filterOptions[key] = new Set();
+    }
+
+    cars.forEach((car) => {
+      filterOptions[key].add(car[key]);
+    });
+  });
+
   const innerHTML = `
     <button id="open-filter-dialog-btn" class="secondary">${createIconElement('filters').outerHTML} Filter / Sort</button>
     
     <div id="filter-dialog" class="hidden">
       <div class="dialog-content">
-        <button id="close-filter-dialog-btn" class="secondary">Done</button>
-        <h1>CSS + HTML only Accordion Element</h1>
-        <ul>
-          <li>
-            <input type="checkbox" checked>
-            <i></i>
-            <h2>Languages Used</h2>
-            <p>This page was written in HTML and CSS. The CSS was compiled from SASS. I used Normalize as my CSS reset and -prefix-free to save myself some headaches. I haven't quite gotten the hang of Slim for compiling into HTML, but someday I'll use it since its syntax compliments that of SASS. Regardless, this could all be done in plain HTML and CSS.</p>
-          </li>
-          <li>
-            <input type="checkbox" checked>
-            <i></i>
-            <h2>How it Works</h2>
-            <p>Using the sibling and checked selectors, we can determine the styling of sibling elements based on the checked state of the checkbox input element. One use, as demonstrated here, is an entirely CSS and HTML accordion element. Media queries are used to make the element responsive to different screen sizes.</p>
-          </li>
-          <li>
-            <input type="checkbox" checked>
-            <i></i>
-            <h2>Points of Interest</h2>
-            <p>By making the open state default for when :checked isn't detected, we can make this system accessable for browsers that don't recognize :checked. The fallback is simply an open accordion. The accordion can be manipulated with Javascript (if needed) by changing the "checked" property of the input element.</p>
-          </li>
-        </ul>
+        <div class="content-header">
+          <h3>Filter / Sort</h3>
+        </div>
+        <div class="content-body">
+          <div class="filters">
+            ${filters.map((filter) => createAccordionElement(filter, [...filterOptions[filter.key]])).join('\n')}
+          </div>
+        </div>
+        <div class="content-footer">
+          <button id="show-filter-results-btn" class="primary">Show Results</button>
+        </div>
       </div>
     </div>
   `;
@@ -134,16 +183,43 @@ function createFiltersElement(cars) {
   /** @type {HTMLDivElement} */
   const filterDialog = wrapperEl.querySelector('#filter-dialog');
   /** @type {HTMLButtonElement} */
-  const closeFilterDialogBtn = wrapperEl.querySelector('#close-filter-dialog-btn');
+  const showFilterResultsBtn = wrapperEl.querySelector('#show-filter-results-btn');
+  /** @type {HTMLDivElement} */
+  const filtersEl = wrapperEl.querySelector('.filters');
+  const filterCheckboxes = filtersEl.querySelectorAll("input[type='checkbox'][name]");
+
+  const searchParams = new URLSearchParams(window.location.search);
 
   openFilterDialogBtn.addEventListener('click', () => {
     filterDialog.classList.remove('hidden');
     document.body.classList.add('dialog-open');
   });
 
-  closeFilterDialogBtn.addEventListener('click', () => {
+  showFilterResultsBtn.addEventListener('click', () => {
     filterDialog.classList.add('hidden');
     document.body.classList.remove('dialog-open');
+    window.location.search = searchParams.toString();
+  });
+
+  filterCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const { name, value, checked } = event.target;
+      const currentValue = searchParams.get(name);
+
+      if (checked) {
+        if (currentValue) {
+          const currentValueArr = currentValue.split(',');
+          if (!currentValueArr.includes(value)) {
+            searchParams.set(name, [...currentValueArr, value]);
+          }
+        } else {
+          searchParams.append(name, [value]);
+        }
+      } else if (currentValue) {
+        const currentValueArr = currentValue.split(',');
+        searchParams.set(name, currentValueArr.filter((currVal) => currVal !== value));
+      }
+    });
   });
 
   decorateIcons(wrapperEl);
