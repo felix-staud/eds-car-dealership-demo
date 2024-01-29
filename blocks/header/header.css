@@ -2,7 +2,7 @@
 header .nav-wrapper {
   background-color: var(--background-color);
   width: 100%;
-  z-index: 2;
+  z-index: var(--z-index-header);
   position: fixed;
   border-bottom: 1px solid #333;
   box-shadow: 0 6px 12px #0000002d;

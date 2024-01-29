@@ -127,6 +127,150 @@
     margin-right: 0.5rem;
 }
 
+.inventory-browser .filters-wrapper #open-filter-dialog-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: .5rem 1rem;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog {
+    display: flex;
+    visibility: visible;
+    position: fixed;
+    inset: 0;
+    background-color: #fff;
+    z-index: var(--z-index-dialog);
+    overflow: auto;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 5px;
+    margin: 0;
+    background: unset;
+    background-color: unset;
+    border: unset;
+    color: #000;
+}
+
+/* ----- */
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content .no-select, 
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content h2 {
+    -webkit-tap-highlight-color: #000;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content p {
+    color: #30455ccc;
+    font-size: 17px;
+    line-height: 26px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    max-height: 800px;
+    opacity: 1;
+    transform: translate(0, 0);
+    margin-top: 14px;
+    z-index: 2;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul {
+    list-style: none;
+    perspective: 900;
+    padding: 0;
+    margin: 0;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 4px;
+    padding-top: 18px;
+    border-top: 1px dotted #dce7eb;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content  ul > li:nth-of-type(1) {
+    animation-delay: 0.5s;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li:nth-of-type(2) {
+    animation-delay: 0.75s;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li:nth-of-type(3) {
+    animation-delay: 1s;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li:last-of-type {
+    padding-bottom: 0;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li i {
+    position: absolute;
+    transform: translate(-6px, 0);
+    margin-top: 16px;
+    right: 0;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul li i::before, 
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul li i::after {
+    content: "";
+    position: absolute;
+    background-color: #ff6873;
+    width: 3px;
+    height: 9px;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul li i::before {
+    transform: translate(-2px, 0) rotate(45deg);
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul li i::after {
+    transform: translate(2px, 0) rotate(-45deg);
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li input[type="checkbox"] {
+    position: absolute;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li input[type="checkbox"]:checked ~ p {
+    margin-top: 0;
+    max-height: 0;
+    opacity: 0;
+    transform: translate(0, 50%);
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li input[type="checkbox"]:checked ~ i::before {
+    transform: translate(2px, 0) rotate(45deg);
+}
+
+.inventory-browser .filters-wrapper #filter-dialog .dialog-content ul > li input[type="checkbox"]:checked ~ i::after {
+    transform: translate(-2px, 0) rotate(-45deg);
+}
+
+/* ----- */
+
 @keyframes slidein {
     from {
       height: 0;
@@ -140,3 +284,32 @@
       opacity: 1;
     }
   }
+
+@keyframes flipdown {
+    0% {
+        opacity: 0;
+        transform-origin: top center;
+        transform: rotateX(-90deg);
+    }
+
+    5% {
+        opacity: 1;
+    }
+
+    80% {
+        transform: rotateX(8deg);
+    }
+
+    83% {
+        transform: rotateX(6deg);
+    }
+
+    92% {
+        transform: rotateX(-3deg);
+    }
+
+    100% {
+        transform-origin: top center;
+        transform: rotateX(0deg);
+    }
+}
