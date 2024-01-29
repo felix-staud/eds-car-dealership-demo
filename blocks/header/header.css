@@ -67,6 +67,8 @@ header nav .nav-hamburger {
 }
 
 header nav .nav-hamburger button {
+  --button-bg-effect-p: 0;
+
   height: 22px;
   margin: 0;
   border: 0;
