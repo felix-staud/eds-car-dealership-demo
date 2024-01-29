@@ -11,12 +11,13 @@
     grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
     grid-gap: 16px;
     min-height: 20rem;
-    align-items: flex-start;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car {
-    border: 1px solid #cecfd1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    border: 1px solid #cecfd1;
     animation: slidein 0.5s forwards;
 }
 
@@ -83,6 +84,10 @@
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
     padding: 0 1rem 1rem;
     font-size: 1rem;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price .tbd {
