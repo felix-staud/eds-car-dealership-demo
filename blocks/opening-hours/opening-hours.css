@@ -1,3 +1,7 @@
+.opening-hours-container a {
+    white-space: nowrap;
+}
+
 .opening-hours {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -11,8 +15,4 @@
 
 .opening-hours .active {
     font-weight: 600;
-}
-
-.opening-hours a {
-    white-space: nowrap;
 }
