@@ -130,3 +130,33 @@ export function setPageImage(image) {
 
   metaElems.forEach((metaEl) => metaEl.setAttribute('content', url.toString()));
 }
+
+/**
+ * @param {Car} car
+ * @returns {string} dealership code
+ */
+export function getDealershipCode(car) {
+  const inventory = car.condition.toLowerCase() === 'new' ? 'new' : 'used';
+
+  return `${inventory.substring(0, 1).toUpperCase()}${car.id}`;
+}
+
+/**
+ * @param {'availability' | 'test drive' | 'other'} reason
+ * @param {Car} car
+ */
+export function createContactFormSearchParamsForCar(reason, car) {
+  const {
+    condition,
+    year,
+    make,
+    model,
+    trim,
+    bodyStyle,
+  } = car;
+  const searchParams = new URLSearchParams();
+  searchParams.append('contact-reason', reason);
+  searchParams.append('contact-comments', `\n\n${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} (Code: ${getDealershipCode(car)})`);
+
+  return searchParams;
+}

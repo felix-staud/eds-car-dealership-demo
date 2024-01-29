@@ -1,9 +1,11 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { Car, MultiSheetData, SingleSheetData } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
+  createContactFormSearchParamsForCar,
   createIconElement,
   extractHrefFromBlock,
   formatNumber,
+  getDealershipCode,
   loadMultiSheetData,
   loadSingleSheetData,
   parseRawCarData,
@@ -130,56 +132,58 @@ function createCarImageElement(car) {
  * @returns {HTMLDivElement}
  */
 function createCarBodyElement(car) {
+  const {
+    price,
+    exteriorColor,
+    interiorColor,
+    miles,
+    bodyStyle,
+    seats,
+    fuelEconomy,
+    transmission,
+    drivetrain,
+    horsepower,
+    engine,
+    fuelType,
+    vin,
+  } = car;
+
   const carBodyEl = document.createElement('div');
   carBodyEl.classList.add('inventory-car-body');
 
-  const carBodyHeaderAnchor = document.createElement('a');
-  carBodyHeaderAnchor.href = getCarDetailsLink(car);
-  carBodyHeaderAnchor.textContent = getCarHeader(car);
-  const carBodyHeader = document.createElement('h4');
-  carBodyHeader.appendChild(carBodyHeaderAnchor);
+  /** @type {{label: string, value?: string | number | null}[]} */
+  const mainDetails = [
+    { label: 'Exterior Color', value: exteriorColor ? `<div class="color-preview" style="background-color: ${exteriorColor}"></div> ${exteriorColor}` : null },
+    { label: 'interior Color', value: interiorColor ? `<div class="color-preview" style="background-color: ${interiorColor}"></div> ${interiorColor}` : null },
+    { label: 'Odometer', value: miles ? `${formatNumber(miles)} miles` : null },
+    { label: 'Body/Seating', value: bodyStyle && seats ? `${bodyStyle}/${seats} ${seats > 1 ? 'seats' : 'seat'}` : null },
+    { label: 'Fuel Economy', value: fuelEconomy || null },
+    { label: 'Transmission', value: transmission || null },
+    { label: 'Drivetrain', value: drivetrain ? `${drivetrain}${horsepower ? ` (${horsepower}hp)` : ''}` : null },
+    { label: 'Engine', value: engine ? `${engine}${fuelType ? ` (${fuelType})` : ''}` : null },
+    { label: 'VIN', value: vin || null },
+    { label: 'Dealership Code', value: getDealershipCode(car) },
+    { label: 'Body Style', value: bodyStyle || null },
+  ];
+  const filteredMainDetails = mainDetails.filter((detail) => detail.value !== null);
 
-  const price = car.price ? car.price : -1;
-  const priceHeader = document.createElement('h5');
-  priceHeader.classList.add('car-price');
-  if (price > 0) {
-    priceHeader.textContent = `$${formatNumber(price)}`;
-  } else {
-    priceHeader.textContent = '$ TBD';
-    priceHeader.classList.add('tbd');
-  }
+  const innerHTML = `
+    <h4 class="car-header">
+      <a href="${getCarDetailsLink(car)}">${getCarHeader(car)}</a>
+    </h4>
+    <h5 class="car-price">
+      <div class="${price > 0 ? 'highlight-container' : ''}"><div class="${price > 0 ? 'highlight' : 'tbd'}">$${price > 0 ? formatNumber(price) : ' TBD'}</div></div>
+    </h5>
+    <ul class="car-main-details">
+      ${filteredMainDetails.map((detail) => `<li>${detail.label}</li>\n<li>${detail.value}</li>`).join('\n')}
+    </ul>
+    <div class="button-group">
+      <a href="/about-us?${createContactFormSearchParamsForCar('availability', car).toString()}#contact-us" class="button primary"> Check Availability</a>
+      <a href="/about-us?${createContactFormSearchParamsForCar('test drive', car).toString()}#contact-us" class="button secondary">Schedule Test-Drive</a>
+    </div>
+  `;
 
-  const carFeaturesDiv = document.createElement('div');
-  carFeaturesDiv.classList.add('inventory-car-features');
-  const carFeaturesListHeader = document.createElement('h5');
-  carFeaturesListHeader.classList.add('car-features-header');
-  carFeaturesListHeader.textContent = 'Features:';
-
-  if (car.features && car.features.length > 0) {
-    const carFeaturesList = document.createElement('ul');
-    carFeaturesList.classList.add('car-features');
-
-    for (let i = 0; i < car.features.length && i < 3; i += 1) {
-      const carFeatureLi = document.createElement('li');
-      carFeatureLi.classList.add('car-feature');
-      carFeatureLi.textContent = car.features[i];
-      carFeaturesList.appendChild(carFeatureLi);
-    }
-
-    if (car.features.length > 3) {
-      const moreIndicatorLi = document.createElement('li');
-      moreIndicatorLi.classList.add('car-feature-more-indicator');
-      moreIndicatorLi.textContent = 'and much more...';
-      carFeaturesList.appendChild(moreIndicatorLi);
-    }
-
-    carFeaturesDiv.appendChild(carFeaturesListHeader);
-    carFeaturesDiv.appendChild(carFeaturesList);
-  }
-
-  carBodyEl.appendChild(carBodyHeader);
-  carBodyEl.appendChild(priceHeader);
-  carBodyEl.appendChild(carFeaturesDiv);
+  carBodyEl.innerHTML = innerHTML;
 
   return carBodyEl;
 }
@@ -231,7 +235,7 @@ function handleSearch(query) {
     const filteredCars = state.cars.filter(({
       year, make, model, trim,
     }) => {
-      const searchStr = (year + make + model + trim).toLowerCase();
+      const searchStr = `${year} ${make} ${model} ${trim}`.toLowerCase();
 
       return searchStr.includes(lQuery);
     });

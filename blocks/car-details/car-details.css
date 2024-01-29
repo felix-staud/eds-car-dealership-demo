@@ -85,32 +85,6 @@ main .section.car-details-container {
   max-width: 100%;
 }
 
-.car-details .highlight-container, .highlight {
-  position: relative;
-  font-weight: var(--highlight-font-weight);
-}
-
-.car-details .highlight-container {
-  display: inline-block;
-  padding: .5rem;
-}
-
-.car-details  .highlight-container::before {
-  content: " ";
-  display: block;
-  height: 90%;
-  width: 100%;
-  margin-left: -3px;
-  margin-right: -3px;
-  position: absolute;
-  background: var(--highlight-color);
-  transform: rotate(2deg);
-  top: -1px;
-  left: -1px;
-  border-radius: 20% 25% 20% 24%;
-  padding: 10px 3px 3px 10px;
-}
-
 /* grid-layout */
 .car-details .car-sections {
   display: grid;

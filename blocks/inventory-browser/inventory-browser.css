@@ -11,6 +11,7 @@
     grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
     grid-gap: 16px;
     min-height: 20rem;
+    align-items: flex-start;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car {
@@ -81,17 +82,39 @@
 
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
     padding: 0 1rem 1rem;
-}
-
-.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price.tbd {
-    font-style: italic;
-    color: #999;
-}
-
-.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-feature-more-indicator {
-    font-style: italic;
     font-size: 1rem;
-    color: #aaa;
+}
+
+.inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price .tbd {
+    font-style: italic;
+}
+
+.inventory-browser .inventory-car .inventory-car-body .button-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+}
+
+.inventory-browser .inventory-car .inventory-car-body .button-group .button {
+    margin: .5rem;
+}
+
+.inventory-browser .inventory-car .inventory-car-body .car-main-details {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1px 5px;
+    padding: 0;
+    margin: 0;
+}
+
+.inventory-browser .inventory-car .inventory-car-body .color-preview {
+    display: inline-flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid #000;
+    border-radius: 100%;
+    margin-right: 0.5rem;
 }
 
 @keyframes slidein {

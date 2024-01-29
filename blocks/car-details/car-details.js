@@ -2,9 +2,11 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs
 import { createOptimizedPicture, decorateIcons, loadCSS } from '../../scripts/aem.js';
 import { Car, SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
+  createContactFormSearchParamsForCar,
   createIconElement,
   extractHrefFromBlock,
   formatNumber,
+  getDealershipCode,
   parseRawCarData,
   setPageDescription,
   setPageImage,
@@ -107,36 +109,6 @@ function getFeatureIcon(feature) {
 }
 
 /**
- * @param {Car} car
- * @returns {string} dealership code
- */
-function getDealershipCode(car) {
-  const inventory = car.condition.toLowerCase() === 'new' ? 'new' : 'used';
-
-  return `${inventory.substring(0, 1).toUpperCase()}${car.id}`;
-}
-
-/**
- * @param {'availability' | 'test drive' | 'other'} reason
- * @param {Car} car
- */
-function createContactFormSearchParams(reason, car) {
-  const {
-    condition,
-    year,
-    make,
-    model,
-    trim,
-    bodyStyle,
-  } = car;
-  const searchParams = new URLSearchParams();
-  searchParams.append('contact-reason', reason);
-  searchParams.append('contact-comments', `\n\n${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} (Code: ${getDealershipCode(car)})`);
-
-  return searchParams;
-}
-
-/**
  * @param {Element} block
  */
 export default async function decorate(block) {
@@ -217,8 +189,8 @@ export default async function decorate(block) {
             <div class="${price > 0 ? 'highlight-container' : ''}"><div class="${price > 0 ? 'highlight' : 'tbd'}">$${price > 0 ? formatNumber(price) : ' TBD'}</div></div>
           </div>
           <div class="button-group">
-            <a href="/about-us?${createContactFormSearchParams('availability', car).toString()}#contact-us" class="button primary"> Check Availability</a>
-            <a href="/about-us?${createContactFormSearchParams('test drive', car).toString()}#contact-us" class="button secondary">Schedule Test-Drive</a>
+            <a href="/about-us?${createContactFormSearchParamsForCar('availability', car).toString()}#contact-us" class="button primary"> Check Availability</a>
+            <a href="/about-us?${createContactFormSearchParamsForCar('test drive', car).toString()}#contact-us" class="button secondary">Schedule Test-Drive</a>
           </div>
           <div>
             We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
@@ -229,7 +201,7 @@ export default async function decorate(block) {
       <li id="car-details-main" class="car-section">
         <div class="car-section-content">
           <ul>
-          ${filteredMainDetails.map((detail) => `<li>${detail.label}</li>\n<li>${detail.value}</li>`).join('\n')}
+            ${filteredMainDetails.map((detail) => `<li>${detail.label}</li>\n<li>${detail.value}</li>`).join('\n')}
           </ul>
         </div>
       </li>
