@@ -162,7 +162,7 @@ header nav .nav-contact {
     right: 0;
     font-size: .8rem;
     color: #fff;
-    background-color: #333;
+    background-color: var(--nav-contact-bg-color);
     text-align: right;
     padding: 0.5rem 1.5rem;
   }

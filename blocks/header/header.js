@@ -97,6 +97,7 @@ export default async function decorate(block) {
   const fragment = await loadFragment(navPath);
 
   // decorate nav DOM
+  document.querySelector('header .placeholder').remove();
   const nav = document.createElement('nav');
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);

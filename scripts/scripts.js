@@ -46,6 +46,10 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  const header = doc.querySelector('header');
+  const placeholder = document.createElement('div');
+  placeholder.classList.add('placeholder');
+  header.appendChild(placeholder);
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);

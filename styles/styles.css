@@ -48,9 +48,10 @@
   --heading-font-size-s: 20px;
   --heading-font-size-xs: 18px;
 
-  /* nav height */
+  /* nav */
   --nav-height: 64px;
   --nav-contact-height: 2.2rem;
+  --nav-contact-bg-color: #333;
 
   /* buttons */
   --btn-border-width: 1px;
@@ -312,8 +313,9 @@ main .section {
     margin: auto;
   }
 
-  header {
-    height: calc(var(--nav-height) + var(--nav-contact-height));
+  header .placeholder {
+    height: var(--nav-contact-height);
+    background-color: var(--nav-contact-bg-color);
   }
 }
 
