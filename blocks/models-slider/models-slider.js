@@ -204,7 +204,7 @@ export default async function decorate(block) {
   await loadCSS(`${window.hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.css`);
 
   block.innerHTML = `
-        <div class="nav-pills"></div>
+        <ul class="nav-pills"></ul>
         <div class="swiper">
             <div class="swiper-wrapper"></div>
             <div class="swiper-navigation">
