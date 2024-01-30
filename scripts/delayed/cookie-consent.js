@@ -1,8 +1,8 @@
-import 'https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js'; // eslint-disable-line import/extensions, import/no-unresolved
-import { loadCSS } from '../aem.js';
+import { loadCSS, loadScript } from '../aem.js';
 
-export default function init() {
-  loadCSS('https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0-rc.17/dist/cookieconsent.css');
+export default async function init() {
+  await loadScript('../../vendor/orestbida-cookieconsent@v3.0.0/cookieconsent.min.umd.js');
+  await loadCSS('../../vendor/orestbida-cookieconsent@v3.0.0/cookieconsent.min.css');
   // eslint-disable-next-line no-undef
   CookieConsent.run({
     guiOptions: {

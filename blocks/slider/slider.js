@@ -1,5 +1,4 @@
-import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'; // eslint-disable-line import/extensions, import/no-unresolved
-import { loadCSS } from '../../scripts/aem.js';
+import { loadCSS, loadScript } from '../../scripts/aem.js';
 
 /**
  * @typedef {{rows: number, columns: number}} SwiperGridConfig
@@ -69,7 +68,10 @@ export function buildSwiperNavigation({ prevEl, nextEl }) {
  * @param {SwiperConfig} [config={}]
  * @returns
  */
-export function buildSwiper(parent, config = {}) {
+export async function buildSwiper(parent, config = {}) {
+  await loadScript('../../vendor/swiper@11.0.5/swiper-bundle.min.js');
+  await loadCSS('../../vendor/swiper@11.0.5/swiper-bundle.min.css');
+
   parent.classList.add('swiper');
   const slides = parent.querySelectorAll(':scope > div');
   /** @type {HTMLElement[]} */
@@ -83,7 +85,7 @@ export function buildSwiper(parent, config = {}) {
   }
 
   parent.replaceChildren(...children);
-  const swiper = new Swiper(parent, config);
+  const swiper = new Swiper(parent, config); // eslint-disable-line no-undef
 
   return swiper;
 }
@@ -93,8 +95,6 @@ export function buildSwiper(parent, config = {}) {
  * @param {Element} block
  */
 export default async function decorate(block) {
-  await loadCSS('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
-
   buildSwiper(block, {
     direction: 'horizontal',
     slidesPerView: 'auto',

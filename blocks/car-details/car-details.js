@@ -1,5 +1,9 @@
-import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'; // eslint-disable-line import/extensions, import/no-unresolved
-import { createOptimizedPicture, decorateIcons, loadCSS } from '../../scripts/aem.js';
+import {
+  createOptimizedPicture,
+  decorateIcons,
+  loadCSS,
+  loadScript,
+} from '../../scripts/aem.js';
 import { Car, SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
   createContactFormSearchParamsForCar,
@@ -224,14 +228,14 @@ export default async function decorate(block) {
     </ul>`;
 
   decorateIcons(block);
-  await loadCSS('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+  await loadScript('../../vendor/swiper@11.0.5/swiper-bundle.min.js');
+  await loadCSS('../../vendor/swiper@11.0.5/swiper-bundle.min.css');
   /** @type {SwiperApi} */
-  const swiper = new Swiper(block.querySelector('.swiper'), {
+  const swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
     direction: 'horizontal',
     initialSlide: 1,
     spaceBetween: 1,
     loop: true,
-    mousewheel: true,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,

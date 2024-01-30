@@ -6,6 +6,10 @@
     max-width: unset;
 }
 
+.hero-slider .swiper-navigation {
+    color: #fff;
+}
+
 .hero-slider .swiper-slide {
     position: relative;
     color: #fff;
@@ -25,10 +29,13 @@
 .hero-slider .swiper-slide h5,
 .hero-slider .swiper-slide h6 {
     text-align: center;
+    margin-top: 0;
 }
 
 .hero-slider .swiper-slide > div {
-    height: fit-content;
+    background-color: #0005;
+    padding: 1.5rem 3rem;
+    border-radius: 3px;
 }
 
 .hero-slider .swiper-slide picture {

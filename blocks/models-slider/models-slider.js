@@ -1,5 +1,4 @@
-import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'; // eslint-disable-line import/extensions, import/no-unresolved
-import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
+import { createOptimizedPicture, loadCSS, loadScript } from '../../scripts/aem.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import { extractHrefFromBlock } from '../../scripts/utils.js';
 import { buildSlide } from '../slider/slider.js';
@@ -201,7 +200,8 @@ export default async function decorate(block) {
   const url = extractHrefFromBlock(block);
 
   if (!url) return;
-  await loadCSS('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+  await loadScript('../../vendor/swiper@11.0.5/swiper-bundle.min.js');
+  await loadCSS('../../vendor/swiper@11.0.5/swiper-bundle.min.css');
 
   block.innerHTML = `
         <div class="nav-pills"></div>
@@ -213,10 +213,9 @@ export default async function decorate(block) {
             </div>
         </div>`;
   state.block = block;
-  state.swiper = new Swiper(block.querySelector('.swiper'), {
+  state.swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
     direction: 'horizontal',
     slidesPerView: 'auto',
-    mousewheel: true,
     autoHeight: true,
     navigation: {
       nextEl: '.swiper-button-next',
