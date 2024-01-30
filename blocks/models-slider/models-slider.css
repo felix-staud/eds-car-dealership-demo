@@ -45,6 +45,13 @@
     width: calc(100% - 2 * var(--swiper-slide-padding));
 }
 
+.models-slider .swiper .swiper-wrapper .swiper-slide picture  {
+    display: inline-flex;
+    height: 110px;
+    aspect-ratio: 275/110;
+}
+
+
 @media (width >=600px) {
     .models-slider .swiper .swiper-wrapper .swiper-slide {
         width: 50%;

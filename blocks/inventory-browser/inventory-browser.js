@@ -224,7 +224,9 @@ async function loadCars(href) {
 function renderFilterAccordions() {
   const { filterDialogEl, filters } = state;
 
-  const innerHTML = filters.map(({ key, options }) => {
+  const multiOptionsFilters = filters.filter((filter) => filter.options.length > 1);
+
+  const innerHTML = multiOptionsFilters.map(({ key, options }) => {
     const checkboxId = generateInputId('checkbox');
     const label = camelCaseToLabel(key);
     return `
@@ -288,6 +290,7 @@ function createFiltersElement() {
   const wrapperEl = document.createElement('div');
   wrapperEl.classList.add('filters-wrapper');
 
+  setFilter('condition', []);
   setFilter('year', []);
   setFilter('make', []);
   setFilter('model', []);

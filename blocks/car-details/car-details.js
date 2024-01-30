@@ -162,7 +162,7 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="car-images swiper">
       <div class="swiper-wrapper">
-          ${images.map((image, index) => `<div class="swiper-slide">${createOptimizedPicture(image, `${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} ${index}`).outerHTML}</div>`).join('\n')}
+          ${images.map((image, index) => `<div class="swiper-slide">${createOptimizedPicture(image, `${condition} ${year} ${make} ${model} ${trim} ${bodyStyle} ${index}`).outerHTML}<div class="swiper-lazy-preloader swiper-lazy-preloader-black"></div></div>`).join('\n')}
         </div>
       <div class="swiper-navigation">
         <div class="swiper-button-prev"></div>
@@ -231,6 +231,7 @@ export default async function decorate(block) {
     initialSlide: 1,
     spaceBetween: 1,
     loop: true,
+    mousewheel: true,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,

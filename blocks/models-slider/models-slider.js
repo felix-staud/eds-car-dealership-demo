@@ -57,18 +57,25 @@ function getCarModelsByActiveIndex() {
   return getCarModelsByType(activeType);
 }
 
+function createSwiperPreloader() {
+  const div = document.createElement('div');
+  div.classList.add('swiper-lazy-preloader', 'swiper-lazy-preloader-black');
+  return div;
+}
+
 /**
  *
  * @param {CarModel} carModel
  */
 function carModelToSwiperSlide(carModel) {
   const picture = createOptimizedPicture(carModel.image, carModel.model);
+  const preloader = createSwiperPreloader();
   const header = document.createElement('div');
   header.textContent = carModel.model;
 
   let slide = document.createElement('div');
   slide = buildSlide(slide);
-  slide.replaceChildren(picture, header);
+  slide.replaceChildren(picture, preloader, header);
 
   return slide;
 }
@@ -209,6 +216,8 @@ export default async function decorate(block) {
   state.swiper = new Swiper(block.querySelector('.swiper'), {
     direction: 'horizontal',
     slidesPerView: 'auto',
+    mousewheel: true,
+    autoHeight: true,
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
