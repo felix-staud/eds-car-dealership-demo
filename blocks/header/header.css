@@ -338,3 +338,12 @@ header nav .nav-sections ul>li>ul {
 header nav .nav-tools {
   grid-area: tools;
 }
+
+header nav .nav-tools button,
+header nav .nav-tools .button {
+  border: unset;
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 100%;
+}
