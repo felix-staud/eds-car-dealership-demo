@@ -1,7 +1,17 @@
-
 /*
   Pure CSS Accordion inspired by https://codepen.io/alvarotrigo/pen/dyJbqpd
 */
+
+.inventory-browser .filters-wrapper .button-group button {
+  display: inline-flex;
+  align-items: center;
+  padding: .5rem 1rem;
+}
+
+.inventory-browser .filters-wrapper .button-group {
+  display: flex;
+  justify-content: space-between;
+}
 
 .inventory-browser #filter-dialog,
 .inventory-browser #filter-dialog *,
@@ -20,7 +30,6 @@
   margin: 0;
   background-color: #fff;
   z-index: var(--z-index-dialog);
-  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -56,22 +65,72 @@
 
 .inventory-browser #filter-dialog .dialog-content .content-header h3 {
   margin-top: 0;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.inventory-browser #filter-dialog #clear-filters-btn {
+  margin: 0;
+}
+
+.inventory-browser .active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.inventory-browser .active-filters.outside {
+  padding: .5rem 0;
+  margin-bottom: .5rem;
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+}
+
+.inventory-browser .active-filters .tag {
+  display: inline-flex;
+  align-items: center;
+  color: var(--btn-secondary-color);
+  background-color: var(--btn-secondary-bg-color);
+  border: 1px solid var(--btn-secondary-border-color);
+  padding: .1rem .5rem;
+  margin: .25rem;
+  font-size: 1rem;
+}
+
+.inventory-browser .active-filters .tag .remove-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 100%;
+  background-color: #00000042;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 .inventory-browser #filter-dialog .dialog-content .content-body {
   overflow: auto;
   padding: var(--dialog-content-padding);
+  height: 100vh;
 }
 
 .inventory-browser #filter-dialog .dialog-content .content-footer {
+  display: flex;
   padding: var(--dialog-content-padding);
   box-shadow: 1px 0 8px #b4b4b4;
+  height: 80px;
 }
 
 .inventory-browser #filter-dialog .dialog-content .content-footer button {
   font-size: 1.5rem;
-  margin-top: 1rem;
+  margin: auto;
   width: 100%;
+  max-width: 400px
 }
 
 .inventory-browser #filter-dialog .accordion {
@@ -88,7 +147,7 @@
 .inventory-browser #filter-dialog .accordion-label {
   display: flex;
   justify-content: space-between;
-  padding: 1em;
+  padding: 1rem;
   font-weight: bold;
   cursor: pointer;
 }
@@ -133,6 +192,8 @@
   color: var(--btn-secondary-color);
   margin-right: .5rem;
   margin-bottom: .5rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .inventory-browser #filter-dialog .accordion-content input:checked + label {

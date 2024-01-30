@@ -160,3 +160,12 @@ export function createContactFormSearchParamsForCar(reason, car) {
 
   return searchParams;
 }
+
+/**
+ * @param {string} ccText
+ */
+export function camelCaseToLabel(camelCase) {
+  const label = camelCase.replace(/([A-Z])/g, ' $1');
+
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}

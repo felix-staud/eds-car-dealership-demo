@@ -1,6 +1,8 @@
+/* eslint-disable no-use-before-define */
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { Car, MultiSheetData, SingleSheetData } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
+  camelCaseToLabel,
   createContactFormSearchParamsForCar,
   createIconElement,
   extractHrefFromBlock,
@@ -12,19 +14,128 @@ import {
 } from '../../scripts/utils.js';
 
 /**
+ * @typedef {string | number} FilterOptionValue
+ *
  * @typedef {{
+ *  value: FilterOptionValue,
+ *  active: boolean,
+ * }} FilterOption
+ *
+ * @typedef {{
+ *  key: string,
+ *  options: FilterOption[],
+ * }} Filter
+ *
+ * @typedef {{
+ *  block: Element | null,
+ *  filterDialogEl: HTMLDivElement | null,
  *  cars: Car[],
  *  inventoryUl: HTMLUListElement,
  *  inputCount: number,
+ *  filters: Filter[],
  * }} State
  */
 
 /** @type {State} */
 const state = {
+  block: null,
+  filterDialogEl: null,
   cars: [],
   inventoryUl: {},
   inputCount: 0,
+  filters: [],
 };
+
+/**
+ * @param {string} key
+ * @param {FilterOptionValue[]} values
+ */
+function setFilter(key, values) {
+  const filterIndex = state.filters.findIndex((filter) => filter.key === key);
+  const filterOptions = values.map((value) => ({ value, active: false }));
+
+  if (filterIndex >= 0) {
+    state.filters[filterIndex].options = filterOptions;
+  } else {
+    state.filters.push({ key, options: filterOptions });
+  }
+}
+
+/**
+ * @param {string} key
+ * @param {FilterOptionValue} value
+ */
+function addFilterOption(key, value) {
+  const filterIndex = state.filters.findIndex((filter) => filter.key === key);
+
+  if (filterIndex >= 0) {
+    const valueExist = state.filters[filterIndex].options.some((option) => option.value === value);
+
+    if (!valueExist) {
+      state.filters[filterIndex].options.push({ value, active: false });
+    }
+  } else {
+    setFilter(key, [value]);
+  }
+}
+
+/**
+ * @param {string} key
+ * @param {FilterOptionValue} value
+ * @param {boolean} removeable
+ * @returns {HTMLDivElement}
+ */
+function createActiveFilterTagElement(key, value, removeable = true) {
+  const tagEl = document.createElement('div');
+  tagEl.classList.add('tag');
+  tagEl.setAttribute('title', `${key}: ${value}`);
+  tagEl.setAttribute('data-key', key);
+  tagEl.setAttribute('data-value', value);
+  tagEl.textContent = value;
+
+  if (removeable) {
+    const removeIcon = createIconElement('cancel-white');
+    removeIcon.classList.add('remove-tag');
+    tagEl.appendChild(removeIcon);
+    decorateIcons(tagEl);
+    removeIcon.addEventListener('click', () => {
+      toggleFilterOption(key, value, false);
+    });
+  }
+
+  return tagEl;
+}
+
+/**
+ * @param {string} key
+ * @param {FilterOptionValue} value
+ * @param {boolean} active
+ */
+function toggleFilterOption(key, value, active) {
+  const { block, filterDialogEl, filters } = state;
+  const filterIndex = filters.findIndex((filter) => filter.key === key);
+
+  if (filterIndex >= 0) {
+    const optionIndex = filters[filterIndex].options.findIndex((option) => option.value === value);
+
+    if (optionIndex >= 0) {
+      filters[filterIndex].options[optionIndex].active = active;
+      const checkbox = filterDialogEl.querySelector(`.filters input[name="${key}"][value="${value}"]`);
+      checkbox.checked = active;
+
+      if (!active) {
+        const activeFilterTags = block.querySelectorAll(`.active-filters .tag[data-key="${key}"][data-value="${value}"]`);
+        activeFilterTags.forEach((el) => el.remove());
+      } else {
+        const activeFiltersElems = block.querySelectorAll('.active-filters');
+        activeFiltersElems.forEach((el) => {
+          const tagEl = createActiveFilterTagElement(key, value, !el.classList.contains('outside'));
+          el.appendChild(tagEl);
+        });
+      }
+    }
+  }
+}
 
 /**
  * @param {string} prefix,
@@ -42,7 +153,10 @@ function generateInputId(prefix = 'input') {
  * @returns {string} header
  */
 function getCarHeader({
-  year, make, model, trim,
+  year,
+  make,
+  model,
+  trim,
 }) {
   return `${year} ${make} ${model} - ${trim}`;
 }
@@ -107,118 +221,146 @@ async function loadCars(href) {
  * @param {string[]} options
  * @returns {string} HTML string
  */
-function createAccordionElement(filter, options = []) {
-  const searchParams = new URLSearchParams(window.location.search);
-  const checkboxId = generateInputId('checkbox');
+function renderFilterAccordions() {
+  const { filterDialogEl, filters } = state;
 
-  const searchParam = searchParams.get(filter.key);
-  const searchParamArr = searchParam ? searchParam.split(',') : [];
+  const innerHTML = filters.map(({ key, options }) => {
+    const checkboxId = generateInputId('checkbox');
+    const label = camelCaseToLabel(key);
+    return `
+      <div class="accordion">
+        <input type="checkbox" id="${checkboxId}" class="accordion-label-checkbox">
+        <label class="accordion-label" for="${checkboxId}">${label}</label>
+        <div class="accordion-content">
+          ${options.map((option, index) => `<input type="checkbox" id="${checkboxId}-option-${index}" name="${key}" value="${option.value}"${option.active ? ' checked ' : ''}/><label for="${checkboxId}-option-${index}">${option.value}</label>`).join('\n')}
+        </div>
+      </div>`;
+  }).join('\n');
 
-  return `
-  <div class="accordion">
-    <input type="checkbox" id="${checkboxId}" class="accordion-label-checkbox">
-    <label class="accordion-label" for="${checkboxId}">${filter.label}</label>
-    <div class="accordion-content">
-      ${options.map((option, index) => `<input type="checkbox" id="${checkboxId}-option-${index}" name="${filter.key}" value="${option}"${searchParamArr.includes(option) ? ' checked ' : ''}/><label for="${`${checkboxId}-option-${index}`}">${option}</label>`).join('\n')}
-    </div>
-  </div>`;
+  const filtersEl = filterDialogEl.querySelector('.filters');
+  filtersEl.innerHTML = innerHTML;
+  decorateIcons(filtersEl);
+
+  const filterCheckboxes = filtersEl.querySelectorAll("input[type='checkbox'][name]");
+  filterCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const { name, value, checked } = event.target;
+      toggleFilterOption(name, value, checked);
+    });
+  });
 }
 
 /**
- * @param {Car[]} cars
+ * @returns {URLSearchParams};
  */
-function createFiltersElement(cars) {
+function getFiltersAsUrlSearchParams() {
+  const { filters } = state;
+  const searchParams = new URLSearchParams();
+
+  filters.forEach((filter) => {
+    const activeOptions = filter.options.filter((option) => option.active);
+
+    if (activeOptions.length > 0) {
+      searchParams.append(filter.key, activeOptions.map((option) => option.value));
+    }
+  });
+
+  return searchParams;
+}
+
+/**
+ * @param {URLSearchParams} searchParams
+ */
+function setActiveFilterValuesFromUrlSearchParams(searchParams) {
+  searchParams.forEach((value, key) => {
+    const valueArr = value.split(',');
+    valueArr.forEach((val) => {
+      toggleFilterOption(key, val, true);
+    });
+  });
+}
+
+/**
+ * @param {Element} block
+ */
+function createFiltersElement() {
+  const { cars } = state;
   const wrapperEl = document.createElement('div');
   wrapperEl.classList.add('filters-wrapper');
 
-  /** @type {{label: string, key: string}[]} */
-  const filters = [
-    { label: 'Year', key: 'year' },
-    { label: 'Make', key: 'make' },
-    { label: 'Model', key: 'model' },
-    { label: 'Trim', key: 'trim' },
-    { label: 'Body Style', key: 'bodyStyle' },
-    { label: 'Exterior Color', key: 'exteriorColor' },
-    { label: 'Interior Color', key: 'interiorColor' },
-    { label: 'Transmission', key: 'transmission' },
-    { label: 'Fuel Type', key: 'fuelType' },
-  ];
+  setFilter('year', []);
+  setFilter('make', []);
+  setFilter('model', []);
+  setFilter('trim', []);
+  setFilter('bodyStyle', []);
+  setFilter('exteriorColor', []);
+  setFilter('interiorColor', []);
+  setFilter('transmission', []);
+  setFilter('fuelType', []);
 
-  /** @type {Record<string, Set>} */
-  const filterOptions = {};
-
-  filters.forEach(({ key }) => {
-    if (!filterOptions[key]) {
-      filterOptions[key] = new Set();
-    }
-
+  state.filters.forEach(({ key }) => {
     cars.forEach((car) => {
-      filterOptions[key].add(car[key]);
+      addFilterOption(key, car[key]);
     });
   });
 
   const innerHTML = `
-    <button id="open-filter-dialog-btn" class="secondary">${createIconElement('filters').outerHTML} Filter / Sort</button>
-    
+    <div class="button-group">
+      <button id="open-filter-dialog-btn" class="primary">${createIconElement('filters-white').outerHTML}&nbsp;Filter</button>
+      <button class="clear-filters-btn secondary">${createIconElement('cancel').outerHTML}&nbsp;Clear Filters</button>
+    </div>
+    <div class="active-filters outside"></div>
     <div id="filter-dialog" class="hidden">
       <div class="dialog-content">
         <div class="content-header">
-          <h3>Filter / Sort</h3>
+          <h3>Filter <button class="clear-filters-btn secondary">Clear Filters</button></h3>
+          <div class="active-filters inside"></div>
         </div>
         <div class="content-body">
-          <div class="filters">
-            ${filters.map((filter) => createAccordionElement(filter, [...filterOptions[filter.key]])).join('\n')}
-          </div>
+          <div class="filters"></div>
         </div>
         <div class="content-footer">
           <button id="show-filter-results-btn" class="primary">Show Results</button>
-        </div>
       </div>
-    </div>
-  `;
+    </div>`;
 
   wrapperEl.innerHTML = innerHTML;
   /** @type {HTMLButtonElement} */
   const openFilterDialogBtn = wrapperEl.querySelector('#open-filter-dialog-btn');
   /** @type {HTMLDivElement} */
-  const filterDialog = wrapperEl.querySelector('#filter-dialog');
+  const filterDialogEl = wrapperEl.querySelector('#filter-dialog');
+  /** @type {HTMLDivElement[]} */
+  const activeFiltersElems = wrapperEl.querySelectorAll('.active-filters');
   /** @type {HTMLButtonElement} */
-  const showFilterResultsBtn = wrapperEl.querySelector('#show-filter-results-btn');
-  /** @type {HTMLDivElement} */
-  const filtersEl = wrapperEl.querySelector('.filters');
-  const filterCheckboxes = filtersEl.querySelectorAll("input[type='checkbox'][name]");
-
-  const searchParams = new URLSearchParams(window.location.search);
+  const showFilterResultsBtn = filterDialogEl.querySelector('#show-filter-results-btn');
+  /** @type {HTMLButtonElement[]} */
+  const clearFiltersBtns = wrapperEl.querySelectorAll('.clear-filters-btn');
 
   openFilterDialogBtn.addEventListener('click', () => {
-    filterDialog.classList.remove('hidden');
+    filterDialogEl.classList.remove('hidden');
     document.body.classList.add('dialog-open');
   });
 
   showFilterResultsBtn.addEventListener('click', () => {
-    filterDialog.classList.add('hidden');
+    filterDialogEl.classList.add('hidden');
     document.body.classList.remove('dialog-open');
-    window.location.search = searchParams.toString();
+    window.location.search = getFiltersAsUrlSearchParams();
   });
 
-  filterCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const { name, value, checked } = event.target;
-      const currentValue = searchParams.get(name);
-
-      if (checked) {
-        if (currentValue) {
-          const currentValueArr = currentValue.split(',');
-          if (!currentValueArr.includes(value)) {
-            searchParams.set(name, [...currentValueArr, value]);
+  clearFiltersBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeFiltersElems.forEach((activeFiltersEl) => {
+        const tagElements = activeFiltersEl.querySelectorAll('.tag');
+        tagElements.forEach((tagEl) => {
+          const removeTagEl = tagEl.querySelector('.remove-tag');
+          if (removeTagEl) {
+            removeTagEl.dispatchEvent(new Event('click'));
+          } else {
+            tagEl.remove();
           }
-        } else {
-          searchParams.append(name, [value]);
-        }
-      } else if (currentValue) {
-        const currentValueArr = currentValue.split(',');
-        searchParams.set(name, currentValueArr.filter((currVal) => currVal !== value));
-      }
+        });
+      });
+      window.location.search = getFiltersAsUrlSearchParams();
     });
   });
 
@@ -246,7 +388,7 @@ function createCarImageElement(car) {
 
   if (images && images.length > 0) {
     [src] = images;
-    alt = `Image of ${getCarHeader(car)}`;
+    alt = `Image of ${getCarHeader(car)} `;
   } else {
     src = 'https://placehold.co/600x400';
     alt = 'placeholder image';
@@ -290,10 +432,10 @@ function createCarBodyElement(car) {
 
   /** @type {{label: string, value?: string | number | null}[]} */
   const mainDetails = [
-    { label: 'Exterior Color', value: exteriorColor ? `<div class="color-preview" style="background-color: ${exteriorColor}"></div> ${exteriorColor}` : null },
-    { label: 'interior Color', value: interiorColor ? `<div class="color-preview" style="background-color: ${interiorColor}"></div> ${interiorColor}` : null },
+    { label: 'Exterior Color', value: exteriorColor ? `<div class="color-preview" style = "background-color: ${exteriorColor}"></div> ${exteriorColor}` : null },
+    { label: 'interior Color', value: interiorColor ? `<div class="color-preview" style = "background-color: ${interiorColor}"></div> ${interiorColor}` : null },
     { label: 'Odometer', value: miles ? `${formatNumber(miles)} miles` : null },
-    { label: 'Body/Seating', value: bodyStyle && seats ? `${bodyStyle}/${seats} ${seats > 1 ? 'seats' : 'seat'}` : null },
+    { label: 'Body/Seating', value: bodyStyle && seats ? `${bodyStyle} /${seats} ${seats > 1 ? 'seats' : 'seat'}` : null },
     { label: 'Fuel Economy', value: fuelEconomy || null },
     { label: 'Transmission', value: transmission || null },
     { label: 'Drivetrain', value: drivetrain ? `${drivetrain}${horsepower ? ` (${horsepower}hp)` : ''}` : null },
@@ -361,15 +503,50 @@ function renderNoResultsElement() {
 }
 
 /**
+ * @returns {Car[]}
+ */
+function getFilteredCars() {
+  const { filters, cars } = state;
+
+  const activeFilters = filters.filter((filter) => filter.options.some((option) => option.active));
+
+  if (activeFilters.length > 0) {
+    const filteredCars = cars.filter((car) => {
+      let doShow = true;
+      activeFilters.some((filter) => {
+        const activeOptions = filter.options.filter((option) => option.active);
+        const values = activeOptions.map((option) => option.value);
+        if (!values.includes(car[filter.key])) {
+          doShow = false;
+        }
+
+        if (!doShow) {
+          return true;
+        }
+
+        return false;
+      });
+
+      return doShow;
+    });
+
+    return filteredCars;
+  }
+
+  return cars;
+}
+
+/**
  * @param {?string} query
  */
 function handleSearch(query) {
   const lQuery = query.toLowerCase();
+  const filteredCars = getFilteredCars();
 
   if (!lQuery || lQuery.length === 0) {
-    renderCarElement(state.cars);
+    renderCarElement(filteredCars);
   } else {
-    const filteredCars = state.cars.filter(({
+    const foundCars = filteredCars.filter(({
       year, make, model, trim,
     }) => {
       const searchStr = `${year} ${make} ${model} ${trim}`.toLowerCase();
@@ -377,8 +554,8 @@ function handleSearch(query) {
       return searchStr.includes(lQuery);
     });
 
-    if (filteredCars.length > 0) {
-      renderCarElement(filteredCars);
+    if (foundCars.length > 0) {
+      renderCarElement(foundCars);
     } else {
       renderNoResultsElement();
     }
@@ -438,7 +615,7 @@ export default async function decorate(block) {
   inventoryDiv.classList.add('inventory');
 
   const searchEl = createSearchElement();
-  const filterEl = createFiltersElement(state.cars);
+  const filterEl = createFiltersElement(block);
 
   inventoryDiv.appendChild(searchEl);
   inventoryDiv.appendChild(filterEl);
@@ -447,6 +624,9 @@ export default async function decorate(block) {
   renderCarElement(state.cars);
 
   block.replaceChildren(inventoryDiv);
-
-  /** some changes to force a reload? */
+  state.block = block;
+  state.filterDialogEl = block.querySelector('#filter-dialog');
+  renderFilterAccordions();
+  setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
+  handleSearch('');
 }

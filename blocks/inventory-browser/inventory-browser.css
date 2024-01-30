@@ -1,4 +1,8 @@
-@import url('./filter-dialog.css');
+@import url('./inventory-brwoser-filter.css');
+
+.inventory-browser-container .default-content-wrapper > h1:first-child {
+  margin-top: 0;
+}
 
 .inventory-browser {
   padding: 0;
@@ -20,7 +24,6 @@
   flex-direction: column;
   overflow: hidden;
   border: 1px solid #cecfd1;
-  animation: slidein 0.5s forwards;
 }
 
 .inventory-browser .inventory .inventory-search {
@@ -127,12 +130,6 @@
   border: 1px solid #000;
   border-radius: 100%;
   margin-right: 0.5rem;
-}
-
-.inventory-browser .filters-wrapper #open-filter-dialog-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: .5rem 1rem;
 }
 
 @keyframes slidein {
