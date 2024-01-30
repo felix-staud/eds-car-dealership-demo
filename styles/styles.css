@@ -11,6 +11,10 @@
  */
 
 :root {
+  /* z-index */
+  --z-index-header: 2;
+  --z-index-dialog: 3;
+
   /* links */
   --link-color: #035fe6;
   --link-hover-color: #136ff6;
@@ -109,6 +113,11 @@ body {
 
 body.appear {
   display: block;
+}
+
+body.dialog-open {
+  max-height: 100%;
+  overflow: hidden;
 }
 
 header {

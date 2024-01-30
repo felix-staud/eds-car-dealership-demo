@@ -1,0 +1,213 @@
+/*
+  Pure CSS Accordion inspired by https://codepen.io/alvarotrigo/pen/dyJbqpd
+*/
+
+.inventory-browser .filters-wrapper .button-group button {
+  display: inline-flex;
+  align-items: center;
+  padding: .5rem 1rem;
+}
+
+.inventory-browser .filters-wrapper .button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inventory-browser #filter-dialog,
+.inventory-browser #filter-dialog *,
+.inventory-browser #filter-dialog *::before,
+.inventory-browser #filter-dialog *::after{
+  box-sizing: border-box;
+}
+
+.inventory-browser #filter-dialog {
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+  position: fixed;
+  inset: 0;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  z-index: var(--z-index-dialog);
+  box-sizing: border-box;
+}
+
+.inventory-browser #filter-dialog.hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.inventory-browser #filter-dialog-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px 5px;
+  margin: 0;
+  background: unset;
+  background-color: unset;
+  border: unset;
+  color: #000;
+}
+
+.inventory-browser #filter-dialog .dialog-content {
+  --dialog-content-padding: 1rem;
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.inventory-browser #filter-dialog .dialog-content .content-header{
+  padding: var(--dialog-content-padding);
+  box-shadow: 0 1px 8px #b4b4b4;
+}
+
+.inventory-browser #filter-dialog .dialog-content .content-header h3 {
+  margin-top: 0;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.inventory-browser #filter-dialog #clear-filters-btn {
+  margin: 0;
+}
+
+.inventory-browser .active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.inventory-browser .active-filters.outside {
+  padding: .5rem 0;
+  margin-bottom: .5rem;
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+}
+
+.inventory-browser .active-filters .tag {
+  display: inline-flex;
+  align-items: center;
+  color: var(--btn-secondary-color);
+  background-color: var(--btn-secondary-bg-color);
+  border: 1px solid var(--btn-secondary-border-color);
+  padding: .1rem .5rem;
+  margin: .25rem;
+  font-size: 1rem;
+}
+
+.inventory-browser .active-filters .tag .remove-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 100%;
+  background-color: #00000042;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.inventory-browser #filter-dialog .dialog-content .content-body {
+  overflow: auto;
+  padding: var(--dialog-content-padding);
+  height: 100vh;
+}
+
+.inventory-browser #filter-dialog .dialog-content .content-footer {
+  display: flex;
+  padding: var(--dialog-content-padding);
+  box-shadow: 1px 0 8px #b4b4b4;
+  height: 80px;
+}
+
+.inventory-browser #filter-dialog .dialog-content .content-footer button {
+  font-size: 1.5rem;
+  margin: auto;
+  width: 100%;
+  max-width: 400px
+}
+
+.inventory-browser #filter-dialog .accordion {
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid silver;
+  padding-bottom: .5rem;
+}
+
+.inventory-browser #filter-dialog .accordion:last-child {
+  border-bottom: unset;
+}
+
+.inventory-browser #filter-dialog .accordion-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Icon */
+.inventory-browser #filter-dialog .accordion-label::after {
+  content: "❯";
+  width: 1em;
+  height: 1em;
+  text-align: center;
+}
+
+.inventory-browser #filter-dialog input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.inventory-browser #filter-dialog .accordion-content {
+  max-height: 0;
+  padding: 0 1em;
+  overflow: hidden;
+}
+
+.inventory-browser #filter-dialog .accordion-content label {
+  display: inline-flex;
+}
+
+.inventory-browser #filter-dialog .accordion-close {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1em;
+  font-size: 0.75em;
+  background: #2c3e50;
+  cursor: pointer;
+}
+
+.inventory-browser #filter-dialog .accordion-content input + label {
+  border: 1px solid var(--btn-secondary-border-color);
+  background-color: var(--btn-secondary-bg-color);
+  padding: .25rem .5rem;
+  color: var(--btn-secondary-color);
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.inventory-browser #filter-dialog .accordion-content input:checked + label {
+  border: 1px solid var(--btn-primary-border-color);
+  background-color: var(--btn-primary-bg-color);
+  color: var(--btn-primary-color);
+}
+
+.inventory-browser #filter-dialog input:checked + .accordion-label::after {
+  transform: rotate(90deg);
+}
+
+.inventory-browser #filter-dialog input:checked ~ .accordion-content {
+  max-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+}

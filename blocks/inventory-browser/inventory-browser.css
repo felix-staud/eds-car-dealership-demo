@@ -1,142 +1,148 @@
+@import url('./inventory-brwoser-filter.css');
+
+.inventory-browser-container .default-content-wrapper > h1:first-child {
+  margin-top: 0;
+}
+
 .inventory-browser {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .inventory-browser .inventory > ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-    grid-gap: 16px;
-    min-height: 20rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+  grid-gap: 16px;
+  min-height: 20rem;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid #cecfd1;
-    animation: slidein 0.5s forwards;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #cecfd1;
 }
 
 .inventory-browser .inventory .inventory-search {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex: 1;
-    margin-bottom: 1rem;
-    border: 2px solid #333;
-    border-radius: .25rem;
-    transition: border-color 350ms ease-in-out;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  margin-bottom: 1rem;
+  border: 2px solid #333;
+  border-radius: .25rem;
+  transition: border-color 350ms ease-in-out;
 }
 
 .inventory-browser .inventory .inventory-search > .icon {
-    padding: 1rem;
-    cursor: pointer;
-    border-left: 2px solid #333;
-    transition: border-color 350ms ease-in-out;
+  padding: 1rem;
+  cursor: pointer;
+  border-left: 2px solid #333;
+  transition: border-color 350ms ease-in-out;
 }
 
 .inventory-browser .inventory .inventory-search.active,
 .inventory-browser .inventory .inventory-search.active > .icon {
-    border-color: blue;
+  border-color: blue;
 }
 
 .inventory-browser .inventory .inventory-search .inventory-search-input {
-    height: 1.5rem;
-    padding: .75rem 1.25rem;
-    font-size: 18px;
-    border-radius: .25rem;
-    flex-grow: 1;
-    outline: none;
-    border: none;
+  height: 1.5rem;
+  padding: .75rem 1.25rem;
+  font-size: 18px;
+  border-radius: .25rem;
+  flex-grow: 1;
+  outline: none;
+  border: none;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image {
-    position: relative;
+  position: relative;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image .overlay {
-    position: absolute;
-    inset: 0;
-    background-color: unset;
-    transition: background-color 350ms ease-in-out;
+  position: absolute;
+  inset: 0;
+  background-color: unset;
+  transition: background-color 350ms ease-in-out;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image a {
-    --link-hover-bg-height: 0;
+  --link-hover-bg-height: 0;
 
-    display: inline-flex;
+  display: inline-flex;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image a:hover .overlay {
-    background-color: #fff5;
+  background-color: #fff5;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-body a {
-    --link-color: #535353;
-    --link-hover-color: #535353;
-    --link-hover-bg-height: 2px;
+  --link-color: #535353;
+  --link-hover-color: #535353;
+  --link-hover-bg-height: 2px;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body {
-    padding: 0 1rem 1rem;
-    font-size: 1rem;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: space-between;
+  padding: 0 1rem 1rem;
+  font-size: 1rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .inventory-browser .inventory > ul > li.inventory-car .inventory-car-body .car-price .tbd {
-    font-style: italic;
+  font-style: italic;
 }
 
 .inventory-browser .inventory-car .inventory-car-body .button-group {
-    display: flex;
-    flex-direction: column;
-    margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5rem;
 }
 
 .inventory-browser .inventory-car .inventory-car-body .button-group .button {
-    margin: .5rem;
+  margin: .5rem;
 }
 
 .inventory-browser .inventory-car .inventory-car-body .car-main-details {
-    list-style: none;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-gap: 3px 5px;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 3px 5px;
+  padding: 0;
+  margin: 0;
 }
 
 .inventory-browser .inventory-car .inventory-car-body .car-main-details > li {
-    display: inline-flex;
-    align-items: center;
+  display: inline-flex;
+  align-items: center;
 }
 
 .inventory-browser .inventory-car .inventory-car-body .color-preview {
-    display: inline-flex;
-    width: 1rem;
-    height: 1rem;
-    border: 1px solid #000;
-    border-radius: 100%;
-    margin-right: 0.5rem;
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #000;
+  border-radius: 100%;
+  margin-right: 0.5rem;
 }
 
 @keyframes slidein {
-    from {
-      height: 0;
-      transform: scale(0);
-      opacity: 0;
-    }
-
-    to {
-      height:var(--h); /* This will change for each element */
-      transform: scale(1);
-      opacity: 1;
-    }
+  from {
+    height: 0;
+    transform: scale(0);
+    opacity: 0;
   }
+
+  to {
+    height:var(--h); /* This will change for each element */
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
