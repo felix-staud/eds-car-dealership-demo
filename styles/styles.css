@@ -313,6 +313,10 @@ main .section {
     margin: auto;
   }
 
+  header {
+    height: calc(var(--nav-height) + var(--nav-contact-height));
+  }
+
   header .placeholder {
     height: var(--nav-contact-height);
     background-color: var(--nav-contact-bg-color);
