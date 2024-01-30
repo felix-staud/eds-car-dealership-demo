@@ -69,8 +69,8 @@ export function buildSwiperNavigation({ prevEl, nextEl }) {
  * @returns
  */
 export async function buildSwiper(parent, config = {}) {
-  await loadScript('../../vendor/swiper@11.0.5/swiper-bundle.min.js');
-  await loadCSS('../../vendor/swiper@11.0.5/swiper-bundle.min.css');
+  await loadScript(`${window.hlx.codeBasePath}/vendor/swiper@11.0.5/swiper-bundle.min.js`);
+  await loadCSS(`${window.hlx.codeBasePath}/vendor/swiper@11.0.5/swiper-bundle.min.css`);
 
   parent.classList.add('swiper');
   const slides = parent.querySelectorAll(':scope > div');
