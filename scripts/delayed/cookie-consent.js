@@ -1,8 +1,8 @@
 import { loadCSS, loadScript } from '../aem.js';
 
 export default async function init() {
-  await loadScript(`${window.hlx.codeBasePath}/vendor/orestbida-cookieconsent@v3.0.0/cookieconsent.min.umd.js`);
-  await loadCSS(`${window.hlx.codeBasePath}/vendor/cookieconsent/cookieconsent.min.css`);
+  await loadScript(`${window.hlx.codeBasePath}/vendor/orestbida/cookieconsent_v3.0.0/cookieconsent.min.umd.js`);
+  await loadCSS(`${window.hlx.codeBasePath}/vendor/orestbida/cookieconsent_v3.0.0/cookieconsent.min.css`);
   // eslint-disable-next-line no-undef
   CookieConsent.run({
     guiOptions: {
