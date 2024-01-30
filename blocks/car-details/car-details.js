@@ -228,7 +228,7 @@ export default async function decorate(block) {
     </ul>`;
 
   decorateIcons(block);
-  await loadScript(`${window.hlx.codeBasePath}/scripts/packages/swiper@11.0.5/swiper-bundle.min.js`);
+  await loadScript(`${window.hlx.codeBasePath}/scripts/delayed/swiper-bundle.min.js`);
   await loadCSS(`${window.hlx.codeBasePath}/scripts/delayed/swiper-bundle.min.css`);
   /** @type {SwiperApi} */
   const swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
