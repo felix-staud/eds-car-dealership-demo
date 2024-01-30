@@ -108,9 +108,16 @@ export default async function decorate(block) {
     if (section) section.classList.add(`nav-${c}`);
   });
 
-  const navContact = nav.querySelector('.nav-contact');
-  if (navContact) {
-    // TODO
+  const navTools = nav.querySelector('.nav-tools');
+
+  if (navTools) {
+    const buttons = navTools.querySelectorAll('.button, button');
+    buttons.forEach(button => {
+      const textContent = button.textContent;
+      const icon = button.querySelector('.icon');
+      button.setAttribute('aria-label', textContent);
+      button.innerHTML = icon.outerHTML;
+    })
   }
 
   const navBrand = nav.querySelector('.nav-brand');
