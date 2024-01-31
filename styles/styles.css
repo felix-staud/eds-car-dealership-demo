@@ -16,13 +16,13 @@
   --z-index-dialog: 3;
 
   /* links */
-  --link-color: #035fe6;
+  --link-color: #0011ff;
   --link-hover-color: #136ff6;
   --link-hover-bg-height: 1px;
 
   /* colors */
   --background-color: #fff;
-  --light-color: #eee;
+  --light-color: #f4f4f4;
   --dark-color: #ccc;
   --text-color: #000;
 
@@ -199,7 +199,7 @@ main pre {
 a {
   color: var(--link-color);
   position: relative;
-  background: linear-gradient(0deg, var(--link-hover-color), var(--link-hover-color)) no-repeat right bottom / 0 var(--link-hover-bg-height);
+  /* background: linear-gradient(0deg, var(--link-hover-color), var(--link-hover-color)) no-repeat right bottom / 0 var(--link-hover-bg-height); */
   transition: background-size 350ms;
 }
 
