@@ -256,5 +256,9 @@ export default async function decorate(block) {
     if (index <= 2) {
       imgEl.setAttribute('fetchpriority', 'high');
     }
+    imgEl.addEventListener('load', () => {
+      imgEl.setAttribute('width', imgEl.width);
+      imgEl.setAttribute('height', imgEl.height);
+    })
   })
 }
