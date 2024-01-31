@@ -1,5 +1,8 @@
 .models-slider {
-    --swiper-slide-padding-x: 3%;
+    --swiper-navigation-sides-offset: -1rem;
+    --swiper-navigation-color: var(--link-hover-color);
+    
+    position: relative;
 }
 
 /* Nav Pills */
@@ -35,34 +38,28 @@
 
 /* Swiper */
 
-.models-slider .swiper .swiper-navigation {
-    --swiper-navigation-sides-offset: 0;
+.models-slider .swiper {
+    margin: 0 2rem;
 }
 
 .models-slider .swiper .swiper-wrapper .swiper-slide {
     text-align: center;
-    padding: 0 var(--swiper-slide-padding-x);
-    width: calc(100% - 2 * var(--swiper-slide-padding));
+    /* padding: 0 var(--swiper-slide-padding-x); */
+    /* width: calc(100% - 2 * var(--swiper-slide-padding)); */
 }
 
 .models-slider .swiper .swiper-wrapper .swiper-slide img {
-    height: 110px;
+    height: 90px;
 }
 
 @media (width >=600px) {
-    .models-slider .swiper .swiper-wrapper .swiper-slide {
-        width: 50%;
+    .models-slider .swiper .swiper-wrapper .swiper-slide img {
+        height: 100px;
     }
 }
 
 @media (width >=900px) {
     .models-slider .swiper .swiper-wrapper .swiper-slide {
-        width: 33%;
-    }
-}
-
-@media (width >=1200px) {
-    .models-slider .swiper .swiper-wrapper .swiper-slide {
-        width: 20%;
+        height: 110px;
     }
 }

@@ -207,23 +207,45 @@ export default async function decorate(block) {
         <ul class="nav-pills"></ul>
         <div class="swiper">
             <div class="swiper-wrapper"></div>
-            <div class="swiper-navigation">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
+        </div>
+        <div class="swiper-navigation">
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>`;
   state.block = block;
   state.swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
     direction: 'horizontal',
-    slidesPerView: 'auto',
-    autoHeight: true,
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+    slidesPerView: 1,
+    spaceBetween: 10,
+    breakpoints: {
+      900: {
+        slidesPerView: 3,
+        spaceBetween: 50,
+      },
+      600: {
+        slidesPerView: 2,
+        spaceBetween: 30,
+      }
     },
-    centeredSlides: true,
-    centeredSlidesBounds: true,
+    navigation: {
+      nextEl: '.swiper-navigation .swiper-button-next',
+      prevEl: '.swiper-navigation .swiper-button-prev',
+    },
+    on: {
+      /**
+       * @param {SwiperApi} swiper 
+       */
+      navigationNext: (swiper) => {
+        const slidesPerView = swiper.slidesPerViewDynamic();
+        swiper.slideTo(swiper.activeIndex + slidesPerView - 1, slidesPerView * 250);
+      },
+      navigationPrev: (swiper) => {
+        const slidesPerView = swiper.slidesPerViewDynamic();
+        swiper.slideTo(swiper.activeIndex - slidesPerView - 1, slidesPerView * 250);
+      }
+    }
   });
   const data = await loadCarModels(url);
   setCarModels(data);
+  state.swiper.on('navigationNext', (...args) => console.log(args));
 }

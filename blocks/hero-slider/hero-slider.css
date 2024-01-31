@@ -10,6 +10,10 @@
     color: #fff;
 }
 
+.hero-slider {
+    --swiper-navigation-color: #fff;
+}
+
 .hero-slider .swiper-slide {
     position: relative;
     color: #fff;
