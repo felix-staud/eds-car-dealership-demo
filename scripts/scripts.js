@@ -12,7 +12,7 @@ import {
   loadCSS,
 } from './aem.js';
 
-const LCP_BLOCKS = ['hero-slider', 'car-details']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['hero-slider', 'slider', 'car-details']; // add your LCP blocks to the list
 
 /**
  * load fonts.css and set a session storage flag
