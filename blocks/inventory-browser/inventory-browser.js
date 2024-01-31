@@ -400,7 +400,7 @@ function createCarImageElement(car) {
     alt = 'placeholder image';
   }
 
-  const pictureEl = createOptimizedPicture(src, alt, true);
+  const pictureEl = createOptimizedPicture(src, alt, true, [{ width: '500' }, { media: '(width >= 600px)', width: '400' }, { media: '(width >= 900px)', width: '300' }]);
   const imgEl = pictureEl.querySelector('img');
   imgEl.setAttribute('fetchpriority', 'high');
   imgEl.width = 356;
