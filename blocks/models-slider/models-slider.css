@@ -60,7 +60,7 @@
 }
 
 @media (width >=900px) {
-    .models-slider .swiper .swiper-wrapper .swiper-slide {
+    .models-slider .swiper .swiper-wrapper .swiper-slide img {
         height: 110px;
     }
 }
