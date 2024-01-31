@@ -84,6 +84,7 @@ function carModelToSwiperSlide(carModel) {
     img.setAttribute('height', img.height);
   });
   img.setAttribute('height', getImageHeight());
+  img.setAttribute('width', 'auto');
   const preloader = createSwiperPreloader();
   const header = document.createElement('div');
   header.textContent = carModel.model;
