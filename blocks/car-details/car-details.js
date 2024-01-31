@@ -250,4 +250,11 @@ export default async function decorate(block) {
   window.addEventListener('resize', () => {
     swiper.update();
   });
+
+  const imgElems = block.querySelectorAll('.swiper-slide img');
+  imgElems.forEach((imgEl, index) => {
+    if (index <= 2) {
+      imgEl.setAttribute('fetchpriority', 'high');
+    }
+  })
 }
