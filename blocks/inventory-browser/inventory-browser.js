@@ -620,6 +620,7 @@ export default async function decorate(block) {
 
   state.inventoryUl = document.createElement('ul');
   state.inventoryUl.classList.add('inventory-car-list');
+  state.inventoryUl.append('loading...')
 
   const inventoryDiv = document.createElement('div');
   inventoryDiv.classList.add('inventory');
@@ -636,8 +637,6 @@ export default async function decorate(block) {
   state.filterDialogEl = block.querySelector('#filter-dialog');
   renderFilterAccordions();
   setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
-
-  handleSearch('');
 
   window.setTimeout(async () => {
     state.cars = await loadCars(url);
