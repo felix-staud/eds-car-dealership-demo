@@ -42,7 +42,7 @@
   justify-content: center;
   position: relative;
   width: 100%;
-  min-height: min(40rem, 99svh);
+  min-height: max(40rem, calc(100svh - var(--nav-height)));
 }
 
 .carousel .carousel-slide:has(.carousel-slide-content[data-align="center"]) {
