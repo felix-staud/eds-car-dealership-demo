@@ -62,7 +62,15 @@ function createSwiperPreloader() {
   return div;
 }
 
-function getImageHeight() {
+function getApproxImageWidth() {
+  if (window.matchMedia("width >= 600px")) {
+    return 250;
+  } else {
+    return 225;
+  }
+}
+
+function getApproxImageHeight() {
   if (window.matchMedia("width >= 900px")) {
     return 110;
   } else if (window.matchMedia("width >= 600px")) {
@@ -83,8 +91,8 @@ function carModelToSwiperSlide(carModel) {
     img.setAttribute('width', img.width);
     img.setAttribute('height', img.height);
   });
-  img.setAttribute('height', getImageHeight());
-  img.setAttribute('width', 'auto');
+  img.setAttribute('height', getApproxImageHeight());
+  img.setAttribute('width', getApproxImageWidth());
   const preloader = createSwiperPreloader();
   const header = document.createElement('div');
   header.textContent = carModel.model;
