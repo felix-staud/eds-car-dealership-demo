@@ -62,12 +62,24 @@ function createSwiperPreloader() {
   return div;
 }
 
+function getImageHeight() {
+  if (window.matchMedia("width >= 900px")) {
+    return 110;
+  } else if (window.matchMedia("width >= 600px")) {
+    return 100;
+  } else {
+    return 90;
+  }
+}
+
 /**
  *
  * @param {CarModel} carModel
  */
 function carModelToSwiperSlide(carModel) {
   const picture = createOptimizedPicture(carModel.image, carModel.model);
+  const img = picture.querySelector('img');
+  img.setAttribute('height', getImageHeight());
   const preloader = createSwiperPreloader();
   const header = document.createElement('div');
   header.textContent = carModel.model;
