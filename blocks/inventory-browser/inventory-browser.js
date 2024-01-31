@@ -399,6 +399,7 @@ function createCarImageElement(car) {
 
   const pictureEl = createOptimizedPicture(src, alt, true);
   const imgEl = pictureEl.querySelector('img');
+  imgEl.setAttribute('fetchpriority', 'high');
   imgEl.width = 356;
   imgEl.height = 275;
   imgEl.addEventListener('load', () => {
