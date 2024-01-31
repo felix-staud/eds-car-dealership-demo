@@ -10,7 +10,7 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-} from './aem.js';
+} from './aem.min.js';
 
 const LCP_BLOCKS = ['hero-slider', 'slider', 'car-details']; // add your LCP blocks to the list
 

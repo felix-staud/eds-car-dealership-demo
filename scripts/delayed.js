@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import { sampleRUM } from './aem.js';
+import { sampleRUM } from './aem.min.js';
 import initCookieConsent from './delayed/cookie-consent.js';
 
 // add more delayed functionality here

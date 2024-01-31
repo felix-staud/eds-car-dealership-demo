@@ -1,4 +1,4 @@
-import { loadCSS, loadScript } from '../aem.js';
+import { loadCSS, loadScript } from '../aem.min.js';
 
 export default async function init() {
   await loadScript(`${window.hlx.codeBasePath}/vendor/orestbida/cookieconsent_v3.0.0/cookieconsent.min.umd.js`);
