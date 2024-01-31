@@ -620,7 +620,7 @@ export default async function decorate(block) {
 
   state.inventoryUl = document.createElement('ul');
   state.inventoryUl.classList.add('inventory-car-list');
-  state.inventoryUl.append('loading...')
+  state.inventoryUl.append('loading...');
 
   const inventoryDiv = document.createElement('div');
   inventoryDiv.classList.add('inventory');
