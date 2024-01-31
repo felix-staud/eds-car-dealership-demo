@@ -199,7 +199,7 @@ main pre {
 a {
   color: var(--link-color);
   position: relative;
-  /* background: linear-gradient(0deg, var(--link-hover-color), var(--link-hover-color)) no-repeat right bottom / 0 var(--link-hover-bg-height); */
+  background: linear-gradient(0deg, var(--link-hover-color), var(--link-hover-color)) no-repeat right bottom / 0 var(--link-hover-bg-height);
   transition: background-size 350ms;
 }
 
