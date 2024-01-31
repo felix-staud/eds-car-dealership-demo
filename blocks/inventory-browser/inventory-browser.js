@@ -342,6 +342,9 @@ function createFiltersElement() {
   openFilterDialogBtn.addEventListener('click', () => {
     filterDialogEl.classList.remove('hidden');
     document.body.classList.add('dialog-open');
+    if (filterDialogEl.querySelectorAll('.accordion').length === 0) {
+      renderFilterAccordions();
+    }
   });
 
   showFilterResultsBtn.addEventListener('click', () => {
@@ -635,11 +638,8 @@ export default async function decorate(block) {
   block.replaceChildren(inventoryDiv);
   state.block = block;
   state.filterDialogEl = block.querySelector('#filter-dialog');
-  renderFilterAccordions();
   setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
 
-  window.setTimeout(async () => {
-    state.cars = await loadCars(url);
-    handleSearch('');
-  }, 3000);
+  state.cars = await loadCars(url);
+  handleSearch('');
 }
