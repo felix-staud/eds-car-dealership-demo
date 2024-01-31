@@ -38,8 +38,11 @@ export function buildSwiperWrapper(slideElements) {
   const swiperWrapper = document.createElement('div');
   swiperWrapper.classList.add('swiper-wrapper');
 
-  slideElements.forEach((slideElement) => {
+  slideElements.forEach((slideElement, index) => {
     const slide = buildSlide(slideElement);
+    if (index === 0) {
+      slide.querySelector('img').setAttribute('fetchpriority', 'high');
+    }
     swiperWrapper.appendChild(slide);
   });
 
