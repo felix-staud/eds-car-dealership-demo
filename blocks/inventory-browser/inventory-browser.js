@@ -618,7 +618,6 @@ export default async function decorate(block) {
 
   if (!url) return;
 
-  state.cars = await loadCars(url);
   state.inventoryUl = document.createElement('ul');
   state.inventoryUl.classList.add('inventory-car-list');
 
@@ -638,7 +637,10 @@ export default async function decorate(block) {
   renderFilterAccordions();
   setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
 
-  window.setTimeout(() => {
+  handleSearch('');
+
+  window.setTimeout(async () => {
+    state.cars = await loadCars(url);
     handleSearch('');
-  }, 2000);
+  }, 3000);
 }
