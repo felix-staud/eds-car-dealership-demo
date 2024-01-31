@@ -1,5 +1,5 @@
 import createField, { createTimestampField } from './form-fields.js';
-import { sampleRUM } from '../../scripts/aem.js';
+import { sampleRUM } from '../../scripts/aem.min.js';
 
 /**
  * @param {HTMLFormElement} form

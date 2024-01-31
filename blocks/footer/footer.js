@@ -1,4 +1,4 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { getMetadata } from '../../scripts/aem.min.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 /**

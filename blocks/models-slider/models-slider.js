@@ -1,4 +1,4 @@
-import { createOptimizedPicture, loadCSS, loadScript } from '../../scripts/aem.js';
+import { createOptimizedPicture, loadCSS, loadScript } from '../../scripts/aem.min.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import { extractHrefFromBlock } from '../../scripts/utils.js';
 import { buildSlide } from '../slider/slider.js';

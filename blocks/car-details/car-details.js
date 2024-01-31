@@ -3,7 +3,7 @@ import {
   decorateIcons,
   loadCSS,
   loadScript,
-} from '../../scripts/aem.js';
+} from '../../scripts/aem.min.js';
 import { Car, SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
   createContactFormSearchParamsForCar,

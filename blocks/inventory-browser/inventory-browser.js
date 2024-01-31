@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
+import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.min.js';
 import { Car, MultiSheetData, SingleSheetData } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import {
   camelCaseToLabel,

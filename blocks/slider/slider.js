@@ -1,4 +1,4 @@
-import { loadCSS, loadScript } from '../../scripts/aem.js';
+import { loadCSS, loadScript } from '../../scripts/aem.min.js';
 
 /**
  * @typedef {{rows: number, columns: number}} SwiperGridConfig
