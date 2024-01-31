@@ -19,6 +19,7 @@ main .section.car-details-container {
 .car-details {
   --icon-size: 36px;
   --secondary-bg-color: #ececec;
+  --swiper-pagination-bullet-size: 1.5rem;
 }
 
 .car-details ul {
