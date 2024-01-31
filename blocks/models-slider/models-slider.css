@@ -50,6 +50,7 @@
 
 .models-slider .swiper .swiper-wrapper .swiper-slide img {
     height: 90px;
+    width: auto;
 }
 
 @media (width >=600px) {
