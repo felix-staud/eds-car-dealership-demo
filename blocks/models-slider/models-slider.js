@@ -97,7 +97,8 @@ function carModelToSwiperSlide(carModel) {
   const header = document.createElement('div');
   header.textContent = carModel.model;
 
-  let slide = document.createElement('div');
+  let slide = document.createElement('a');
+  slide.href = `/inventory/new?q=${carModel.model}`
   slide = buildSlide(slide);
   slide.replaceChildren(picture, preloader, header);
 

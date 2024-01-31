@@ -283,6 +283,17 @@ function setActiveFilterValuesFromUrlSearchParams(searchParams) {
 }
 
 /**
+ * @param {URLSearchParams} searchParams 
+ */
+function setSearchValueFromUrlSearchParams(searchParams) {
+  const qParam = searchParams.get('q');
+
+  if (qParam) {
+    state.block.querySelector('.inventory-search-input').value = qParam;
+  }
+}
+
+/**
  * @param {Element} block
  */
 function createFiltersElement() {
@@ -342,9 +353,6 @@ function createFiltersElement() {
   openFilterDialogBtn.addEventListener('click', () => {
     filterDialogEl.classList.remove('hidden');
     document.body.classList.add('dialog-open');
-    if (filterDialogEl.querySelectorAll('.accordion').length === 0) {
-      renderFilterAccordions();
-    }
   });
 
   showFilterResultsBtn.addEventListener('click', () => {
@@ -568,6 +576,8 @@ function handleSearch(query) {
       return searchStr.includes(lQuery);
     });
 
+    console.log(query, foundCars);
+
     if (foundCars.length > 0) {
       renderCarElement(foundCars);
     } else {
@@ -621,9 +631,10 @@ export default async function decorate(block) {
 
   if (!url) return;
 
+  state.cars = await loadCars(url);
+
   state.inventoryUl = document.createElement('ul');
   state.inventoryUl.classList.add('inventory-car-list');
-  state.inventoryUl.append('loading...');
 
   const inventoryDiv = document.createElement('div');
   inventoryDiv.classList.add('inventory');
@@ -638,8 +649,10 @@ export default async function decorate(block) {
   block.replaceChildren(inventoryDiv);
   state.block = block;
   state.filterDialogEl = block.querySelector('#filter-dialog');
-  setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
+  renderFilterAccordions();
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  setActiveFilterValuesFromUrlSearchParams(urlSearchParams);
+  setSearchValueFromUrlSearchParams(urlSearchParams)
 
-  state.cars = await loadCars(url);
-  handleSearch('');
+  handleSearch(block.querySelector('.inventory-search-input').value);
 }

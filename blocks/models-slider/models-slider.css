@@ -5,6 +5,10 @@
     position: relative;
 }
 
+.models-slider a {
+    color: currentColor;
+}
+
 /* Nav Pills */
 
 .models-slider .nav-pills {
