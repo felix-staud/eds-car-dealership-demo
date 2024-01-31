@@ -632,12 +632,13 @@ export default async function decorate(block) {
   inventoryDiv.appendChild(filterEl);
   inventoryDiv.appendChild(state.inventoryUl);
 
-  renderCarElement(state.cars);
-
   block.replaceChildren(inventoryDiv);
   state.block = block;
   state.filterDialogEl = block.querySelector('#filter-dialog');
   renderFilterAccordions();
   setActiveFilterValuesFromUrlSearchParams(new URLSearchParams(window.location.search));
-  handleSearch('');
+
+  window.setTimeout(() => {
+    handleSearch('');
+  }, 2000);
 }
