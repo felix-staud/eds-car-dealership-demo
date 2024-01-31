@@ -59,6 +59,10 @@
   border: none;
 }
 
+.inventory-browser .inventory .inventory-car-list {
+  min-height: 80vh;
+}
+
 .inventory-browser .inventory .inventory-car .inventory-car-image {
   position: relative;
   min-height: 217px;
