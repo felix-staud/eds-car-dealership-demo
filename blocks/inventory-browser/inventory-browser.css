@@ -61,6 +61,14 @@
 
 .inventory-browser .inventory .inventory-car .inventory-car-image {
   position: relative;
+  min-height: 217px;
+}
+
+@media (width >= 900px) {
+  .inventory-browser .inventory .inventory-car .inventory-car-image {
+    min-height: 225px;
+
+  }
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image .overlay {
@@ -68,6 +76,7 @@
   inset: 0;
   background-color: unset;
   transition: background-color 350ms ease-in-out;
+  min-width: 275px;
 }
 
 .inventory-browser .inventory .inventory-car .inventory-car-image a {

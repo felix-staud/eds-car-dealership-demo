@@ -397,7 +397,14 @@ function createCarImageElement(car) {
     alt = 'placeholder image';
   }
 
-  const pictureEl = createOptimizedPicture(src, alt);
+  const pictureEl = createOptimizedPicture(src, alt, true);
+  const imgEl = pictureEl.querySelector('img');
+  imgEl.width = 356;
+  imgEl.height = 275;
+  imgEl.addEventListener('load', () => {
+    imgEl.setAttribute('width', imgEl.width);
+    imgEl.setAttribute('height', imgEl.height);
+  })
 
   carImageAnchor.appendChild(pictureEl);
 
