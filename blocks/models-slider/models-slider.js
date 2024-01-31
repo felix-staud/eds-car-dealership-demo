@@ -79,6 +79,10 @@ function getImageHeight() {
 function carModelToSwiperSlide(carModel) {
   const picture = createOptimizedPicture(carModel.image, carModel.model);
   const img = picture.querySelector('img');
+  img.addEventListener('load', () => {
+    img.setAttribute('width', img.width);
+    img.setAttribute('height', img.height);
+  });
   img.setAttribute('height', getImageHeight());
   const preloader = createSwiperPreloader();
   const header = document.createElement('div');
@@ -259,5 +263,4 @@ export default async function decorate(block) {
   });
   const data = await loadCarModels(url);
   setCarModels(data);
-  state.swiper.on('navigationNext', (...args) => console.log(args));
 }
