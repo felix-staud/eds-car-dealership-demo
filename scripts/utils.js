@@ -72,7 +72,7 @@ export function createIconElement(iconname) {
 
 /**
  * parse any[] car data to Car[]
- * @param {an6[]} rawCarData
+ * @param {any[]} rawCarData
  */
 export function parseRawCarData(rawCarData) {
   const splitter = { features: ', ', images: '\n' };
@@ -81,6 +81,11 @@ export function parseRawCarData(rawCarData) {
     delete car._originLink; // eslint-disable-line no-underscore-dangle
     return ({
       ...car,
+      price: Number(car.price),
+      year: Number(car.year),
+      miles: Number(car.miles),
+      seats: Number(car.seats),
+      horsepower: Number(car.horsepower),
       features: car.features.split(splitter.features),
       images: car.images.split(splitter.images),
     });
@@ -168,4 +173,11 @@ export function camelCaseToLabel(camelCase) {
   const label = camelCase.replace(/([A-Z])/g, ' $1');
 
   return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+/**
+ * @param {Array} array
+ */
+export function toUniqueArray(array) {
+  return [...new Set(array)];
 }

@@ -11,6 +11,7 @@ import {
   loadMultiSheetData,
   loadSingleSheetData,
   parseRawCarData,
+  toUniqueArray,
 } from '../../scripts/utils.js';
 
 /**
@@ -32,6 +33,8 @@ import {
  *  cars: Car[],
  *  inventoryUl: HTMLUListElement,
  *  inputCount: number,
+ *  search: string,
+ *  sortBy: {key: string, direction: "asc" | "desc"},
  *  filters: Filter[],
  * }} State
  */
@@ -43,8 +46,34 @@ const state = {
   cars: [],
   inventoryUl: {},
   inputCount: 0,
+  search: '',
+  sortBy: { key: 'year', direction: 'desc' },
   filters: [],
 };
+
+/**
+ * @param {string} search
+ */
+function setSearch(search) {
+  state.search = search;
+  const el = state.block.querySelector('.inventory-search-input');
+  if (el) {
+    el.value = search;
+  }
+}
+
+/**
+ * @param {string} key
+ * @param {State["sortBy"]["direction"]} [direction="desc"]
+ */
+function setSortBy(key, direction = 'desc') {
+  state.sortBy.key = key;
+  state.sortBy.direction = direction;
+  const el = state.filterDialogEl.querySelector('#sort-by-select');
+  if (el) {
+    el.value = `${key};${direction}`;
+  }
+}
 
 /**
  * @param {string} key
@@ -58,24 +87,6 @@ function setFilter(key, values) {
     state.filters[filterIndex].options = filterOptions;
   } else {
     state.filters.push({ key, options: filterOptions });
-  }
-}
-
-/**
- * @param {string} key
- * @param {FilterOptionValue} value
- */
-function addFilterOption(key, value) {
-  const filterIndex = state.filters.findIndex((filter) => filter.key === key);
-
-  if (filterIndex >= 0) {
-    const valueExist = state.filters[filterIndex].options.some((option) => option.value === value);
-
-    if (!valueExist) {
-      state.filters[filterIndex].options.push({ value, active: false });
-    }
-  } else {
-    setFilter(key, [value]);
   }
 }
 
@@ -211,9 +222,7 @@ async function loadCars(href) {
       throw new Error(`unknown sheet-type: ${sheetData[':type']}`);
   }
 
-  const cars = parseRawCarData(rawCarData);
-
-  return cars.sort((a, b) => (getCarHeader(a) > getCarHeader(b) ? -1 : 1));
+  return parseRawCarData(rawCarData);
 }
 
 /**
@@ -255,8 +264,8 @@ function renderFilterAccordions() {
 /**
  * @returns {URLSearchParams};
  */
-function getFiltersAsUrlSearchParams() {
-  const { filters } = state;
+function getAllAsUrlSearchParams() {
+  const { filters, search, sortBy } = state;
   const searchParams = new URLSearchParams();
 
   filters.forEach((filter) => {
@@ -266,6 +275,14 @@ function getFiltersAsUrlSearchParams() {
       searchParams.append(filter.key, activeOptions.map((option) => option.value));
     }
   });
+
+  if (search) {
+    searchParams.append('q', search);
+  }
+
+  if (sortBy) {
+    searchParams.append('sortBy', `${sortBy.key};${sortBy.direction}`);
+  }
 
   return searchParams;
 }
@@ -283,13 +300,25 @@ function setActiveFilterValuesFromUrlSearchParams(searchParams) {
 }
 
 /**
- * @param {URLSearchParams} searchParams 
+ * @param {URLSearchParams} searchParams
  */
 function setSearchValueFromUrlSearchParams(searchParams) {
   const qParam = searchParams.get('q');
 
   if (qParam) {
-    state.block.querySelector('.inventory-search-input').value = qParam;
+    setSearch(qParam);
+  }
+}
+
+/**
+ * @param {URLSearchParams} searchParams
+ */
+function setSortByFromUrlSearchParams(searchParams) {
+  const sortByParam = searchParams.get('sortBy');
+
+  if (sortByParam && sortByParam.includes(';')) {
+    const [key, direction] = sortByParam.split(';');
+    setSortBy(key, direction);
   }
 }
 
@@ -301,33 +330,43 @@ function createFiltersElement() {
   const wrapperEl = document.createElement('div');
   wrapperEl.classList.add('filters-wrapper');
 
-  setFilter('condition', []);
-  setFilter('year', []);
-  setFilter('make', []);
-  setFilter('model', []);
-  setFilter('trim', []);
-  setFilter('bodyStyle', []);
-  setFilter('exteriorColor', []);
-  setFilter('interiorColor', []);
-  setFilter('transmission', []);
-  setFilter('fuelType', []);
+  const filterKeys = [
+    'condition',
+    'year',
+    'make',
+    'model',
+    'trim',
+    'bodyStyle',
+    'exteriorColor',
+    'interiorColor',
+    'transmission',
+    'fuelType',
+  ];
 
-  state.filters.forEach(({ key }) => {
-    cars.forEach((car) => {
-      addFilterOption(key, car[key]);
-    });
+  filterKeys.forEach((key) => {
+    const options = cars.map((car) => car[key]);
+    setFilter(key, toUniqueArray(options));
   });
+
+  const sortKeys = ['year', 'price', 'miles', 'horsepower'];
 
   const innerHTML = `
     <div class="button-group">
-      <button id="open-filter-dialog-btn" class="primary">${createIconElement('filters-white').outerHTML}&nbsp;Filter</button>
-      <button class="clear-filters-btn secondary">${createIconElement('cancel').outerHTML}&nbsp;Clear Filters</button>
+      <button id="open-filter-dialog-btn" class="primary">${createIconElement('filters-white').outerHTML}&nbsp;Filter/Sort</button>
+      <button class="clear-btn secondary">${createIconElement('cancel-btn-secondary').outerHTML}&nbsp;Clear</button>
     </div>
     <div class="active-filters outside"></div>
     <div id="filter-dialog" class="hidden">
       <div class="dialog-content">
         <div class="content-header">
-          <h3>Filter <button class="clear-filters-btn secondary">Clear Filters</button></h3>
+          <h3>Filter/Sort <button class="clear-btn secondary">Clear Filters</button></h3>
+          <div class="form-control">
+            <label for="sort-by-select">Sort By: </label>
+            <select name="sort-by" id="sort-by-select">
+              <option value="">- none -</option>
+              ${sortKeys.map((key) => `<option value="${key};asc">${key} - Ascending</option>\n<option value="${key};desc">${key} - Descending</option>`).join('\n')}
+            </select>
+          </div>
           <div class="active-filters inside"></div>
         </div>
         <div class="content-body">
@@ -343,12 +382,12 @@ function createFiltersElement() {
   const openFilterDialogBtn = wrapperEl.querySelector('#open-filter-dialog-btn');
   /** @type {HTMLDivElement} */
   const filterDialogEl = wrapperEl.querySelector('#filter-dialog');
-  /** @type {HTMLDivElement[]} */
-  const activeFiltersElems = wrapperEl.querySelectorAll('.active-filters');
   /** @type {HTMLButtonElement} */
   const showFilterResultsBtn = filterDialogEl.querySelector('#show-filter-results-btn');
   /** @type {HTMLButtonElement[]} */
-  const clearFiltersBtns = wrapperEl.querySelectorAll('.clear-filters-btn');
+  const clearBtns = wrapperEl.querySelectorAll('.clear-btn');
+  /** @type {HTMLSelectElement} */
+  const soryByEl = filterDialogEl.querySelector('#sort-by-select');
 
   openFilterDialogBtn.addEventListener('click', () => {
     filterDialogEl.classList.remove('hidden');
@@ -358,24 +397,33 @@ function createFiltersElement() {
   showFilterResultsBtn.addEventListener('click', () => {
     filterDialogEl.classList.add('hidden');
     document.body.classList.remove('dialog-open');
-    window.location.search = getFiltersAsUrlSearchParams();
+    window.location.search = getAllAsUrlSearchParams();
   });
 
-  clearFiltersBtns.forEach((btn) => {
+  clearBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      activeFiltersElems.forEach((activeFiltersEl) => {
-        const tagElements = activeFiltersEl.querySelectorAll('.tag');
-        tagElements.forEach((tagEl) => {
-          const removeTagEl = tagEl.querySelector('.remove-tag');
-          if (removeTagEl) {
-            removeTagEl.dispatchEvent(new Event('click'));
-          } else {
-            tagEl.remove();
-          }
+      const { filters } = state;
+      filters.forEach((filter) => {
+        filter.options.forEach((option) => {
+          option.active = false;
         });
+        state.search = '';
+        state.sortBy = '';
       });
-      window.location.search = getFiltersAsUrlSearchParams();
+      window.location.search = getAllAsUrlSearchParams();
     });
+  });
+
+  soryByEl.addEventListener('change', () => {
+    const { value } = soryByEl;
+    console.log('sortByEl change', value);
+
+    if (!value) {
+      setSortBy('');
+    }
+
+    const [key, direction] = value.split(';');
+    setSortBy(key, direction);
   });
 
   decorateIcons(wrapperEl);
@@ -416,7 +464,7 @@ function createCarImageElement(car) {
   imgEl.addEventListener('load', () => {
     imgEl.setAttribute('width', imgEl.width);
     imgEl.setAttribute('height', imgEl.height);
-  })
+  });
 
   carImageAnchor.appendChild(pictureEl);
 
@@ -525,6 +573,35 @@ function renderNoResultsElement() {
 }
 
 /**
+ * @param {Car[]} cars
+ * @returns {Car[]} sorted cars
+ */
+function sortCars(cars) {
+  console.log('sortCars:', state.sortBy, cars);
+  if (cars.length <= 1) return cars;
+
+  const { sortBy } = state;
+  const firstCar = cars[0];
+  const keys = Object.keys(firstCar);
+
+  if (keys.includes(sortBy.key)) {
+    const sortedCars = cars.sort((carA, carB) => {
+      const a = carA[sortBy.key];
+      const b = carB[sortBy.key];
+
+      if (a < b) return sortBy.direction === 'asc' ? -1 : 1;
+      if (a > b) return sortBy.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    console.log(sortedCars);
+    return sortedCars;
+  }
+
+  return cars; // unknown sortBy keys are ignored
+}
+
+/**
  * @returns {Car[]}
  */
 function getFilteredCars() {
@@ -564,9 +641,10 @@ function getFilteredCars() {
 function handleSearch(query) {
   const lQuery = query.toLowerCase();
   const filteredCars = getFilteredCars();
+  console.log(state.sortBy);
 
   if (!lQuery || lQuery.length === 0) {
-    renderCarElement(filteredCars);
+    renderCarElement(sortCars(filteredCars));
   } else {
     const foundCars = filteredCars.filter(({
       year, make, model, trim,
@@ -576,10 +654,8 @@ function handleSearch(query) {
       return searchStr.includes(lQuery);
     });
 
-    console.log(query, foundCars);
-
     if (foundCars.length > 0) {
-      renderCarElement(foundCars);
+      renderCarElement(sortCars(foundCars));
     } else {
       renderNoResultsElement();
     }
@@ -652,7 +728,8 @@ export default async function decorate(block) {
   renderFilterAccordions();
   const urlSearchParams = new URLSearchParams(window.location.search);
   setActiveFilterValuesFromUrlSearchParams(urlSearchParams);
-  setSearchValueFromUrlSearchParams(urlSearchParams)
+  setSearchValueFromUrlSearchParams(urlSearchParams);
+  setSortByFromUrlSearchParams(urlSearchParams);
 
   handleSearch(block.querySelector('.inventory-search-input').value);
 }

@@ -2,15 +2,17 @@
   Pure CSS Accordion inspired by https://codepen.io/alvarotrigo/pen/dyJbqpd
 */
 
-.inventory-browser .filters-wrapper .button-group button {
-  display: inline-flex;
-  align-items: center;
-  padding: .5rem 1rem;
-}
-
 .inventory-browser .filters-wrapper .button-group {
   display: flex;
   justify-content: space-between;
+}
+
+.inventory-browser .filters-wrapper .button-group button {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: .3rem 1rem;
 }
 
 .inventory-browser #filter-dialog,
@@ -64,7 +66,7 @@
 }
 
 .inventory-browser #filter-dialog .dialog-content .content-header h3 {
-  margin-top: 0;
+  margin: 0;
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
@@ -75,18 +77,30 @@
   margin: 0;
 }
 
+.inventory-browser #filter-dialog #sort-by-select,
+.inventory-browser #filter-dialog label[for="sort-by-select"] { 
+  font-size: 1rem;
+} 
+
+.inventory-browser #filter-dialog #sort-by-select { 
+  color: var(--btn-primary-bg-color);
+  border-color: var(--btn-primary-border-color);
+  padding: .25rem;
+}
+
 .inventory-browser .active-filters {
   display: flex;
   flex-wrap: wrap;
   max-height: 200px;
   overflow: auto;
+  padding: .5rem 0;
+  margin: .5rem 0;
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
 }
 
 .inventory-browser .active-filters.outside {
-  padding: .5rem 0;
-  margin-bottom: .5rem;
-  border-top: 1px solid silver;
-  border-bottom: 1px solid silver;
+  margin-top: 1rem;
 }
 
 .inventory-browser .active-filters .tag {
