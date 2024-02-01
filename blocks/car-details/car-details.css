@@ -63,6 +63,10 @@ main .section.car-details-container {
   margin: .5rem;
 }
 
+.car-details .car-images {
+  min-height: 350px;
+}
+
 /* swiper */
 .car-details .swiper {
   background-color: var(--secondary-bg-color);
@@ -223,6 +227,10 @@ main .section.car-details-container {
 }
 
 @media (width >=900px) {
+  .car-details .car-images {
+    min-height: 450px;
+  }
+
   .car-details .car-sections {
     grid-gap: 1rem;
     grid-template-columns: auto 400px;
