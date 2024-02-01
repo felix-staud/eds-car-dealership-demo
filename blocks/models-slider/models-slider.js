@@ -85,6 +85,7 @@ function getApproxImageHeight() {
  * @param {CarModel} carModel
  */
 function carModelToSwiperSlide(carModel) {
+  const slide = document.createElement('div');
   const picture = createOptimizedPicture(carModel.image, carModel.model);
   const img = picture.querySelector('img');
   img.addEventListener('load', () => {
@@ -97,10 +98,12 @@ function carModelToSwiperSlide(carModel) {
   const header = document.createElement('div');
   header.textContent = carModel.model;
 
-  let slide = document.createElement('a');
-  slide.href = `/inventory/new?q=${carModel.model}`
-  slide = buildSlide(slide);
-  slide.replaceChildren(picture, preloader, header);
+  let anchor = document.createElement('a');
+  anchor.href = `/inventory/new?q=${carModel.model}`
+  anchor.replaceChildren(picture, preloader, header);
+
+  buildSlide(slide);
+  slide.appendChild(anchor);
 
   return slide;
 }
