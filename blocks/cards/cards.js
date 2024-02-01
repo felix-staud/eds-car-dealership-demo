@@ -18,7 +18,7 @@ export default function decorate(block) {
       img.setAttribute('width', img.width);
       img.setAttribute('height', img.height);
     });
-  })
+  });
   block.textContent = '';
   block.append(ul);
 }

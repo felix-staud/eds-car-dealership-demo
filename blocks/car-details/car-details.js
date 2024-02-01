@@ -259,6 +259,6 @@ export default async function decorate(block) {
     imgEl.addEventListener('load', () => {
       imgEl.setAttribute('width', imgEl.width);
       imgEl.setAttribute('height', imgEl.height);
-    })
-  })
+    });
+  });
 }

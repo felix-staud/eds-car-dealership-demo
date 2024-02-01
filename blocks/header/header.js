@@ -112,12 +112,12 @@ export default async function decorate(block) {
 
   if (navTools) {
     const buttons = navTools.querySelectorAll('.button, button');
-    buttons.forEach(button => {
-      const textContent = button.textContent;
+    buttons.forEach((button) => {
+      const { textContent } = button;
       const icon = button.querySelector('.icon');
       button.setAttribute('aria-label', textContent);
       button.innerHTML = icon.outerHTML;
-    })
+    });
   }
 
   const navBrand = nav.querySelector('.nav-brand');

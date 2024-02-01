@@ -63,21 +63,19 @@ function createSwiperPreloader() {
 }
 
 function getApproxImageWidth() {
-  if (window.matchMedia("width >= 600px")) {
+  if (window.matchMedia('width >= 600px')) {
     return 250;
-  } else {
-    return 225;
   }
+  return 225;
 }
 
 function getApproxImageHeight() {
-  if (window.matchMedia("width >= 900px")) {
+  if (window.matchMedia('width >= 900px')) {
     return 110;
-  } else if (window.matchMedia("width >= 600px")) {
+  } if (window.matchMedia('width >= 600px')) {
     return 100;
-  } else {
-    return 90;
   }
+  return 90;
 }
 
 /**
@@ -98,8 +96,8 @@ function carModelToSwiperSlide(carModel) {
   const header = document.createElement('div');
   header.textContent = carModel.model;
 
-  let anchor = document.createElement('a');
-  anchor.href = `/inventory/new?q=${carModel.model}`
+  const anchor = document.createElement('a');
+  anchor.href = `/inventory/new?q=${carModel.model}`;
   anchor.replaceChildren(picture, preloader, header);
 
   buildSlide(slide);
@@ -254,7 +252,7 @@ export default async function decorate(block) {
       600: {
         slidesPerView: 2,
         spaceBetween: 30,
-      }
+      },
     },
     navigation: {
       nextEl: '.swiper-navigation .swiper-button-next',
@@ -262,7 +260,7 @@ export default async function decorate(block) {
     },
     on: {
       /**
-       * @param {SwiperApi} swiper 
+       * @param {SwiperApi} swiper
        */
       navigationNext: (swiper) => {
         const slidesPerView = swiper.slidesPerViewDynamic();
@@ -271,8 +269,8 @@ export default async function decorate(block) {
       navigationPrev: (swiper) => {
         const slidesPerView = swiper.slidesPerViewDynamic();
         swiper.slideTo(swiper.activeIndex - slidesPerView - 1, slidesPerView * 250);
-      }
-    }
+      },
+    },
   });
   const data = await loadCarModels(url);
   setCarModels(data);
