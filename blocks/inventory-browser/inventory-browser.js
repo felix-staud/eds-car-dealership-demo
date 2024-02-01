@@ -416,7 +416,6 @@ function createFiltersElement() {
 
   soryByEl.addEventListener('change', () => {
     const { value } = soryByEl;
-    console.log('sortByEl change', value);
 
     if (!value) {
       setSortBy('');
@@ -577,7 +576,6 @@ function renderNoResultsElement() {
  * @returns {Car[]} sorted cars
  */
 function sortCars(cars) {
-  console.log('sortCars:', state.sortBy, cars);
   if (cars.length <= 1) return cars;
 
   const { sortBy } = state;
@@ -594,7 +592,6 @@ function sortCars(cars) {
       return 0;
     });
 
-    console.log(sortedCars);
     return sortedCars;
   }
 
@@ -641,7 +638,6 @@ function getFilteredCars() {
 function handleSearch(query) {
   const lQuery = query.toLowerCase();
   const filteredCars = getFilteredCars();
-  console.log(state.sortBy);
 
   if (!lQuery || lQuery.length === 0) {
     renderCarElement(sortCars(filteredCars));
