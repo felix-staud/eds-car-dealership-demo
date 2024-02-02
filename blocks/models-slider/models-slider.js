@@ -84,7 +84,7 @@ function getApproxImageHeight() {
  */
 function carModelToSwiperSlide(carModel) {
   const slide = document.createElement('div');
-  const picture = createOptimizedPicture(carModel.image, carModel.model);
+  const picture = createOptimizedPicture(carModel.image, `${carModel.model} ${carModel.type} Image`);
   const img = picture.querySelector('img');
   img.addEventListener('load', () => {
     img.setAttribute('width', img.width);
