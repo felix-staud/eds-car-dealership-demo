@@ -7,15 +7,15 @@
 import {
   decorateMain,
 } from '../../scripts/scripts.js';
-
 import {
   loadBlocks,
 } from '../../scripts/aem.min.js';
+import { getWindowLocation } from '../../scripts/utils.js';
 
 /**
  * Loads a fragment.
  * @param {string} path The path to the fragment
- * @returns {HTMLElement} The root element of the fragment
+ * @returns {Promise<HTMLElement>} The root element of the fragment
  */
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
@@ -27,7 +27,7 @@ export async function loadFragment(path) {
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, getWindowLocation())).href;
         });
       };
       resetAttributeBase('img', 'src');

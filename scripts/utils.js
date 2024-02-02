@@ -181,3 +181,11 @@ export function camelCaseToLabel(camelCase) {
 export function toUniqueArray(array) {
   return [...new Set(array)];
 }
+
+/**
+ * iframe proof window.location grab
+ * @returns {String} the true window.location
+ */
+export function getWindowLocation() {
+  return window.location.href === 'about:srcdoc' ? window.parent.location : window.location;
+}
