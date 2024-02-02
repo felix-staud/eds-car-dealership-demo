@@ -33,9 +33,10 @@ async function loadOpeningHoursData(href) {
 /**
  *
  * @param {OpeningHour[]} openingHours
+ * @param {HTMLElement} block
  * @returns
  */
-function buildOpeningHoursCells(openingHours) {
+function buildOpeningHoursCells(openingHours, block) {
   const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const dayIndex = new Date().getDay();
   /** @type {HTMLElement[]} */
@@ -49,7 +50,7 @@ function buildOpeningHoursCells(openingHours) {
       const elem = document.createElement('div');
       elem.classList.add(key);
 
-      if (isActiveWeekday) {
+      if (!block.classList.contains('no-highlight') && isActiveWeekday) {
         elem.classList.add('active');
       }
 
@@ -71,7 +72,7 @@ export default async function decorate(block) {
   if (!url) return;
 
   const openingHours = await loadOpeningHoursData(url);
-  const cells = buildOpeningHoursCells(openingHours);
+  const cells = buildOpeningHoursCells(openingHours, block);
 
   block.replaceChildren(...cells);
 }
