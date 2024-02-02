@@ -7,6 +7,10 @@
   max-width: unset;
 }
 
+.carousel {
+  --slide-padding: 2rem;
+}
+
 .carousel a {
   white-space: nowrap;
 }
@@ -34,6 +38,7 @@
 }
 
 .carousel .carousel-slide {
+  box-sizing: border-box;
   flex: 0 0 100%;
   scroll-snap-align: start;
   display: flex;
@@ -41,6 +46,7 @@
   align-items: flex-start;
   justify-content: center;
   position: relative;
+  padding: var(--slide-padding);
   width: 100%;
   min-height: max(40rem, calc(100svh - var(--nav-height)));
 }
@@ -66,7 +72,7 @@
 
 .carousel .carousel-slide .carousel-slide-content {
   z-index: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   margin: 1.5rem 3rem;
   color: white;
   background-color: rgba(0 0 0 / 50%);
@@ -81,6 +87,12 @@
 .carousel .carousel-slide .carousel-slide-content h4,
 .carousel .carousel-slide .carousel-slide-content h5 {
   margin-top: 0;
+}
+
+.carousel .carousel-slide .carousel-slide-content .button {
+  display: inline-flex;
+  width: 100%;
+  margin:0;
 }
 
 .carousel .carousel-pagination-nav.hidden {
@@ -124,10 +136,8 @@
 
 .carousel .carousel-navigation {
   position: absolute;
-  top: 50%;
+  inset: 50% .25rem 0;
   transform: translateY(-50%);
-  left: 0.5rem;
-  right: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -188,10 +198,16 @@
   }
   
   .carousel .carousel-slide .carousel-slide-content {
-      padding: 3rem 5rem;
+      padding: 1.5rem 3rem;
   }
 
   .carousel .carousel-slide .carousel-slide-content[data-align="justify"] {
     --slide-content-width: auto;
+  }
+
+  @media (width >=900px) {
+    .carousel .carousel-slide {
+      min-height: max(40rem, calc(100svh - var(--nav-height) - var(--nav-contact-height)));
+    }
   }
 }
