@@ -82,7 +82,7 @@ export function parseRawCarData(rawCarData) {
     return ({
       ...car,
       price: Number(car.price),
-      year: Number(car.year),
+      // year: Number(car.year),
       miles: Number(car.miles),
       seats: Number(car.seats),
       horsepower: Number(car.horsepower),
