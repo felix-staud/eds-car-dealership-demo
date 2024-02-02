@@ -1,7 +1,6 @@
 import { createOptimizedPicture, loadCSS, loadScript } from '../../scripts/aem.min.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
 import { extractHrefFromBlock } from '../../scripts/utils.js';
-import { buildSlide } from '../slider/slider.js';
 
 /**
  * @typedef {{
@@ -84,6 +83,7 @@ function getApproxImageHeight() {
  */
 function carModelToSwiperSlide(carModel) {
   const slide = document.createElement('div');
+  slide.classList.add('swiper-slide');
   const picture = createOptimizedPicture(carModel.image, `${carModel.model} ${carModel.type} Image`);
   const img = picture.querySelector('img');
   img.addEventListener('load', () => {
@@ -100,7 +100,6 @@ function carModelToSwiperSlide(carModel) {
   anchor.href = `/inventory/new?q=${carModel.model}`;
   anchor.replaceChildren(picture, preloader, header);
 
-  buildSlide(slide);
   slide.appendChild(anchor);
 
   return slide;
