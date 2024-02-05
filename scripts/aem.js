@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getWindowSafe } from "./utils";
+import { getWindowSafe } from './utils.js';
 
 /* eslint-env browser */
 
