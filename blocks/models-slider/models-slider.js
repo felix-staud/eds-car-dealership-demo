@@ -1,6 +1,6 @@
 import { createOptimizedPicture, loadCSS, loadScript } from '../../scripts/aem.min.js';
 import { SingleSheetData, SwiperApi } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
-import { extractHrefFromBlock } from '../../scripts/utils.js';
+import { extractHrefFromBlock, getWindowSafe } from '../../scripts/utils.js';
 
 /**
  * @typedef {{
@@ -62,16 +62,16 @@ function createSwiperPreloader() {
 }
 
 function getApproxImageWidth() {
-  if (window.matchMedia('width >= 600px')) {
+  if (getWindowSafe().matchMedia('width >= 600px')) {
     return 250;
   }
   return 225;
 }
 
 function getApproxImageHeight() {
-  if (window.matchMedia('width >= 900px')) {
+  if (getWindowSafe().matchMedia('width >= 900px')) {
     return 110;
-  } if (window.matchMedia('width >= 600px')) {
+  } if (getWindowSafe().matchMedia('width >= 600px')) {
     return 100;
   }
   return 90;
@@ -226,8 +226,8 @@ export default async function decorate(block) {
   const url = extractHrefFromBlock(block);
 
   if (!url) return;
-  await loadScript(`${window.hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.js`);
-  await loadCSS(`${window.hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.css`);
+  await loadScript(`${getWindowSafe().hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.js`);
+  await loadCSS(`${getWindowSafe().hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.css`);
 
   block.innerHTML = `
         <ul class="nav-pills"></ul>

@@ -1,6 +1,14 @@
 import { Car } from './types.js'; // eslint-disable-line no-unused-vars
 
 /**
+ * iframe proof window grab
+ * @returns {Window} the true window
+ */
+export function getWindowSafe() {
+  return window.location.href === 'about:srcdoc' ? window.parent : window;
+}
+
+/**
  * extract the first anchor url from a block
  * @param {Element} block
  * @returns {string | null}
@@ -124,13 +132,13 @@ export function setPageImage(image) {
   /** @type {URL} */
   let url;
 
-  if (image.startsWith(window.location.origin)) {
+  if (image.startsWith(getWindowSafe().location.origin)) {
     url = new URL(image);
   } else if (image.startsWith('/')) {
-    url = new URL(image, window.location.origin);
+    url = new URL(image, getWindowSafe().location.origin);
   } else {
     const imgUrl = new URL(image);
-    url = new URL(imgUrl.pathname, window.location.origin);
+    url = new URL(imgUrl.pathname, getWindowSafe().location.origin);
   }
 
   metaElems.forEach((metaEl) => metaEl.setAttribute('content', url.toString()));
@@ -180,12 +188,4 @@ export function camelCaseToLabel(camelCase) {
  */
 export function toUniqueArray(array) {
   return [...new Set(array)];
-}
-
-/**
- * iframe proof window.location grab
- * @returns {String} the true window.location
- */
-export function getWindowLocation() {
-  return window.location.href === 'about:srcdoc' ? window.parent.location : window.location;
 }

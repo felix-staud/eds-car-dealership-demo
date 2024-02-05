@@ -11,6 +11,7 @@ import {
   loadBlocks,
   loadCSS,
 } from './aem.min.js';
+import { getWindowSafe } from './utils.js';
 
 const LCP_BLOCKS = ['hero-slider', 'slider', 'car-details']; // add your LCP blocks to the list
 
@@ -18,9 +19,9 @@ const LCP_BLOCKS = ['hero-slider', 'slider', 'car-details']; // add your LCP blo
  * load fonts.css and set a session storage flag
  */
 async function loadFonts() {
-  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  await loadCSS(`${getWindowSafe().hlx.codeBasePath}/styles/fonts.css`);
   try {
-    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+    if (!getWindowSafe().location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
   } catch (e) {
     // do nothing
   }
@@ -59,7 +60,7 @@ async function loadEager(doc) {
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
-    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+    if (getWindowSafe().innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
       loadFonts();
     }
   } catch (e) {
@@ -75,14 +76,14 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadBlocks(main);
 
-  const { hash } = window.location;
+  const { hash } = getWindowSafe().location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
   loadHeader(doc.querySelector('header'));
   loadFooter(doc.querySelector('footer'));
 
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadCSS(`${getWindowSafe().hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
 
   sampleRUM('lazy');
@@ -96,7 +97,7 @@ async function loadLazy(doc) {
  */
 function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => import('./delayed.js'), 3000);
+  getWindowSafe().setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
 }
 

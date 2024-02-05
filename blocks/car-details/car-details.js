@@ -11,6 +11,7 @@ import {
   extractHrefFromBlock,
   formatNumber,
   getDealershipCode,
+  getWindowSafe,
   parseRawCarData,
   setPageDescription,
   setPageImage,
@@ -33,7 +34,7 @@ function getApiUrl(block) {
  * @returns {number} car id
  */
 function getCarId() {
-  const pathArr = window.location.pathname;
+  const pathArr = getWindowSafe().location.pathname;
   const id = pathArr[pathArr.length - 1];
 
   if (!id || Number.isNaN(id)) throw new Error('No car ID found in location path!');
@@ -228,8 +229,8 @@ export default async function decorate(block) {
     </ul>`;
 
   decorateIcons(block);
-  await loadScript(`${window.hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.js`);
-  await loadCSS(`${window.hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.css`);
+  await loadScript(`${getWindowSafe().hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.js`);
+  await loadCSS(`${getWindowSafe().hlx.codeBasePath}/vendor/swiper_v11.0.5/swiper-bundle.min.css`);
   /** @type {SwiperApi} */
   const swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
     direction: 'horizontal',
@@ -247,7 +248,7 @@ export default async function decorate(block) {
     },
   });
 
-  window.addEventListener('resize', () => {
+  getWindowSafe().addEventListener('resize', () => {
     swiper.update();
   });
 

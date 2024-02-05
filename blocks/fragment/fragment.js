@@ -10,7 +10,7 @@ import {
 import {
   loadBlocks,
 } from '../../scripts/aem.min.js';
-import { getWindowLocation } from '../../scripts/utils.js';
+import { getWindowSafe } from '../../scripts/utils.js';
 
 /**
  * Loads a fragment.
@@ -27,7 +27,8 @@ export async function loadFragment(path) {
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, getWindowLocation())).href;
+          const { location } = getWindowSafe();
+          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, location)).href;
         });
       };
       resetAttributeBase('img', 'src');

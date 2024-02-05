@@ -28,8 +28,6 @@ import {
  *  options: FilterOption[],
  * }} Filter
  *
- * @typedef {"asc" | "desc"} SortDirection
- *
  * @typedef {{
  *  block: Element | null,
  *  filterDialogEl: HTMLDivElement | null,
@@ -37,27 +35,10 @@ import {
  *  inventoryUl: HTMLUListElement,
  *  inputCount: number,
  *  search: string,
- *  sortBy: {key: string, direction: SortDirection},
+ *  sortBy: {key: string, direction: "asc" | "desc"},
  *  filters: Filter[],
  * }} State
  */
-
-const blockName = 'inventory-browser';
-const Event = {
-  carsLoaded: `${blockName}/carsLoaded`,
-  filterOption: {
-    add: `${blockName}/filterOption/add`,
-    remove: `${blockName}/filterOption/remove`,
-  },
-  clearAll: `${blockName}/clearAll`,
-  sortBy: {
-    update: `${blockName}/sortBy/update`,
-  },
-  filterDialog: {
-    open: `${blockName}/filterDialog/open`,
-    confirm: `${blockName}/filterDialog/confirm`,
-  },
-};
 
 /** @type {State} */
 const state = {
@@ -84,7 +65,7 @@ function setSearch(search) {
 
 /**
  * @param {string} key
- * @param {SortDirection} [direction="desc"]
+ * @param {State["sortBy"]["direction"]} [direction="desc"]
  */
 function setSortBy(key, direction = 'desc') {
   state.sortBy.key = key;
@@ -130,12 +111,7 @@ function createActiveFilterTagElement(key, value, removeable = true) {
     tagEl.appendChild(removeIcon);
     decorateIcons(tagEl);
     removeIcon.addEventListener('click', () => {
-      state.block.dispatchEvent(new CustomEvent(Event.filterOption.remove, {
-        detail: {
-          filterKey: key,
-          optionValue: value,
-        },
-      }));
+      toggleFilterOption(key, value, false);
     });
   }
 
@@ -148,124 +124,29 @@ function createActiveFilterTagElement(key, value, removeable = true) {
  * @param {boolean} active
  */
 function toggleFilterOption(key, value, active) {
-  const { block } = state;
-
-  if (!active) {
-    const deleteEvent = new CustomEvent(Event.filterOption.remove, {
-      detail: {
-        filterKey: key,
-        optionValue: value,
-      },
-    });
-    block.dispatchEvent(deleteEvent);
-  } else {
-    const addEvent = new CustomEvent(Event.filterOption.add, {
-      detail: {
-        filterKey: key,
-        optionValue: value,
-      },
-    });
-    block.dispatchEvent(addEvent);
-  }
-}
-
-/**
- * @param {CustomEvent<{
- *  filterKey: string,
- *  optionValue: FilterOptionValue,
- * }>} event filter-option-remove-event
- */
-function handleFilterOptionRemove(event) {
-  const { filterKey, optionValue } = event.detail;
   const { block, filterDialogEl, filters } = state;
-  const filterIndex = filters.findIndex((filter) => filter.key === filterKey);
+  const filterIndex = filters.findIndex((filter) => filter.key === key);
 
   if (filterIndex >= 0) {
-    const { options } = filters[filterIndex];
-    const optionIndex = options.findIndex((option) => option.value === optionValue);
+    const optionIndex = filters[filterIndex].options.findIndex((option) => option.value === value);
 
     if (optionIndex >= 0) {
-      filters[filterIndex].options[optionIndex].active = false;
-      const checkbox = filterDialogEl.querySelector(`.filters input[name="${filterKey}"][value="${optionValue}"]`);
-      checkbox.checked = false;
+      filters[filterIndex].options[optionIndex].active = active;
+      const checkbox = filterDialogEl.querySelector(`.filters input[name="${key}"][value="${value}"]`);
+      checkbox.checked = active;
 
-      const activeFilterTags = block.querySelectorAll(`.active-filters .tag[data-key="${filterKey}"][data-value="${optionValue}"]`);
-      activeFilterTags.forEach((el) => el.remove());
+      if (!active) {
+        const activeFilterTags = block.querySelectorAll(`.active-filters .tag[data-key="${key}"][data-value="${value}"]`);
+        activeFilterTags.forEach((el) => el.remove());
+      } else {
+        const activeFiltersElems = block.querySelectorAll('.active-filters');
+        activeFiltersElems.forEach((el) => {
+          const tagEl = createActiveFilterTagElement(key, value, !el.classList.contains('outside'));
+          el.appendChild(tagEl);
+        });
+      }
     }
   }
-}
-
-/**
- * @param {CustomEvent<{
-*  filterKey: string,
-*  optionValue: FilterOptionValue,
-* }>} event filter-option-add-event
-*/
-function handleFilterOptionAdd(event) {
-  const { filterKey, optionValue } = event.detail;
-  const { block, filterDialogEl, filters } = state;
-  const filterIndex = filters.findIndex((filter) => filter.key === filterKey);
-
-  if (filterIndex >= 0) {
-    const { options } = filters[filterIndex];
-    const optionIndex = options.findIndex((option) => option.value === optionValue);
-
-    if (optionIndex >= 0) {
-      filters[filterIndex].options[optionIndex].active = true;
-      const checkbox = filterDialogEl.querySelector(`.filters input[name="${filterKey}"][value="${optionValue}"]`);
-      checkbox.checked = true;
-
-      const activeFiltersElems = block.querySelectorAll('.active-filters');
-      activeFiltersElems.forEach((el) => {
-        const tagEl = createActiveFilterTagElement(filterKey, optionValue, !el.classList.contains('outside'));
-        el.appendChild(tagEl);
-      });
-    }
-  }
-}
-
-/**
- * @param {CustomEvent} event clear-all-event
- */
-function handleClearAll() {
-  state.filters.forEach((filter) => filter.options.forEach((option) => {
-    option.active = false;
-  }));
-  state.sortBy.key = '';
-  state.sortBy.direction = '';
-  getWindowSafe().location.search = getAllAsUrlSearchParams();
-}
-
-/**
- * @param {CustomEvent<{value: string}>} event sort-by-update-event
- */
-function handleSortByUpdate(event) {
-  const { value } = event.detail;
-
-  if (!value || !value.includes(';')) {
-    setSortBy('');
-  }
-
-  const [key, direction] = value.split(';');
-  setSortBy(key, direction);
-}
-
-function handleFilterDialogOpen() {
-  const { block } = state;
-  const { body } = document;
-  const filterDialogEl = block.querySelector('#filter-dialog');
-
-  filterDialogEl.classList.remove('hidden');
-  body.classList.add('dialog-open');
-}
-
-function handleFilterDialogConfirm() {
-  const { block } = state;
-  const filterDialogEl = block.querySelector('#filter-dialog');
-
-  filterDialogEl.classList.add('hidden');
-  document.body.classList.remove('dialog-open');
-  getWindowSafe().location.search = getAllAsUrlSearchParams();
 }
 
 /**
@@ -342,14 +223,7 @@ async function loadCars(href) {
       throw new Error(`unknown sheet-type: ${sheetData[':type']}`);
   }
 
-  const carData = parseRawCarData(rawCarData);
-  state.block.dispatchEvent(new CustomEvent(Event.carsLoaded, {
-    detail: {
-      cars: carData,
-    },
-  }));
-
-  return carData;
+  return parseRawCarData(rawCarData);
 }
 
 /**
@@ -383,13 +257,7 @@ function renderFilterAccordions() {
   filterCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', (event) => {
       const { name, value, checked } = event.target;
-      const eventName = checked ? Event.filterOption.add : Event.filterOption.remove;
-      state.block.dispatchEvent(new CustomEvent(eventName, {
-        detail: {
-          filterKey: name,
-          optionValue: value,
-        },
-      }));
+      toggleFilterOption(name, value, checked);
     });
   });
 }
@@ -449,18 +317,17 @@ function setSearchValueFromUrlSearchParams(searchParams) {
 function setSortByFromUrlSearchParams(searchParams) {
   const sortByParam = searchParams.get('sortBy');
 
-  state.block.dispatchEvent(new CustomEvent(Event.sortBy.update, {
-    detail: {
-      value: sortByParam,
-    },
-  }));
+  if (sortByParam && sortByParam.includes(';')) {
+    const [key, direction] = sortByParam.split(';');
+    setSortBy(key, direction);
+  }
 }
 
 /**
  * @param {Element} block
  */
 function createFiltersElement() {
-  const { cars, block } = state;
+  const { cars } = state;
   const wrapperEl = document.createElement('div');
   wrapperEl.classList.add('filters-wrapper');
 
@@ -479,7 +346,7 @@ function createFiltersElement() {
 
   filterKeys.forEach((key) => {
     const options = cars.map((car) => car[key]);
-    setFilter(key, toUniqueArray(options).sort());
+    setFilter(key, toUniqueArray(options));
   });
 
   const sortKeys = ['year', 'price', 'miles', 'horsepower'];
@@ -524,25 +391,39 @@ function createFiltersElement() {
   const soryByEl = filterDialogEl.querySelector('#sort-by-select');
 
   openFilterDialogBtn.addEventListener('click', () => {
-    block.dispatchEvent(new CustomEvent(Event.filterDialog.open));
+    filterDialogEl.classList.remove('hidden');
+    document.body.classList.add('dialog-open');
   });
 
   showFilterResultsBtn.addEventListener('click', () => {
-    block.dispatchEvent(new CustomEvent(Event.filterDialog.confirm));
+    filterDialogEl.classList.add('hidden');
+    document.body.classList.remove('dialog-open');
+    getWindowSafe().location.search = getAllAsUrlSearchParams();
   });
 
   clearBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      block.dispatchEvent(new CustomEvent(Event.clearAll));
+      const { filters } = state;
+      filters.forEach((filter) => {
+        filter.options.forEach((option) => {
+          option.active = false;
+        });
+        state.search = '';
+        state.sortBy = '';
+      });
+      getWindowSafe().location.search = getAllAsUrlSearchParams();
     });
   });
 
   soryByEl.addEventListener('change', () => {
-    block.dispatchEvent(new CustomEvent(Event.sortBy.update, {
-      detail: {
-        value: soryByEl.value,
-      },
-    }));
+    const { value } = soryByEl;
+
+    if (!value) {
+      setSortBy('');
+    }
+
+    const [key, direction] = value.split(';');
+    setSortBy(key, direction);
   });
 
   decorateIcons(wrapperEl);
@@ -753,18 +634,14 @@ function getFilteredCars() {
 }
 
 /**
- * @param {string} query
+ * @param {?string} query
  */
 function handleSearch(query) {
   const lQuery = query.toLowerCase();
   const filteredCars = getFilteredCars();
 
   if (!lQuery || lQuery.length === 0) {
-    if (filteredCars.length > 0) {
-      renderCarElement(sortCars(filteredCars));
-    } else {
-      renderNoResultsElement();
-    }
+    renderCarElement(sortCars(filteredCars));
   } else {
     const foundCars = filteredCars.filter(({
       year, make, model, trim,
@@ -819,12 +696,16 @@ function createSearchElement() {
 }
 
 /**
- * @param {CustomEvent<{cars: Car[]}>} cars loaded event
+ * decorate inventory browser
+ * @param {Element} block
  */
-function handleCarsLoaded(event) {
-  const { cars } = event.detail;
-  const { block } = state;
-  state.cars = cars;
+export default async function decorate(block) {
+  const url = extractHrefFromBlock(block);
+
+  if (!url) return;
+
+  state.cars = await loadCars(url);
+
   state.inventoryUl = document.createElement('ul');
   state.inventoryUl.classList.add('inventory-car-list');
 
@@ -839,6 +720,7 @@ function handleCarsLoaded(event) {
   inventoryDiv.appendChild(state.inventoryUl);
 
   block.replaceChildren(inventoryDiv);
+  state.block = block;
   state.filterDialogEl = block.querySelector('#filter-dialog');
   renderFilterAccordions();
   const urlSearchParams = new URLSearchParams(getWindowSafe().location.search);
@@ -847,30 +729,4 @@ function handleCarsLoaded(event) {
   setSortByFromUrlSearchParams(urlSearchParams);
 
   handleSearch(block.querySelector('.inventory-search-input').value);
-}
-
-/**
- * @param {HTMLElement} block
- */
-function bindEvents(block) {
-  block.addEventListener(Event.carsLoaded, handleCarsLoaded);
-  block.addEventListener(Event.filterOption.add, handleFilterOptionAdd);
-  block.addEventListener(Event.filterOption.remove, handleFilterOptionRemove);
-  block.addEventListener(Event.clearAll, handleClearAll);
-  block.addEventListener(Event.sortBy.update, handleSortByUpdate);
-  block.addEventListener(Event.filterDialog.open, handleFilterDialogOpen);
-  block.addEventListener(Event.filterDialog.confirm, handleFilterDialogConfirm);
-}
-
-/**
- * decorate inventory browser
- * @param {HTMLElement} block
- */
-export default async function decorate(block) {
-  const url = extractHrefFromBlock(block);
-
-  if (!url) return;
-  state.block = block;
-  bindEvents(block);
-  await loadCars(url);
 }

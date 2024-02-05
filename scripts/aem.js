@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { getWindowSafe } from "./utils";
+
 /* eslint-env browser */
 
 /**
@@ -43,9 +45,9 @@ function sampleRUM(checkpoint, data = {}) {
   defer('observe');
   defer('cwv');
   try {
-    window.hlx = window.hlx || {};
-    if (!window.hlx.rum) {
-      const usp = new URLSearchParams(window.location.search);
+    getWindowSafe().hlx = getWindowSafe().hlx || {};
+    if (!getWindowSafe().hlx.rum) {
+      const usp = new URLSearchParams(getWindowSafe().location.search);
       const weight = usp.get('rum') === 'on' ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
       const id = Array.from({ length: 75 }, (_, i) => String.fromCharCode(48 + i))
         .filter((a) => /\d|[A-Z]/i.test(a))
@@ -55,23 +57,23 @@ function sampleRUM(checkpoint, data = {}) {
       const isSelected = random * weight < 1;
       const firstReadTime = Date.now();
       const urlSanitizers = {
-        full: () => window.location.href,
-        origin: () => window.location.origin,
-        path: () => window.location.href.replace(/\?.*$/, ''),
+        full: () => getWindowSafe().location.href,
+        origin: () => getWindowSafe().location.origin,
+        path: () => getWindowSafe().location.href.replace(/\?.*$/, ''),
       };
       // eslint-disable-next-line object-curly-newline, max-len
-      window.hlx.rum = {
+      getWindowSafe().hlx.rum = {
         weight,
         id,
         random,
         isSelected,
         firstReadTime,
         sampleRUM,
-        sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'],
+        sanitizeURL: urlSanitizers[getWindowSafe().hlx.RUM_MASK_URL || 'path'],
       };
     }
-    const { weight, id, firstReadTime } = window.hlx.rum;
-    if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
+    const { weight, id, firstReadTime } = getWindowSafe().hlx.rum;
+    if (getWindowSafe().hlx && getWindowSafe().hlx.rum && getWindowSafe().hlx.rum.isSelected) {
       const knownProperties = [
         'weight',
         'id',
@@ -92,7 +94,7 @@ function sampleRUM(checkpoint, data = {}) {
           {
             weight,
             id,
-            referer: window.hlx.rum.sanitizeURL(),
+            referer: getWindowSafe().hlx.rum.sanitizeURL(),
             checkpoint,
             t: Date.now() - firstReadTime,
             ...data,
@@ -132,15 +134,15 @@ function sampleRUM(checkpoint, data = {}) {
  * Setup block utils.
  */
 function setup() {
-  window.hlx = window.hlx || {};
-  window.hlx.RUM_MASK_URL = 'full';
-  window.hlx.codeBasePath = '';
-  window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  getWindowSafe().hlx = getWindowSafe().hlx || {};
+  getWindowSafe().hlx.RUM_MASK_URL = 'full';
+  getWindowSafe().hlx.codeBasePath = '';
+  getWindowSafe().hlx.lighthouse = new URLSearchParams(getWindowSafe().location.search).get('lighthouse') === 'on';
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
   if (scriptEl) {
     try {
-      [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
+      [getWindowSafe().hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -156,13 +158,13 @@ function init() {
   setup();
   sampleRUM('top');
 
-  window.addEventListener('load', () => sampleRUM('load'));
+  getWindowSafe().addEventListener('load', () => sampleRUM('load'));
 
-  window.addEventListener('unhandledrejection', (event) => {
+  getWindowSafe().addEventListener('unhandledrejection', (event) => {
     sampleRUM('error', { source: event.reason.sourceURL, target: event.reason.line });
   });
 
-  window.addEventListener('error', (event) => {
+  getWindowSafe().addEventListener('error', (event) => {
     sampleRUM('error', { source: event.filename, target: event.lineno });
   });
 }
@@ -307,7 +309,7 @@ function createOptimizedPicture(
   eager = false,
   breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
 ) {
-  const url = new URL(src, window.location.href);
+  const url = new URL(src, getWindowSafe().location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
   const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
@@ -405,7 +407,7 @@ function decorateIcon(span, prefix = '', alt = '') {
     .substring(5);
   const img = document.createElement('img');
   img.dataset.iconName = iconName;
-  img.src = `${window.hlx.codeBasePath}${prefix}/icons/${iconName}.svg`;
+  img.src = `${getWindowSafe().hlx.codeBasePath}${prefix}/icons/${iconName}.svg`;
   img.alt = alt;
   img.loading = 'lazy';
   span.append(img);
@@ -472,9 +474,9 @@ function decorateSections(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 async function fetchPlaceholders(prefix = 'default') {
-  window.placeholders = window.placeholders || {};
-  if (!window.placeholders[prefix]) {
-    window.placeholders[prefix] = new Promise((resolve) => {
+  getWindowSafe().placeholders = getWindowSafe().placeholders || {};
+  if (!getWindowSafe().placeholders[prefix]) {
+    getWindowSafe().placeholders[prefix] = new Promise((resolve) => {
       fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
         .then((resp) => {
           if (resp.ok) {
@@ -489,17 +491,17 @@ async function fetchPlaceholders(prefix = 'default') {
             .forEach((placeholder) => {
               placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
             });
-          window.placeholders[prefix] = placeholders;
-          resolve(window.placeholders[prefix]);
+          getWindowSafe().placeholders[prefix] = placeholders;
+          resolve(getWindowSafe().placeholders[prefix]);
         })
         .catch(() => {
           // error loading placeholders
-          window.placeholders[prefix] = {};
-          resolve(window.placeholders[prefix]);
+          getWindowSafe().placeholders[prefix] = {};
+          resolve(getWindowSafe().placeholders[prefix]);
         });
     });
   }
-  return window.placeholders[`${prefix}`];
+  return getWindowSafe().placeholders[`${prefix}`];
 }
 
 /**
@@ -567,12 +569,12 @@ async function loadBlock(block) {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
-      const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
+      const cssLoaded = loadCSS(`${getWindowSafe().hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
             const mod = await import(
-              `${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`
+              `${getWindowSafe().hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`
             );
             if (mod.default) {
               await mod.default(block);

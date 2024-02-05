@@ -1,8 +1,9 @@
 import { getMetadata } from '../../scripts/aem.min.js';
+import { getWindowSafe } from '../../scripts/utils.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = getWindowSafe().matchMedia('(min-width: 900px)');
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -80,9 +81,9 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   // enable menu collapse on escape keypress
   if (!expanded || isDesktop.matches) {
     // collapse menu on escape press
-    window.addEventListener('keydown', closeOnEscape);
+    getWindowSafe().addEventListener('keydown', closeOnEscape);
   } else {
-    window.removeEventListener('keydown', closeOnEscape);
+    getWindowSafe().removeEventListener('keydown', closeOnEscape);
   }
 }
 

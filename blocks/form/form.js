@@ -1,11 +1,12 @@
 import createField, { createTimestampField } from './form-fields.js';
 import { sampleRUM } from '../../scripts/aem.min.js';
+import { getWindowSafe } from '../../scripts/utils.js';
 
 /**
  * @param {HTMLFormElement} form
  */
 function fillFieldsFromLocationUrl(form) {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = new URLSearchParams(getWindowSafe().location.search);
 
   searchParams.forEach((value, key) => {
     /** @type {HTMLInputElement | null} */
@@ -90,7 +91,7 @@ async function handleSubmit(form) {
     if (response.ok) {
       sampleRUM('form:submit', { source: '.form', target: form.dataset.action });
       if (form.dataset.confirmation) {
-        window.location.href = form.dataset.confirmation;
+        getWindowSafe().location.href = form.dataset.confirmation;
       }
     } else {
       const error = await response.text();
