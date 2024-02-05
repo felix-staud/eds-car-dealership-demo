@@ -1,0 +1,153 @@
+.payment-calculator .field-wrapper {
+  display: grid;
+  grid-auto-flow: row;
+  align-items: center;
+  padding: 8px;
+}
+
+.payment-calculator fieldset {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 8px;
+  border: none;
+  padding: 0;
+}
+
+@media (width >= 900px) {
+  .payment-calculator fieldset {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+.payment-calculator fieldset > legend {
+  font-weight: 700;
+  font-size: var(--heading-font-size-xs);
+}
+
+.payment-calculator label {
+  font-weight: 700;
+  font-size: var(--body-font-size-xs);
+  margin-bottom: 0.25em;
+}
+
+.payment-calculator input,
+.payment-calculator select,
+.payment-calculator textarea {
+  font-size: var(--body-font-size-s);
+  width: 100%;
+  max-width: 50rem;
+  display: block;
+  padding: 12px 8px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.payment-calculator textarea {
+  resize: vertical;
+}
+
+.payment-calculator .selection-wrapper input {
+  width: 16px;
+}
+
+.payment-calculator .selection-wrapper label {
+  margin-bottom: 0;
+}
+
+.payment-calculator input:hover {
+  border: 1px solid var(--text-color);
+}
+
+.payment-calculator .button {
+  max-width: 225px;
+  font-size: var(--body-font-size-m);
+  padding: 0.2em 0.4em;
+}
+
+.payment-calculator .field-wrapper.selection-wrapper {
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: 16px;
+}
+
+.payment-calculator .field-wrapper > label {
+  order: -1;
+}
+
+.payment-calculator .field-wrapper.selection-wrapper > label {
+  order: 1;
+}
+
+.payment-calculator input[required] + label::after {
+  content: "*";
+  color: firebrick;
+  margin-inline-start: 1ch;
+}
+
+.payment-calculator .toggle-wrapper .switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.payment-calculator .toggle-wrapper input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.payment-calculator .toggle-wrapper .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--dark-color);
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.payment-calculator .toggle-wrapper .slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--background-color);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.payment-calculator .toggle-wrapper input:checked + .slider {
+  background-color: var(--link-color);
+}
+
+.payment-calculator .toggle-wrapper input:focus + .slider {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+.payment-calculator .toggle-wrapper input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+.payment-calculator #payment-calculator-form,
+.payment-calculator #calc-btn {
+  scroll-margin-top: calc(var(--nav-height) + 1rem);
+}
+
+@media (width >= 900px) {
+  .payment-calculator #payment-calculator-form,
+  .payment-calculator #calc-btn {
+    scroll-margin-top: calc(var(--nav-height) + var(--nav-contact-height) + 1rem);
+  }
+}
+
+.payment-calculator #payment-calculator-form .field-wrapper.hidden {
+  display: none;
+  visibility: hidden;
+}

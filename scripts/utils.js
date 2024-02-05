@@ -189,3 +189,17 @@ export function camelCaseToLabel(camelCase) {
 export function toUniqueArray(array) {
   return [...new Set(array)];
 }
+
+/**
+ * @param {HTMLElement} element
+ * @param {ScrollBehavior} [behavior='smooth']
+ */
+export function scrollToElement(element, behavior = 'smooth') {
+  const { documentElement } = getWindowSafe().document;
+  const { scrollTop, clientTop } = documentElement;
+  const { top } = element.getBoundingClientRect();
+  const navEl = documentElement.querySelector('#nav');
+  const navElHeight = navEl.clientHeight + 10;
+
+  getWindowSafe().scrollTo({ behavior, top: top + scrollTop - clientTop - navElHeight });
+}

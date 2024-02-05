@@ -1,4 +1,9 @@
 import { toClassName } from '../../scripts/aem.min.js';
+import { FormDefinition } from '../../scripts/types.js'; // eslint-disable-line no-unused-vars
+
+/**
+ * @typedef {{field: HTMLElement, fieldWrapper: HTMLElement}} FormCreateReturn
+ */
 
 function createFieldWrapper(fd) {
   const fieldWrapper = document.createElement('div');
@@ -31,10 +36,16 @@ function setCommonAttributes(field, fd) {
   field.id = fd.Id;
   field.name = fd.Name;
   field.required = fd.Mandatory && (fd.Mandatory.toLowerCase() === 'true' || fd.Mandatory.toLowerCase() === 'x');
-  field.placeholder = fd.Placeholder;
+  if (fd.Placeholder) {
+    field.placeholder = fd.Placeholder;
+  }
   field.value = fd.Value;
-  field.min = fd.Min;
-  field.max = fd.Max;
+  if (fd.Min) {
+    field.min = fd.Min;
+  }
+  if (fd.Max) {
+    field.max = fd.Max;
+  }
 }
 
 const createHeading = (fd) => {
@@ -116,15 +127,23 @@ const createConfirmation = (fd, form) => {
   return {};
 };
 
-const createSubmit = (fd) => {
+const createButton = (fd) => {
   const button = document.createElement('button');
-  button.textContent = fd.Label || fd.Name;
+  button.id = fd.Id;
   button.classList.add('button');
-  button.type = 'submit';
+  button.type = 'button';
+  button.textContent = fd.Label || fd.Name;
 
   const fieldWrapper = createFieldWrapper(fd);
   fieldWrapper.append(button);
   return { field: button, fieldWrapper };
+};
+
+const createSubmit = (fd) => {
+  const { field, fieldWrapper } = createButton(fd);
+  field.type = 'submit';
+
+  return { field, fieldWrapper };
 };
 
 const createTextArea = (fd) => {
@@ -208,6 +227,7 @@ const createRadio = (fd) => {
   return { field, fieldWrapper };
 };
 
+/** @type {Record<FormType, (fd: FormDefinition) => Promise<FormCreateReturn>} */
 const FIELD_CREATOR_FUNCTIONS = {
   select: createSelect,
   heading: createHeading,
@@ -215,6 +235,7 @@ const FIELD_CREATOR_FUNCTIONS = {
   'text-area': createTextArea,
   toggle: createToggle,
   submit: createSubmit,
+  button: createButton,
   confirmation: createConfirmation,
   fieldset: createFieldset,
   checkbox: createCheckbox,
@@ -230,6 +251,12 @@ export const createTimestampField = (name = '_timestamp') => {
   return timestampInput;
 };
 
+/**
+ * create a form field
+ * @param {FormDefinition} fd form-definition
+ * @param {HTMLElement} form form-element
+ * @returns {Promise<HTMLElement>} fieldWrapper
+ */
 export default async function createField(fd, form) {
   fd.Id = fd.Id || generateFieldId(fd);
   const type = fd.Type.toLowerCase();

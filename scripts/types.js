@@ -58,9 +58,43 @@
  *  features: string[],
  *  notes: string,
  * }} Car
+ *
+ * @typedef {"text"
+ *  | "button"
+ *  | "number"
+ *  | "date"
+ *  | "date-time"
+ *  | "select"
+ *  | "heading"
+ *  | "text-area"
+ *  | "plaintext"
+ *  | "toggle"
+ *  | "submit"
+ *  | "confirmation"
+ *  | "fieldset"
+ *  | "checkbox"
+ *  | "radio"
+* } FormType
+ *
+ * @typedef {{
+ *  Type: FormType,
+ *  Name: string,
+ *  Value?: string | number,
+ *  Fieldset?: string,
+ *  Style?: string,
+ *  Label?: string,
+ *  Id?: string,
+ *  Mandatory?: string,
+ *  Placeholder?: string,
+ *  Min?: number,
+ *  Max?: number,
+ *  Options?: string,
+* }} FormDefinition
  */
 
 export let SingleSheetData;
 export let MultiSheetData;
 export let SwiperApi;
 export let Car;
+export let FormType;
+export let FormDefinition;
