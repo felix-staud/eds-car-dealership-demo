@@ -244,10 +244,10 @@ function handleSortByUpdate(event) {
 
   if (!value || !value.includes(';')) {
     setSortBy('');
+  } else {
+    const [key, direction] = value.split(';');
+    setSortBy(key, direction);
   }
-
-  const [key, direction] = value.split(';');
-  setSortBy(key, direction);
 }
 
 function handleFilterDialogOpen() {
