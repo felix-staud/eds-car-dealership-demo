@@ -135,6 +135,10 @@ main .section.car-details-container {
   display: inline-block;
 }
 
+.car-details #car-pricing a {
+  white-space: nowrap;
+}
+
 .car-details #car-pricing .car-section-content {
   display: flex;
   flex-direction: column;
@@ -232,8 +236,7 @@ main .section.car-details-container {
   }
 
   .car-details .car-sections {
-    grid-gap: 1rem;
-    grid-template-columns: auto 400px;
+    grid-template-columns: auto minmax(360px, auto);
     grid-template-areas:
     'header header'
     'details-main pricing'

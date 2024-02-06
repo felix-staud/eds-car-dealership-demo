@@ -196,6 +196,7 @@ export default async function decorate(block) {
           <div class="button-group">
             <a href="/about-us?${createContactFormSearchParamsForCar('availability', car).toString()}#contact-us" class="button primary"> Check Availability</a>
             <a href="/about-us?${createContactFormSearchParamsForCar('test drive', car).toString()}#contact-us" class="button secondary">Schedule Test-Drive</a>
+            <a href="#payment-calculator-form" class="button secondary">Calculate Payment</a>
           </div>
           <div>
             We're here to help <a href="tel:+1-1234567890">+1-1234567890</a>
@@ -234,14 +235,14 @@ export default async function decorate(block) {
   /** @type {SwiperApi} */
   const swiper = new Swiper(block.querySelector('.swiper'), { // eslint-disable-line no-undef
     direction: 'horizontal',
-    initialSlide: 1,
+    initialSlide: 0,
     spaceBetween: 1,
+    slidesPerView: 'auto',
     loop: true,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
     },
-    slidesPerView: 'auto',
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
@@ -261,5 +262,10 @@ export default async function decorate(block) {
       imgEl.setAttribute('width', imgEl.width);
       imgEl.setAttribute('height', imgEl.height);
     });
+  });
+
+  document.addEventListener('payment-calculator/ready', () => {
+    const setAutoPriceEvent = new CustomEvent('payment-calculator/autoPrice/set', { detail: { autoPrice: car.price } });
+    document.dispatchEvent(setAutoPriceEvent);
   });
 }

@@ -70,19 +70,19 @@ export default async function decorate(block) {
   form.replaceChildren(...fields);
   block.append(form);
 
+  const autoPriceEl = form.querySelector('[name="auto-price"]');
+  const loanTermEl = form.querySelector('[name="loan-term"]');
+  const interestRateEl = form.querySelector('[name="interest-rate"]');
+  const downPaymentEl = form.querySelector('[name="down-payment"]');
+  const tradeInValueEl = form.querySelector('[name="trade-in-value"]');
+  const monthlyPaymentEl = form.querySelector('#monthly-payment');
+  const interestPaymentEl = form.querySelector('#interest-payment');
+  const totalPaymentEl = form.querySelector('#total-payment');
+
   form.querySelectorAll('.readonly > input').forEach((el) => el.setAttribute('readonly', 'readonly'));
 
   const calcBtn = block.querySelector('#calc-btn');
   calcBtn.addEventListener('click', () => {
-    const autoPriceEl = form.querySelector('[name="auto-price"]');
-    const loanTermEl = form.querySelector('[name="loan-term"]');
-    const interestRateEl = form.querySelector('[name="interest-rate"]');
-    const downPaymentEl = form.querySelector('[name="down-payment"]');
-    const tradeInValueEl = form.querySelector('[name="trade-in-value"]');
-    const monthlyPaymentEl = form.querySelector('#monthly-payment');
-    const interestPaymentEl = form.querySelector('#interest-payment');
-    const totalPaymentEl = form.querySelector('#total-payment');
-
     const autoPrice = autoPriceEl.value;
     const loanTerm = loanTermEl.value;
     const interestRate = interestRateEl.value;
@@ -107,4 +107,11 @@ export default async function decorate(block) {
     form.querySelectorAll('.hidden').forEach((el) => el.classList.remove('hidden'));
     scrollToElement(calcBtn);
   });
+
+  document.addEventListener('payment-calculator/autoPrice/set', (event) => {
+    const { autoPrice } = event.detail;
+    autoPriceEl.value = autoPrice;
+  });
+
+  document.dispatchEvent(new CustomEvent('payment-calculator/ready'));
 }
