@@ -1,0 +1,11 @@
+.iframe,
+.iframe *,
+.iframe *::before,
+.iframe *::after {
+  box-sizing: border-box;
+}
+
+.iframe {
+  max-width: 100%;
+  max-height: 100%;
+}
